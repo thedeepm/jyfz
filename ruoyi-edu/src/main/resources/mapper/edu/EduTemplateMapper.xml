@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.EduTemplateMapper">
+    
+    <resultMap type="EduTemplate" id="EduTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="hallName"    column="hall_name"    />
+        <result property="totalSeats"    column="total_seats"    />
+        <result property="partitionNumber"    column="partition_number"    />
+        <result property="flowId"    column="flow_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="tbc1"    column="TBC1"    />
+        <result property="tbc2"    column="TBC2"    />
+        <result property="tbc3"    column="TBC3"    />
+        <result property="tbc4"    column="TBC4"    />
+        <result property="tbc5"    column="TBC5"    />
+    </resultMap>
+
+    <sql id="selectEduTemplateVo">
+        select id, hall_name, total_seats, partition_number, flow_id, create_time, update_time, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_template
+    </sql>
+
+    <select id="selectEduTemplateList" parameterType="EduTemplate" resultMap="EduTemplateResult">
+        <include refid="selectEduTemplateVo"/>
+        <where>  
+            <if test="hallName != null  and hallName != ''"> and hall_name like concat('%', #{hallName}, '%')</if>
+            <if test="totalSeats != null "> and total_seats = #{totalSeats}</if>
+            <if test="partitionNumber != null  and partitionNumber != ''"> and partition_number = #{partitionNumber}</if>
+            <if test="flowId != null "> and flow_id = #{flowId}</if>
+            <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
+            <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>
+            <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
+            <if test="tbc4 != null  and tbc4 != ''"> and TBC4 = #{tbc4}</if>
+            <if test="tbc5 != null  and tbc5 != ''"> and TBC5 = #{tbc5}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduTemplateById" parameterType="Long" resultMap="EduTemplateResult">
+        <include refid="selectEduTemplateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduTemplate" parameterType="EduTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hallName != null">hall_name,</if>
+            <if test="totalSeats != null">total_seats,</if>
+            <if test="partitionNumber != null">partition_number,</if>
+            <if test="flowId != null">flow_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="tbc1 != null">TBC1,</if>
+            <if test="tbc2 != null">TBC2,</if>
+            <if test="tbc3 != null">TBC3,</if>
+            <if test="tbc4 != null">TBC4,</if>
+            <if test="tbc5 != null">TBC5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hallName != null">#{hallName},</if>
+            <if test="totalSeats != null">#{totalSeats},</if>
+            <if test="partitionNumber != null">#{partitionNumber},</if>
+            <if test="flowId != null">#{flowId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="tbc1 != null">#{tbc1},</if>
+            <if test="tbc2 != null">#{tbc2},</if>
+            <if test="tbc3 != null">#{tbc3},</if>
+            <if test="tbc4 != null">#{tbc4},</if>
+            <if test="tbc5 != null">#{tbc5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduTemplate" parameterType="EduTemplate">
+        update edu_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hallName != null">hall_name = #{hallName},</if>
+            <if test="totalSeats != null">total_seats = #{totalSeats},</if>
+            <if test="partitionNumber != null">partition_number = #{partitionNumber},</if>
+            <if test="flowId != null">flow_id = #{flowId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="tbc1 != null">TBC1 = #{tbc1},</if>
+            <if test="tbc2 != null">TBC2 = #{tbc2},</if>
+            <if test="tbc3 != null">TBC3 = #{tbc3},</if>
+            <if test="tbc4 != null">TBC4 = #{tbc4},</if>
+            <if test="tbc5 != null">TBC5 = #{tbc5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduTemplateById" parameterType="Long">
+        delete from edu_template where id = #{id}
+    </delete>
+
+    <delete id="deleteEduTemplateByIds" parameterType="String">
+        delete from edu_template where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

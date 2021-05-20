@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.EduPartitionMapper">
+    
+    <resultMap type="EduPartition" id="EduPartitionResult">
+        <result property="id"    column="id"    />
+        <result property="partitionName"    column="partition_name"    />
+        <result property="totalSeats"    column="total_seats"    />
+        <result property="groupNumber"    column="group_number"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="partitionInterval"    column="partition_interval"    />
+        <result property="functionAttribute"    column="function_attribute"    />
+        <result property="color"    column="color"    />
+        <result property="tbc1"    column="TBC1"    />
+        <result property="tbc2"    column="TBC2"    />
+        <result property="tbc3"    column="TBC3"    />
+        <result property="tbc4"    column="TBC4"    />
+        <result property="tbc5"    column="TBC5"    />
+    </resultMap>
+
+    <sql id="selectEduPartitionVo">
+        select id, partition_name, total_seats, group_number, template_id, partition_interval, function_attribute, color, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_partition
+    </sql>
+
+    <select id="selectEduPartitionList" parameterType="EduPartition" resultMap="EduPartitionResult">
+        <include refid="selectEduPartitionVo"/>
+        <where>  
+            <if test="partitionName != null  and partitionName != ''"> and partition_name like concat('%', #{partitionName}, '%')</if>
+            <if test="totalSeats != null "> and total_seats = #{totalSeats}</if>
+            <if test="groupNumber != null "> and group_number = #{groupNumber}</if>
+            <if test="templateId != null "> and template_id = #{templateId}</if>
+            <if test="partitionInterval != null  and partitionInterval != ''"> and partition_interval = #{partitionInterval}</if>
+            <if test="functionAttribute != null  and functionAttribute != ''"> and function_attribute = #{functionAttribute}</if>
+            <if test="color != null  and color != ''"> and color = #{color}</if>
+            <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
+            <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>
+            <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
+            <if test="tbc4 != null  and tbc4 != ''"> and TBC4 = #{tbc4}</if>
+            <if test="tbc5 != null  and tbc5 != ''"> and TBC5 = #{tbc5}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduPartitionById" parameterType="Long" resultMap="EduPartitionResult">
+        <include refid="selectEduPartitionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduPartition" parameterType="EduPartition" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_partition
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="partitionName != null">partition_name,</if>
+            <if test="totalSeats != null">total_seats,</if>
+            <if test="groupNumber != null">group_number,</if>
+            <if test="templateId != null">template_id,</if>
+            <if test="partitionInterval != null">partition_interval,</if>
+            <if test="functionAttribute != null">function_attribute,</if>
+            <if test="color != null">color,</if>
+            <if test="tbc1 != null">TBC1,</if>
+            <if test="tbc2 != null">TBC2,</if>
+            <if test="tbc3 != null">TBC3,</if>
+            <if test="tbc4 != null">TBC4,</if>
+            <if test="tbc5 != null">TBC5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="partitionName != null">#{partitionName},</if>
+            <if test="totalSeats != null">#{totalSeats},</if>
+            <if test="groupNumber != null">#{groupNumber},</if>
+            <if test="templateId != null">#{templateId},</if>
+            <if test="partitionInterval != null">#{partitionInterval},</if>
+            <if test="functionAttribute != null">#{functionAttribute},</if>
+            <if test="color != null">#{color},</if>
+            <if test="tbc1 != null">#{tbc1},</if>
+            <if test="tbc2 != null">#{tbc2},</if>
+            <if test="tbc3 != null">#{tbc3},</if>
+            <if test="tbc4 != null">#{tbc4},</if>
+            <if test="tbc5 != null">#{tbc5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduPartition" parameterType="EduPartition">
+        update edu_partition
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="partitionName != null">partition_name = #{partitionName},</if>
+            <if test="totalSeats != null">total_seats = #{totalSeats},</if>
+            <if test="groupNumber != null">group_number = #{groupNumber},</if>
+            <if test="templateId != null">template_id = #{templateId},</if>
+            <if test="partitionInterval != null">partition_interval = #{partitionInterval},</if>
+            <if test="functionAttribute != null">function_attribute = #{functionAttribute},</if>
+            <if test="color != null">color = #{color},</if>
+            <if test="tbc1 != null">TBC1 = #{tbc1},</if>
+            <if test="tbc2 != null">TBC2 = #{tbc2},</if>
+            <if test="tbc3 != null">TBC3 = #{tbc3},</if>
+            <if test="tbc4 != null">TBC4 = #{tbc4},</if>
+            <if test="tbc5 != null">TBC5 = #{tbc5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduPartitionById" parameterType="Long">
+        delete from edu_partition where id = #{id}
+    </delete>
+
+    <delete id="deleteEduPartitionByIds" parameterType="String">
+        delete from edu_partition where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

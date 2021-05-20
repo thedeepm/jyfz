@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.EduSeatMapper">
+    
+    <resultMap type="EduSeat" id="EduSeatResult">
+        <result property="id"    column="id"    />
+        <result property="seatName"    column="seat_name"    />
+        <result property="groupId"    column="group_id"    />
+        <result property="groupIndex"    column="group_index"    />
+        <result property="tag"    column="tag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="position"    column="position"    />
+        <result property="tbc1"    column="TBC1"    />
+        <result property="tbc2"    column="TBC2"    />
+        <result property="tbc3"    column="TBC3"    />
+        <result property="tbc4"    column="TBC4"    />
+        <result property="tbc5"    column="TBC5"    />
+    </resultMap>
+
+    <sql id="selectEduSeatVo">
+        select id, seat_name, group_id, group_index, tag, create_time, position, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_seat
+    </sql>
+
+    <select id="selectEduSeatList" parameterType="EduSeat" resultMap="EduSeatResult">
+        <include refid="selectEduSeatVo"/>
+        <where>  
+            <if test="seatName != null  and seatName != ''"> and seat_name like concat('%', #{seatName}, '%')</if>
+            <if test="groupId != null "> and group_id = #{groupId}</if>
+            <if test="groupIndex != null "> and group_index = #{groupIndex}</if>
+            <if test="tag != null  and tag != ''"> and tag = #{tag}</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
+            <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>
+            <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
+            <if test="tbc4 != null  and tbc4 != ''"> and TBC4 = #{tbc4}</if>
+            <if test="tbc5 != null  and tbc5 != ''"> and TBC5 = #{tbc5}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduSeatById" parameterType="Long" resultMap="EduSeatResult">
+        <include refid="selectEduSeatVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduSeat" parameterType="EduSeat" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_seat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seatName != null">seat_name,</if>
+            <if test="groupId != null">group_id,</if>
+            <if test="groupIndex != null">group_index,</if>
+            <if test="tag != null">tag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="position != null">position,</if>
+            <if test="tbc1 != null">TBC1,</if>
+            <if test="tbc2 != null">TBC2,</if>
+            <if test="tbc3 != null">TBC3,</if>
+            <if test="tbc4 != null">TBC4,</if>
+            <if test="tbc5 != null">TBC5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seatName != null">#{seatName},</if>
+            <if test="groupId != null">#{groupId},</if>
+            <if test="groupIndex != null">#{groupIndex},</if>
+            <if test="tag != null">#{tag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="position != null">#{position},</if>
+            <if test="tbc1 != null">#{tbc1},</if>
+            <if test="tbc2 != null">#{tbc2},</if>
+            <if test="tbc3 != null">#{tbc3},</if>
+            <if test="tbc4 != null">#{tbc4},</if>
+            <if test="tbc5 != null">#{tbc5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduSeat" parameterType="EduSeat">
+        update edu_seat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="seatName != null">seat_name = #{seatName},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="groupIndex != null">group_index = #{groupIndex},</if>
+            <if test="tag != null">tag = #{tag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="tbc1 != null">TBC1 = #{tbc1},</if>
+            <if test="tbc2 != null">TBC2 = #{tbc2},</if>
+            <if test="tbc3 != null">TBC3 = #{tbc3},</if>
+            <if test="tbc4 != null">TBC4 = #{tbc4},</if>
+            <if test="tbc5 != null">TBC5 = #{tbc5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduSeatById" parameterType="Long">
+        delete from edu_seat where id = #{id}
+    </delete>
+
+    <delete id="deleteEduSeatByIds" parameterType="String">
+        delete from edu_seat where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

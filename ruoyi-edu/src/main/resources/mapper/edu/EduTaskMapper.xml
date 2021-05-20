@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.EduTaskMapper">
+    
+    <resultMap type="EduTask" id="EduTaskResult">
+        <result property="id"    column="id"    />
+        <result property="taskName"    column="task_name"    />
+        <result property="partitionName"    column="partition_name"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="seatId"    column="seat_id"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="warningTime"    column="warning_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="flowId"    column="flow_id"    />
+        <result property="stepLevel"    column="step_level"    />
+        <result property="completed"    column="completed"    />
+        <result property="tbc1"    column="TBC1"    />
+        <result property="tbc2"    column="TBC2"    />
+        <result property="tbc3"    column="TBC3"    />
+        <result property="tbc4"    column="TBC4"    />
+        <result property="tbc5"    column="TBC5"    />
+    </resultMap>
+
+    <sql id="selectEduTaskVo">
+        select id, task_name, partition_name, group_name, seat_id, start_time, end_time, warning_time, create_time, flow_id, step_level, completed, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_task
+    </sql>
+
+    <select id="selectEduTaskList" parameterType="EduTask" resultMap="EduTaskResult">
+        <include refid="selectEduTaskVo"/>
+        <where>  
+            <if test="taskName != null  and taskName != ''"> and task_name like concat('%', #{taskName}, '%')</if>
+            <if test="partitionName != null  and partitionName != ''"> and partition_name like concat('%', #{partitionName}, '%')</if>
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+            <if test="seatId != null "> and seat_id = #{seatId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="warningTime != null "> and warning_time = #{warningTime}</if>
+            <if test="flowId != null "> and flow_id = #{flowId}</if>
+            <if test="stepLevel != null "> and step_level = #{stepLevel}</if>
+            <if test="completed != null "> and completed = #{completed}</if>
+            <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
+            <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>
+            <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
+            <if test="tbc4 != null  and tbc4 != ''"> and TBC4 = #{tbc4}</if>
+            <if test="tbc5 != null  and tbc5 != ''"> and TBC5 = #{tbc5}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduTaskById" parameterType="Long" resultMap="EduTaskResult">
+        <include refid="selectEduTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduTask" parameterType="EduTask" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskName != null">task_name,</if>
+            <if test="partitionName != null">partition_name,</if>
+            <if test="groupName != null">group_name,</if>
+            <if test="seatId != null">seat_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="warningTime != null">warning_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="flowId != null">flow_id,</if>
+            <if test="stepLevel != null">step_level,</if>
+            <if test="completed != null">completed,</if>
+            <if test="tbc1 != null">TBC1,</if>
+            <if test="tbc2 != null">TBC2,</if>
+            <if test="tbc3 != null">TBC3,</if>
+            <if test="tbc4 != null">TBC4,</if>
+            <if test="tbc5 != null">TBC5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskName != null">#{taskName},</if>
+            <if test="partitionName != null">#{partitionName},</if>
+            <if test="groupName != null">#{groupName},</if>
+            <if test="seatId != null">#{seatId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="warningTime != null">#{warningTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="flowId != null">#{flowId},</if>
+            <if test="stepLevel != null">#{stepLevel},</if>
+            <if test="completed != null">#{completed},</if>
+            <if test="tbc1 != null">#{tbc1},</if>
+            <if test="tbc2 != null">#{tbc2},</if>
+            <if test="tbc3 != null">#{tbc3},</if>
+            <if test="tbc4 != null">#{tbc4},</if>
+            <if test="tbc5 != null">#{tbc5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduTask" parameterType="EduTask">
+        update edu_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskName != null">task_name = #{taskName},</if>
+            <if test="partitionName != null">partition_name = #{partitionName},</if>
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="seatId != null">seat_id = #{seatId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="warningTime != null">warning_time = #{warningTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="flowId != null">flow_id = #{flowId},</if>
+            <if test="stepLevel != null">step_level = #{stepLevel},</if>
+            <if test="completed != null">completed = #{completed},</if>
+            <if test="tbc1 != null">TBC1 = #{tbc1},</if>
+            <if test="tbc2 != null">TBC2 = #{tbc2},</if>
+            <if test="tbc3 != null">TBC3 = #{tbc3},</if>
+            <if test="tbc4 != null">TBC4 = #{tbc4},</if>
+            <if test="tbc5 != null">TBC5 = #{tbc5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduTaskById" parameterType="Long">
+        delete from edu_task where id = #{id}
+    </delete>
+
+    <delete id="deleteEduTaskByIds" parameterType="String">
+        delete from edu_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

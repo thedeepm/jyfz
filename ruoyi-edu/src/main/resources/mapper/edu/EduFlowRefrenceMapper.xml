@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.EduFlowRefrenceMapper">
+    
+    <resultMap type="EduFlowRefrence" id="EduFlowRefrenceResult">
+        <result property="id"    column="id"    />
+        <result property="flowRefrenceName"    column="flow_refrence_name"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="tbc1"    column="TBC1"    />
+        <result property="tbc2"    column="TBC2"    />
+        <result property="tbc3"    column="TBC3"    />
+        <result property="tbc4"    column="TBC4"    />
+        <result property="tbc5"    column="TBC5"    />
+    </resultMap>
+
+    <sql id="selectEduFlowRefrenceVo">
+        select id, flow_refrence_name, file_id, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_flow_refrence
+    </sql>
+
+    <select id="selectEduFlowRefrenceList" parameterType="EduFlowRefrence" resultMap="EduFlowRefrenceResult">
+        <include refid="selectEduFlowRefrenceVo"/>
+        <where>  
+            <if test="flowRefrenceName != null  and flowRefrenceName != ''"> and flow_refrence_name like concat('%', #{flowRefrenceName}, '%')</if>
+            <if test="fileId != null "> and file_id = #{fileId}</if>
+            <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
+            <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>
+            <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
+            <if test="tbc4 != null  and tbc4 != ''"> and TBC4 = #{tbc4}</if>
+            <if test="tbc5 != null  and tbc5 != ''"> and TBC5 = #{tbc5}</if>
+        </where>
+    </select>
+    
+    <select id="selectEduFlowRefrenceById" parameterType="Long" resultMap="EduFlowRefrenceResult">
+        <include refid="selectEduFlowRefrenceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduFlowRefrence" parameterType="EduFlowRefrence" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_flow_refrence
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="flowRefrenceName != null">flow_refrence_name,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="tbc1 != null">TBC1,</if>
+            <if test="tbc2 != null">TBC2,</if>
+            <if test="tbc3 != null">TBC3,</if>
+            <if test="tbc4 != null">TBC4,</if>
+            <if test="tbc5 != null">TBC5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="flowRefrenceName != null">#{flowRefrenceName},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="tbc1 != null">#{tbc1},</if>
+            <if test="tbc2 != null">#{tbc2},</if>
+            <if test="tbc3 != null">#{tbc3},</if>
+            <if test="tbc4 != null">#{tbc4},</if>
+            <if test="tbc5 != null">#{tbc5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduFlowRefrence" parameterType="EduFlowRefrence">
+        update edu_flow_refrence
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="flowRefrenceName != null">flow_refrence_name = #{flowRefrenceName},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="tbc1 != null">TBC1 = #{tbc1},</if>
+            <if test="tbc2 != null">TBC2 = #{tbc2},</if>
+            <if test="tbc3 != null">TBC3 = #{tbc3},</if>
+            <if test="tbc4 != null">TBC4 = #{tbc4},</if>
+            <if test="tbc5 != null">TBC5 = #{tbc5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduFlowRefrenceById" parameterType="Long">
+        delete from edu_flow_refrence where id = #{id}
+    </delete>
+
+    <delete id="deleteEduFlowRefrenceByIds" parameterType="String">
+        delete from edu_flow_refrence where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
