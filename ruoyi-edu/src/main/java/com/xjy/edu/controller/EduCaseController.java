@@ -1,6 +1,8 @@
 package com.xjy.edu.controller;
 
 import java.util.List;
+
+import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author wuzh
  * @date 2021-05-19
  */
+@Api(value = "/edu/case", description = "案例管理")
 @RestController
 @RequestMapping("/edu/case")
 public class EduCaseController extends BaseController
@@ -36,9 +39,10 @@ public class EduCaseController extends BaseController
     /**
      * 查询案例列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:case:list')")
+    @ApiOperation("获取案例列表")
+    //@PreAuthorize("@ss.hasPermi('edu:case:list')")
     @GetMapping("/list")
-    public TableDataInfo list(EduCase eduCase)
+    public TableDataInfo list(@ApiParam(value = "查询案例列表", required = true) EduCase eduCase)
     {
         startPage();
         List<EduCase> list = eduCaseService.selectEduCaseList(eduCase);
@@ -48,10 +52,10 @@ public class EduCaseController extends BaseController
     /**
      * 导出案例列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:case:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:export')")
     @Log(title = "案例", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
-    public AjaxResult export(EduCase eduCase)
+    public AjaxResult export(@ApiParam(value = "查询案例列表", required = true) EduCase eduCase)
     {
         List<EduCase> list = eduCaseService.selectEduCaseList(eduCase);
         ExcelUtil<EduCase> util = new ExcelUtil<EduCase>(EduCase.class);
@@ -61,9 +65,10 @@ public class EduCaseController extends BaseController
     /**
      * 获取案例详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:case:query')")
+    @ApiOperation("获取案例详细信息")
+    //@PreAuthorize("@ss.hasPermi('edu:case:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@ApiParam(value = "案例id", required = true) @PathVariable("id") Long id)
     {
         return AjaxResult.success(eduCaseService.selectEduCaseById(id));
     }
@@ -71,7 +76,8 @@ public class EduCaseController extends BaseController
     /**
      * 新增案例
      */
-    @PreAuthorize("@ss.hasPermi('edu:case:add')")
+    @ApiOperation("新增案例")
+    //@PreAuthorize("@ss.hasPermi('edu:case:add')")
     @Log(title = "案例", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduCase eduCase)
@@ -82,7 +88,8 @@ public class EduCaseController extends BaseController
     /**
      * 修改案例
      */
-    @PreAuthorize("@ss.hasPermi('edu:case:edit')")
+    @ApiOperation("修改案例")
+    //@PreAuthorize("@ss.hasPermi('edu:case:edit')")
     @Log(title = "案例", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduCase eduCase)
@@ -93,7 +100,8 @@ public class EduCaseController extends BaseController
     /**
      * 删除案例
      */
-    @PreAuthorize("@ss.hasPermi('edu:case:remove')")
+    @ApiOperation("删除案例")
+    //@PreAuthorize("@ss.hasPermi('edu:case:remove')")
     @Log(title = "案例", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

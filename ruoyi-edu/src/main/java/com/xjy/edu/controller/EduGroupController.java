@@ -1,6 +1,9 @@
 package com.xjy.edu.controller;
 
 import java.util.List;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author wuzh
  * @date 2021-05-19
  */
+@Api(value = "/edu/group", description = "分组管理")
 @RestController
 @RequestMapping("/edu/group")
 public class EduGroupController extends BaseController
@@ -36,7 +40,8 @@ public class EduGroupController extends BaseController
     /**
      * 查询分组列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:group:list')")
+    @ApiOperation("查询分组列表")
+    //@PreAuthorize("@ss.hasPermi('edu:group:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduGroup eduGroup)
     {
@@ -48,7 +53,8 @@ public class EduGroupController extends BaseController
     /**
      * 导出分组列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:group:export')")
+    @ApiOperation("导出分组列表")
+    //@PreAuthorize("@ss.hasPermi('edu:group:export')")
     @Log(title = "分组", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduGroup eduGroup)
@@ -61,7 +67,8 @@ public class EduGroupController extends BaseController
     /**
      * 获取分组详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:group:query')")
+    @ApiOperation("获取分组详细信息")
+    //@PreAuthorize("@ss.hasPermi('edu:group:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +78,8 @@ public class EduGroupController extends BaseController
     /**
      * 新增分组
      */
-    @PreAuthorize("@ss.hasPermi('edu:group:add')")
+    @ApiOperation("新增分组")
+    //@PreAuthorize("@ss.hasPermi('edu:group:add')")
     @Log(title = "分组", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduGroup eduGroup)
@@ -82,7 +90,8 @@ public class EduGroupController extends BaseController
     /**
      * 修改分组
      */
-    @PreAuthorize("@ss.hasPermi('edu:group:edit')")
+    @ApiOperation("修改分组")
+    //@PreAuthorize("@ss.hasPermi('edu:group:edit')")
     @Log(title = "分组", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduGroup eduGroup)
@@ -93,7 +102,8 @@ public class EduGroupController extends BaseController
     /**
      * 删除分组
      */
-    @PreAuthorize("@ss.hasPermi('edu:group:remove')")
+    @ApiOperation("删除分组")
+    //@PreAuthorize("@ss.hasPermi('edu:group:remove')")
     @Log(title = "分组", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

@@ -2,11 +2,17 @@ package com.xjy.edu.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.xjy.edu.domain.EduPartition;
+import com.xjy.edu.domain.EduSeat;
+import com.xjy.edu.domain.vo.EduTemplateRequestVo;
+import com.xjy.edu.mapper.EduPartitionMapper;
+import com.xjy.edu.mapper.EduSeatMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduTemplateMapper;
 import com.xjy.edu.domain.EduTemplate;
 import com.xjy.edu.service.IEduTemplateService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 模板Service业务层处理
@@ -17,12 +23,28 @@ import com.xjy.edu.service.IEduTemplateService;
 @Service
 public class EduTemplateServiceImpl implements IEduTemplateService 
 {
-    @Autowired(required = false)
+    @Autowired
     private EduTemplateMapper eduTemplateMapper;
+
+    @Autowired
+    private EduSeatMapper eduSeatMapper;
+
+    @Autowired
+    private EduPartitionMapper eduPartitionMapper;
+    /**
+     * 查询最新模板
+     *
+     * @return 模板
+     */
+    @Override
+    public EduTemplate getLastEduTemplate()
+    {
+        return eduTemplateMapper.getLastEduTemplate();
+    }
 
     /**
      * 查询模板
-     * 
+     *
      * @param id 模板ID
      * @return 模板
      */
@@ -47,14 +69,33 @@ public class EduTemplateServiceImpl implements IEduTemplateService
     /**
      * 新增模板
      * 
-     * @param eduTemplate 模板
+     * @param eduTemplateVo 模板
      * @return 结果
      */
     @Override
-    public int insertEduTemplate(EduTemplate eduTemplate)
+    @Transactional
+    public int insertEduTemplate(EduTemplateRequestVo eduTemplateVo)
     {
-        eduTemplate.setCreateTime(DateUtils.getNowDate());
-        return eduTemplateMapper.insertEduTemplate(eduTemplate);
+        eduTemplateVo.setCreateTime(DateUtils.getNowDate());
+        EduTemplate eduTemplate = eduTemplateVo.getTemplate();
+        int rows = eduTemplateMapper.insertEduTemplate(eduTemplate);
+        if(rows != 0){
+            eduTemplate = this.getLastEduTemplate();
+            EduPartition eduPartition;
+            EduSeat eduSeat = new EduSeat();
+            //创建分区
+            for(int i = 0; i < eduTemplate.getPartitionNumber(); i++){
+                eduPartition = eduTemplateVo.getPartitionsList().get(i);
+                eduPartition.setTemplateId(eduTemplate.getId());
+                eduPartitionMapper.insertEduPartition(eduPartition);
+            }
+            //创建席位
+            for(int i = 0; i < eduTemplate.getTotalSeats(); i++){
+                eduSeat.setCreateTime(DateUtils.getNowDate());
+                eduSeatMapper.insertEduSeat(eduSeat);
+            }
+        };
+        return rows;
     }
 
     /**

@@ -1,6 +1,9 @@
 package com.xjy.edu.controller;
 
 import java.util.List;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author wuzh
  * @date 2021-05-19
  */
+@Api(value = "/edu/partition", description = "分区管理")
 @RestController
 @RequestMapping("/edu/partition")
 public class EduPartitionController extends BaseController
@@ -36,7 +40,8 @@ public class EduPartitionController extends BaseController
     /**
      * 查询分区列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:partition:list')")
+    @ApiOperation("查询分区列表")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduPartition eduPartition)
     {
@@ -48,7 +53,8 @@ public class EduPartitionController extends BaseController
     /**
      * 导出分区列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:partition:export')")
+    @ApiOperation("导出分区列表")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:export')")
     @Log(title = "分区", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduPartition eduPartition)
@@ -61,7 +67,8 @@ public class EduPartitionController extends BaseController
     /**
      * 获取分区详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:partition:query')")
+    @ApiOperation("获取分区详细信息")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +78,8 @@ public class EduPartitionController extends BaseController
     /**
      * 新增分区
      */
-    @PreAuthorize("@ss.hasPermi('edu:partition:add')")
+    @ApiOperation("新增分区")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:add')")
     @Log(title = "分区", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduPartition eduPartition)
@@ -82,7 +90,8 @@ public class EduPartitionController extends BaseController
     /**
      * 修改分区
      */
-    @PreAuthorize("@ss.hasPermi('edu:partition:edit')")
+    @ApiOperation("修改分区")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:edit')")
     @Log(title = "分区", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduPartition eduPartition)
@@ -93,7 +102,8 @@ public class EduPartitionController extends BaseController
     /**
      * 删除分区
      */
-    @PreAuthorize("@ss.hasPermi('edu:partition:remove')")
+    @ApiOperation("删除分区")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:remove')")
     @Log(title = "分区", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

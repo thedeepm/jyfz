@@ -42,6 +42,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectEduTemplateVo"/>
         where id = #{id}
     </select>
+
+    <select id="getLastEduTemplate" parameterType="Long" resultMap="EduTemplateResult">
+        <include refid="selectEduTemplateVo"/>
+        order by id DESC LIMIT 1
+    </select>
         
     <insert id="insertEduTemplate" parameterType="EduTemplate" useGeneratedKeys="true" keyProperty="id">
         insert into edu_template

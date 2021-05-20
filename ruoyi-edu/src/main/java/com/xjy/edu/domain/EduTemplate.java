@@ -28,7 +28,7 @@ public class EduTemplate extends BaseEntity
 
     /** 分区数量 */
     @Excel(name = "分区数量")
-    private String partitionNumber;
+    private Long partitionNumber;
 
     /** 关联流程id */
     @Excel(name = "关联流程id")
@@ -81,12 +81,12 @@ public class EduTemplate extends BaseEntity
     {
         return totalSeats;
     }
-    public void setPartitionNumber(String partitionNumber) 
+    public void setPartitionNumber(Long partitionNumber)
     {
         this.partitionNumber = partitionNumber;
     }
 
-    public String getPartitionNumber() 
+    public Long getPartitionNumber()
     {
         return partitionNumber;
     }

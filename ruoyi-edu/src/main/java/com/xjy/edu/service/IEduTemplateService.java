@@ -2,6 +2,7 @@ package com.xjy.edu.service;
 
 import java.util.List;
 import com.xjy.edu.domain.EduTemplate;
+import com.xjy.edu.domain.vo.EduTemplateRequestVo;
 
 /**
  * 模板Service接口
@@ -18,6 +19,12 @@ public interface IEduTemplateService
      * @return 模板
      */
         EduTemplate selectEduTemplateById(Long id);
+    /**
+     * 查询最近的模板
+     *
+     * @return 模板
+     */
+    EduTemplate getLastEduTemplate();
 
     /**
      * 查询模板列表
@@ -33,7 +40,7 @@ public interface IEduTemplateService
      * @param eduTemplate 模板
      * @return 结果
      */
-    int insertEduTemplate(EduTemplate eduTemplate);
+    int insertEduTemplate(EduTemplateRequestVo eduTemplateVo);
 
     /**
      * 修改模板

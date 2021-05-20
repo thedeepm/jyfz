@@ -1,6 +1,20 @@
 package com.xjy.edu.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.constant.HttpStatus;
+import com.xjy.edu.domain.EduPartition;
+import com.xjy.edu.domain.EduSeat;
+import com.xjy.edu.domain.vo.EduTemplateRequestVo;
+import com.xjy.edu.service.IEduGroupService;
+import com.xjy.edu.service.IEduPartitionService;
+import com.xjy.edu.service.IEduSeatService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +40,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author wuzh
  * @date 2021-05-19
  */
+@Api(value = "/edu/case", description = "模板管理")
 @RestController
 @RequestMapping("/edu/template")
 public class EduTemplateController extends BaseController
@@ -33,10 +48,16 @@ public class EduTemplateController extends BaseController
     @Autowired
     private IEduTemplateService eduTemplateService;
 
+    @Autowired
+    private IEduPartitionService eduPartitionService;
+
+    @Autowired
+    private IEduSeatService eduSeatService;
     /**
      * 查询模板列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:template:list')")
+    @ApiOperation("获取模板列表")
+    //@PreAuthorize("@ss.hasPermi('edu:template:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTemplate eduTemplate)
     {
@@ -48,7 +69,8 @@ public class EduTemplateController extends BaseController
     /**
      * 导出模板列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:template:export')")
+    @ApiOperation("导出模板")
+    //@PreAuthorize("@ss.hasPermi('edu:template:export')")
     @Log(title = "模板", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduTemplate eduTemplate)
@@ -61,7 +83,8 @@ public class EduTemplateController extends BaseController
     /**
      * 获取模板详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:template:query')")
+    @ApiOperation("获取模板详细信息")
+    //@PreAuthorize("@ss.hasPermi('edu:template:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,18 +94,34 @@ public class EduTemplateController extends BaseController
     /**
      * 新增模板
      */
-    @PreAuthorize("@ss.hasPermi('edu:template:add')")
+    @ApiOperation("新增模板")
+    //@PreAuthorize("@ss.hasPermi('edu:template:add')")
     @Log(title = "模板", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody EduTemplate eduTemplate)
+    public TableDataInfo add(@RequestBody EduTemplateRequestVo eduTemplateVo)
     {
-        return toAjax(eduTemplateService.insertEduTemplate(eduTemplate));
+        List<EduPartition> eduPartitionList = new ArrayList<>();
+        if(eduTemplateService.insertEduTemplate(eduTemplateVo) != 0){
+            EduPartition eduPartition = new EduPartition();
+            EduTemplate eduTemplate = eduTemplateService.getLastEduTemplate();
+            eduPartition.setTemplateId(eduTemplate.getId());
+            eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+        }
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("新增成功");
+        rspData.setRows(eduPartitionList);
+        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
+//        Map map = new HashMap<String,Object>();
+//        map.put("code", HttpStatus.SUCCESS);
+        return rspData;
     }
 
     /**
      * 修改模板
      */
-    @PreAuthorize("@ss.hasPermi('edu:template:edit')")
+    @ApiOperation("修改模板")
+    //@PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduTemplate eduTemplate)
@@ -93,7 +132,8 @@ public class EduTemplateController extends BaseController
     /**
      * 删除模板
      */
-    @PreAuthorize("@ss.hasPermi('edu:template:remove')")
+    @ApiOperation("删除模板")
+    //@PreAuthorize("@ss.hasPermi('edu:template:remove')")
     @Log(title = "模板", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

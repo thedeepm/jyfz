@@ -19,6 +19,8 @@ public interface EduTemplateMapper
      */
         EduTemplate selectEduTemplateById(Long id);
 
+    EduTemplate getLastEduTemplate();
+
     /**
      * 查询模板列表
      * 
