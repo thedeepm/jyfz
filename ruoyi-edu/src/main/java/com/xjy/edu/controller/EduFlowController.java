@@ -1,6 +1,10 @@
 package com.xjy.edu.controller;
 
 import java.util.List;
+
+import com.xjy.edu.domain.vo.EduFlowRequestVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +32,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/edu/flow")
+@Api(value = "/edu/flow", description = "流程管理")
 public class EduFlowController extends BaseController
 {
     @Autowired
@@ -36,6 +41,7 @@ public class EduFlowController extends BaseController
     /**
      * 查询流程列表
      */
+    @ApiOperation("查询流程列表")
     //@PreAuthorize("@ss.hasPermi('edu:flow:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduFlow eduFlow)
@@ -48,6 +54,7 @@ public class EduFlowController extends BaseController
     /**
      * 导出流程列表
      */
+    @ApiOperation("导出流程列表")
     //@PreAuthorize("@ss.hasPermi('edu:flow:export')")
     @Log(title = "流程", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -61,6 +68,7 @@ public class EduFlowController extends BaseController
     /**
      * 获取流程详细信息
      */
+    @ApiOperation("获取流程详细信息")
     //@PreAuthorize("@ss.hasPermi('edu:flow:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -71,17 +79,19 @@ public class EduFlowController extends BaseController
     /**
      * 新增流程
      */
+    @ApiOperation("新增流程")
     //@PreAuthorize("@ss.hasPermi('edu:flow:add')")
     @Log(title = "流程", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody EduFlow eduFlow)
+    public AjaxResult add(@RequestBody EduFlowRequestVo eduFlowRequestVo)
     {
-        return toAjax(eduFlowService.insertEduFlow(eduFlow));
+        return toAjax(eduFlowService.insertEduFlow(eduFlowRequestVo));
     }
 
     /**
      * 修改流程
      */
+    @ApiOperation("修改流程")
     //@PreAuthorize("@ss.hasPermi('edu:flow:edit')")
     @Log(title = "流程", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -93,6 +103,7 @@ public class EduFlowController extends BaseController
     /**
      * 删除流程
      */
+    @ApiOperation("删除流程")
     //@PreAuthorize("@ss.hasPermi('edu:flow:remove')")
     @Log(title = "流程", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")

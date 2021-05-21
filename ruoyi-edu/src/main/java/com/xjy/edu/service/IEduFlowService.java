@@ -2,6 +2,7 @@ package com.xjy.edu.service;
 
 import java.util.List;
 import com.xjy.edu.domain.EduFlow;
+import com.xjy.edu.domain.vo.EduFlowRequestVo;
 
 /**
  * 流程Service接口
@@ -28,12 +29,19 @@ public interface IEduFlowService
     List<EduFlow> selectEduFlowList(EduFlow eduFlow);
 
     /**
+     * 获取最新流程
+     *
+     * @return 流程
+     */
+    EduFlow getLastEduFlow();
+
+    /**
      * 新增流程
      * 
-     * @param eduFlow 流程
+     * @param eduFlowRequestVo 流程
      * @return 结果
      */
-    int insertEduFlow(EduFlow eduFlow);
+    int insertEduFlow(EduFlowRequestVo eduFlowRequestVo);
 
     /**
      * 修改流程

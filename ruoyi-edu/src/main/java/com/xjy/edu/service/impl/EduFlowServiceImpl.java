@@ -1,11 +1,17 @@
 package com.xjy.edu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.xjy.edu.domain.EduTask;
+import com.xjy.edu.domain.vo.EduFlowRequestVo;
+import com.xjy.edu.mapper.EduTaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduFlowMapper;
 import com.xjy.edu.domain.EduFlow;
 import com.xjy.edu.service.IEduFlowService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 流程Service业务层处理
@@ -16,8 +22,11 @@ import com.xjy.edu.service.IEduFlowService;
 @Service
 public class EduFlowServiceImpl implements IEduFlowService 
 {
-    @Autowired(required = false)
+    @Autowired
     private EduFlowMapper eduFlowMapper;
+
+    @Autowired
+    private EduTaskMapper eduTaskMapper;
 
     /**
      * 查询流程
@@ -29,6 +38,17 @@ public class EduFlowServiceImpl implements IEduFlowService
     public EduFlow selectEduFlowById(Long id)
     {
         return eduFlowMapper.selectEduFlowById(id);
+    }
+
+    /**
+     * 查询流程
+     *
+     * @return 流程
+     */
+    @Override
+    public EduFlow getLastEduFlow()
+    {
+        return eduFlowMapper.getLastEduFlow();
     }
 
     /**
@@ -46,13 +66,26 @@ public class EduFlowServiceImpl implements IEduFlowService
     /**
      * 新增流程
      * 
-     * @param eduFlow 流程
+     * @param eduFlowRequestVo 流程
      * @return 结果
      */
     @Override
-    public int insertEduFlow(EduFlow eduFlow)
+    @Transactional
+    public int insertEduFlow(EduFlowRequestVo eduFlowRequestVo)
     {
-        return eduFlowMapper.insertEduFlow(eduFlow);
+        EduFlow eduFlow = eduFlowRequestVo.getEduflow();
+        List<EduTask> eduTaskList = eduFlowRequestVo.getEduTaskList();
+        EduTask eduTask;
+        int rows = eduFlowMapper.insertEduFlow(eduFlow);
+        if(rows != 0){
+            eduFlow = this.getLastEduFlow();
+            for (int i = 0; i < eduTaskList.size(); i++){
+                eduTask = eduTaskList.get(i);
+                eduTask.setFlowId(eduFlow.getId());
+                eduTaskMapper.insertEduTask(eduTask);
+            }
+        }
+        return rows;
     }
 
     /**

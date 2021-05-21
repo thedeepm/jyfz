@@ -20,6 +20,13 @@ public interface EduSeatMapper
         EduSeat selectEduSeatById(Long id);
 
     /**
+     * 获取最新席位
+     *
+     * @return 席位
+     */
+    EduSeat getLastEduSeat();
+
+    /**
      * 查询席位列表
      * 
      * @param eduSeat 席位

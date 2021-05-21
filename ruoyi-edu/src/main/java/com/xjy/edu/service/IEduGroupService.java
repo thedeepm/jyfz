@@ -2,6 +2,7 @@ package com.xjy.edu.service;
 
 import java.util.List;
 import com.xjy.edu.domain.EduGroup;
+import com.xjy.edu.domain.vo.EduGroupRequestVo;
 
 /**
  * 分组Service接口
@@ -20,6 +21,13 @@ public interface IEduGroupService
         EduGroup selectEduGroupById(Long id);
 
     /**
+     * 获取最新分组
+     *
+     * @return 分组
+     */
+    EduGroup getLastEduGroup();
+
+    /**
      * 查询分组列表
      * 
      * @param eduGroup 分组
@@ -33,7 +41,7 @@ public interface IEduGroupService
      * @param eduGroup 分组
      * @return 结果
      */
-    int insertEduGroup(EduGroup eduGroup);
+    int insertEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList);
 
     /**
      * 修改分组

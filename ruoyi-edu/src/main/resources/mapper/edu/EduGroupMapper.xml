@@ -23,6 +23,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, group_name, total_seats, group_interval, partition_id, function_attribute, color, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_group
     </sql>
 
+    <select id="getLastEduGroup" parameterType="Long" resultMap="EduGroupResult">
+        <include refid="selectEduGroupVo"/>
+        order by id DESC LIMIT 1
+    </select>
+
+
     <select id="selectEduGroupList" parameterType="EduGroup" resultMap="EduGroupResult">
         <include refid="selectEduGroupVo"/>
         <where>  

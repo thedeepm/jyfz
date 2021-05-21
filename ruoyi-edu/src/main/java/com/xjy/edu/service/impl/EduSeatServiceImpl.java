@@ -43,6 +43,16 @@ public class EduSeatServiceImpl implements IEduSeatService
     {
         return eduSeatMapper.selectEduSeatList(eduSeat);
     }
+    
+    /**
+     * 获取最新席位
+     *
+     * @return 席位
+     */
+    @Override
+    public EduSeat getLastEduSeat(){
+        return eduSeatMapper.getLastEduSeat();
+    };
 
     /**
      * 新增席位

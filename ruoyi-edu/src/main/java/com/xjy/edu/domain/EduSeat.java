@@ -38,6 +38,10 @@ public class EduSeat extends BaseEntity
     @Excel(name = "职位")
     private String position;
 
+    /** 关联模板id */
+    @Excel(name = "关联模板id")
+    private Long templateId;
+
     /** $column.columnComment */
     @Excel(name = "职位")
     private String tbc1;
@@ -117,7 +121,10 @@ public class EduSeat extends BaseEntity
         this.tbc1 = tbc1;
     }
 
-    public String getTbc1() 
+    public Long getTemplateId() { return templateId; }
+    public void setTemplateId(Long templateId) { this.templateId = templateId; }
+
+    public String getTbc1()
     {
         return tbc1;
     }
@@ -168,6 +175,7 @@ public class EduSeat extends BaseEntity
             .append("tag", getTag())
             .append("createTime", getCreateTime())
             .append("position", getPosition())
+            .append("templateId", getTemplateId())
             .append("tbc1", getTbc1())
             .append("tbc2", getTbc2())
             .append("tbc3", getTbc3())

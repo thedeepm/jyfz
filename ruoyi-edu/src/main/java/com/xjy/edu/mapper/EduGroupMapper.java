@@ -2,6 +2,7 @@ package com.xjy.edu.mapper;
 
 import java.util.List;
 import com.xjy.edu.domain.EduGroup;
+import com.xjy.edu.domain.EduSeat;
 
 /**
  * 分组Mapper接口
@@ -18,6 +19,13 @@ public interface EduGroupMapper
      * @return 分组
      */
         EduGroup selectEduGroupById(Long id);
+
+    /**
+     * 获取最新分组
+     *
+     * @return 分组
+     */
+    EduGroup getLastEduGroup();
 
     /**
      * 查询分组列表

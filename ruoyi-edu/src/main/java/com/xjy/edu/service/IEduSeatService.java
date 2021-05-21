@@ -1,6 +1,8 @@
 package com.xjy.edu.service;
 
 import java.util.List;
+
+import com.xjy.edu.domain.EduFlow;
 import com.xjy.edu.domain.EduSeat;
 
 /**
@@ -26,6 +28,14 @@ public interface IEduSeatService
      * @return 席位集合
      */
     List<EduSeat> selectEduSeatList(EduSeat eduSeat);
+
+    /**
+     * 获取最新席位
+     *
+     * @return 席位
+     */
+    EduSeat getLastEduSeat();
+
 
     /**
      * 新增席位

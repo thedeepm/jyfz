@@ -17,7 +17,14 @@ public interface EduFlowMapper
      * @param id 流程ID
      * @return 流程
      */
-        EduFlow selectEduFlowById(Long id);
+    EduFlow selectEduFlowById(Long id);
+
+    /**
+     * 获取最新流程
+     *
+     * @return 流程
+     */
+    EduFlow getLastEduFlow();
 
     /**
      * 查询流程列表

@@ -2,6 +2,7 @@ package com.xjy.edu.controller;
 
 import java.util.List;
 
+import com.xjy.edu.domain.vo.EduGroupRequestVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,9 +83,13 @@ public class EduGroupController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:group:add')")
     @Log(title = "分组", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody EduGroup eduGroup)
+    public AjaxResult add(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
     {
-        return toAjax(eduGroupService.insertEduGroup(eduGroup));
+        //新增分组数据
+//        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
+//            eduGroupService.insertEduGroup(eduGroupRequestVoList.get(i).getEduGroupList());
+//        }
+        return toAjax(eduGroupService.insertEduGroup(eduGroupRequestVoList));
     }
 
     /**
