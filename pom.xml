@@ -48,6 +48,11 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-websocket</artifactId>
+            </dependency>
+
             <!--阿里数据库连接池 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -216,7 +221,7 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
-            <!-- 通用工具-->
+            <!-- edu-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-edu</artifactId>

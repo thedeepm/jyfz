@@ -19,7 +19,7 @@ public class EduFlow extends BaseEntity
     private Long id;
 
     /** 组名 */
-    @Excel(name = "组名")
+    @Excel(name = "流程名")
     private String flowName;
 
     /** 步骤数量 */

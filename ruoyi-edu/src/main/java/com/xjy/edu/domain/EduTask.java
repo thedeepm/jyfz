@@ -24,13 +24,13 @@ public class EduTask extends BaseEntity
     @Excel(name = "任务名")
     private String taskName;
 
-    /** 分区名 */
-    @Excel(name = "分区名")
-    private String partitionName;
+    /** 分区id */
+    @Excel(name = "分区id")
+    private Long partitionId;
 
-    /** 分组名 */
-    @Excel(name = "分组名")
-    private String groupName;
+    /** 分组id */
+    @Excel(name = "分组id")
+    private Long groupId;
 
     /** 席位编号 */
     @Excel(name = "席位编号")
@@ -101,25 +101,24 @@ public class EduTask extends BaseEntity
     {
         return taskName;
     }
-    public void setPartitionName(String partitionName) 
-    {
-        this.partitionName = partitionName;
+
+    public Long getPartitionId() {
+        return partitionId;
     }
 
-    public String getPartitionName() 
-    {
-        return partitionName;
-    }
-    public void setGroupName(String groupName) 
-    {
-        this.groupName = groupName;
+    public void setPartitionId(Long partitionId) {
+        this.partitionId = partitionId;
     }
 
-    public String getGroupName() 
-    {
-        return groupName;
+    public Long getGroupId() {
+        return groupId;
     }
-    public void setSeatId(Long seatId) 
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setSeatId(Long seatId)
     {
         this.seatId = seatId;
     }
@@ -233,8 +232,8 @@ public class EduTask extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("taskName", getTaskName())
-            .append("partitionName", getPartitionName())
-            .append("groupName", getGroupName())
+            .append("partitionId", getPartitionId())
+            .append("groupId", getGroupId())
             .append("seatId", getSeatId())
             .append("startTime", getStartTime())
             .append("endTime", getEndTime())

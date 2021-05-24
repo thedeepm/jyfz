@@ -3,6 +3,8 @@ package com.xjy.edu.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.Arith;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.xjy.edu.domain.EduPartition;
 import com.xjy.edu.domain.EduSeat;
 import com.xjy.edu.domain.vo.EduGroupRequestVo;
@@ -77,9 +79,9 @@ public class EduGroupServiceImpl implements IEduGroupService
         List<EduGroup> eduGroupList;
         EduGroupRequestVo eduGroupRequestVo = new EduGroupRequestVo();
         EduSeat seat = new EduSeat();
-        List<EduSeat> seatList;
-        int count = 0;
-        Double index = 1d, groupIndex = 1d;
+        //List<EduSeat> seatList;
+//        int count = 0;
+//        Double index = 1d, groupIndex = 1d;
         for(int i = 0; i < eduGroupRequestVoList.size(); i++){
             eduGroupRequestVo = eduGroupRequestVoList.get(i);
             eduGroupList = eduGroupRequestVo.getEduGroupList();
@@ -91,20 +93,34 @@ public class EduGroupServiceImpl implements IEduGroupService
                 rows = eduGroupMapper.insertEduGroup(eduGroup);
                 if(rows != 0){
                     eduGroup = this.getLastEduGroup();
+                    //修改席位及index
+//                    seat.setTemplateId(eduGroupRequestVo.getTemplateId());
+//                    seatList = eduSeatMapper.selectEduSeatList(seat);
+//                    for (int k = count; k < seatList.size(); k++){
+//                        if(k!=0){
+//                            index = Math.ceil(Arith.div((eduGroupList.size()*eduGroupRequestVoList.size())*(k), seatList.size()));
+//                        }else{
+//                            index = Math.ceil(Arith.div((eduGroupList.size()*eduGroupRequestVoList.size())*(k+1), seatList.size()));
+//                        }
+//                        groupIndex = Math.ceil(Arith.div((eduGroupList.size()*eduGroupRequestVoList.size())*(k+1), seatList.size()));
+//                        seat = seatList.get(k);
+//                        seat.setGroupId(eduGroupList.get(j).getId());
+//                        seat.setGroupIndex(groupIndex.longValue());
+//                        eduSeatMapper.updateEduSeat(seat);
+//                        if(!index.equals(groupIndex)){
+//                            count = k;
+//                            //break;
+//                        }
+//                    }
+                    //创建席位
+                    seat.setGroupId(eduGroup.getId());
                     seat.setTemplateId(eduGroupRequestVo.getTemplateId());
-                    seatList = eduSeatMapper.selectEduSeatList(seat);
-                    for (int k = count; k < seatList.size(); k++){
-                        index = Math.ceil(Arith.div(eduGroupList.size()*(count+1), seatList.size()));
-                        groupIndex = Math.ceil(Arith.div(eduGroupList.size()*(k+1), seatList.size()));
-                        seat = seatList.get(k);
-                        seat.setGroupId(eduGroup.getId());
-                        seat.setGroupIndex(groupIndex.longValue());
-                        eduSeatMapper.updateEduSeat(seat);
-                        if(!index.equals(groupIndex)){
-                            count = k;
-                            //break;
-                        }
+                    seat.setCreateTime(DateUtils.getNowDate());
+                    for (int k = 0; k < eduGroup.getTotalSeats(); k++){
+                        seat.setGroupIndex(new Long(eduGroup.getGroupInterval().split("-")[0])+k);
+                        eduSeatMapper.insertEduSeat(seat);
                     }
+
                 }
             }
         }
@@ -146,4 +162,13 @@ public class EduGroupServiceImpl implements IEduGroupService
     {
         return eduGroupMapper.deleteEduGroupById(id);
     }
+
+//    public void setGroupIndex(GenTable table)
+//    {
+//        String subTableName = table.getSubTableName();
+//        if (StringUtils.isNotEmpty(subTableName))
+//        {
+//            table.setSubTable(genTableMapper.selectGenTableByName(subTableName));
+//        }
+//    }
 }

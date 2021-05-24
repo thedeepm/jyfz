@@ -7,8 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="EduTask" id="EduTaskResult">
         <result property="id"    column="id"    />
         <result property="taskName"    column="task_name"    />
-        <result property="partitionName"    column="partition_name"    />
-        <result property="groupName"    column="group_name"    />
+        <result property="partitionId"    column="partition_id"    />
+        <result property="groupId"    column="group_id"    />
         <result property="seatId"    column="seat_id"    />
         <result property="startTime"    column="start_time"    />
         <result property="endTime"    column="end_time"    />
@@ -25,15 +25,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectEduTaskVo">
-        select id, task_name, partition_name, group_name, seat_id, start_time, end_time, warning_time, create_time, flow_id, step_level, completed, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_task
+        select id, task_name, partition_id, group_id, seat_id, start_time, end_time, warning_time, create_time, flow_id, step_level, completed, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_task
     </sql>
 
     <select id="selectEduTaskList" parameterType="EduTask" resultMap="EduTaskResult">
         <include refid="selectEduTaskVo"/>
         <where>  
             <if test="taskName != null  and taskName != ''"> and task_name like concat('%', #{taskName}, '%')</if>
-            <if test="partitionName != null  and partitionName != ''"> and partition_name like concat('%', #{partitionName}, '%')</if>
-            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+            <if test="partitionId != null  and partitionId != ''"> and partition_id like concat('%', #{partitionId}, '%')</if>
+            <if test="groupId != null  and groupId != ''"> and group_id like concat('%', #{groupId}, '%')</if>
             <if test="seatId != null "> and seat_id = #{seatId}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
@@ -58,8 +58,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into edu_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="taskName != null">task_name,</if>
-            <if test="partitionName != null">partition_name,</if>
-            <if test="groupName != null">group_name,</if>
+            <if test="partitionId != null">partition_id,</if>
+            <if test="groupId != null">group_id,</if>
             <if test="seatId != null">seat_id,</if>
             <if test="startTime != null">start_time,</if>
             <if test="endTime != null">end_time,</if>
@@ -76,8 +76,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="taskName != null">#{taskName},</if>
-            <if test="partitionName != null">#{partitionName},</if>
-            <if test="groupName != null">#{groupName},</if>
+            <if test="partitionId != null">#{partitionId},</if>
+            <if test="groupId != null">#{groupId},</if>
             <if test="seatId != null">#{seatId},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
@@ -98,8 +98,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update edu_task
         <trim prefix="SET" suffixOverrides=",">
             <if test="taskName != null">task_name = #{taskName},</if>
-            <if test="partitionName != null">partition_name = #{partitionName},</if>
-            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="partitionId != null">partition_id = #{partitionId},</if>
+            <if test="groupId != null">group_id = #{groupId},</if>
             <if test="seatId != null">seat_id = #{seatId},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>

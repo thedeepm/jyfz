@@ -90,11 +90,11 @@ public class EduTemplateServiceImpl implements IEduTemplateService
                 eduPartitionMapper.insertEduPartition(eduPartition);
             }
             //创建席位
-            for(int i = 0; i < eduTemplate.getTotalSeats(); i++){
-                eduSeat.setCreateTime(DateUtils.getNowDate());
-                eduSeat.setTemplateId(eduTemplate.getId());
-                eduSeatMapper.insertEduSeat(eduSeat);
-            }
+//            for(int i = 0; i < eduTemplate.getTotalSeats(); i++){
+//                eduSeat.setCreateTime(DateUtils.getNowDate());
+//                eduSeat.setTemplateId(eduTemplate.getId());
+//                eduSeatMapper.insertEduSeat(eduSeat);
+//            }
         };
         return rows;
     }
