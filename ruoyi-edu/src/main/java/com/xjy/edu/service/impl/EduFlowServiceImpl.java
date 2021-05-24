@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.xjy.edu.domain.EduTask;
+import com.xjy.edu.domain.EduTemplate;
 import com.xjy.edu.domain.vo.EduFlowRequestVo;
 import com.xjy.edu.mapper.EduTaskMapper;
+import com.xjy.edu.mapper.EduTemplateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduFlowMapper;
@@ -28,6 +30,9 @@ public class EduFlowServiceImpl implements IEduFlowService
     @Autowired
     private EduTaskMapper eduTaskMapper;
 
+
+    @Autowired
+    private EduTemplateMapper eduTemplateMapper ;
     /**
      * 查询流程
      * 
@@ -82,9 +87,16 @@ public class EduFlowServiceImpl implements IEduFlowService
             for (int i = 0; i < eduTaskList.size(); i++){
                 eduTask = eduTaskList.get(i);
                 eduTask.setFlowId(eduFlow.getId());
+                //创建任务
                 eduTaskMapper.insertEduTask(eduTask);
             }
+            //创建任务后需将模板绑定流程
+            EduTemplate eduTemplate = new EduTemplate();
+            eduTemplate.setId(eduFlowRequestVo.getTemplateId());
+            eduTemplate = eduTemplateMapper.selectEduTemplateList(eduTemplate).get(0);
+            eduTemplate.setFlowId(eduFlow.getId());
         }
+
         return rows;
     }
 

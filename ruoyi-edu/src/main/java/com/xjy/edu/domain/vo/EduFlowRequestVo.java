@@ -16,6 +16,16 @@ public class EduFlowRequestVo extends EduFlow
 
     public List<EduTask> eduTaskList;
 
+    public Long templateId;
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
+    }
+
     public List<EduTask> getEduTaskList() {
         return eduTaskList;
     }
