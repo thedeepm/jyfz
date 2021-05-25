@@ -36,7 +36,7 @@ public class EduSeatController extends BaseController
     /**
      * 查询席位列表
      */
-    //@PreAuthorize("@ss.hasPermi('edu:seat:list')")
+    @PreAuthorize("@ss.hasPermi('edu:seat:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduSeat eduSeat)
     {
@@ -48,7 +48,7 @@ public class EduSeatController extends BaseController
     /**
      * 导出席位列表
      */
-    //@PreAuthorize("@ss.hasPermi('edu:seat:export')")
+    @PreAuthorize("@ss.hasPermi('edu:seat:export')")
     @Log(title = "席位", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduSeat eduSeat)
@@ -61,7 +61,7 @@ public class EduSeatController extends BaseController
     /**
      * 获取席位详细信息
      */
-    //@PreAuthorize("@ss.hasPermi('edu:seat:query')")
+    @PreAuthorize("@ss.hasPermi('edu:seat:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +71,7 @@ public class EduSeatController extends BaseController
     /**
      * 新增席位
      */
-    //@PreAuthorize("@ss.hasPermi('edu:seat:add')")
+    @PreAuthorize("@ss.hasPermi('edu:seat:add')")
     @Log(title = "席位", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduSeat eduSeat)
@@ -82,7 +82,7 @@ public class EduSeatController extends BaseController
     /**
      * 修改席位
      */
-    //@PreAuthorize("@ss.hasPermi('edu:seat:edit')")
+    @PreAuthorize("@ss.hasPermi('edu:seat:edit')")
     @Log(title = "席位", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduSeat eduSeat)
@@ -93,7 +93,7 @@ public class EduSeatController extends BaseController
     /**
      * 删除席位
      */
-    //@PreAuthorize("@ss.hasPermi('edu:seat:remove')")
+    @PreAuthorize("@ss.hasPermi('edu:seat:remove')")
     @Log(title = "席位", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

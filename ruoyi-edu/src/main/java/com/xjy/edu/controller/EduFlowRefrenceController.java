@@ -36,7 +36,7 @@ public class EduFlowRefrenceController extends BaseController
     /**
      * 查询流程图列表
      */
-    //@PreAuthorize("@ss.hasPermi('edu:refrence:list')")
+    @PreAuthorize("@ss.hasPermi('edu:refrence:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduFlowRefrence eduFlowRefrence)
     {
@@ -48,7 +48,7 @@ public class EduFlowRefrenceController extends BaseController
     /**
      * 导出流程图列表
      */
-    //@PreAuthorize("@ss.hasPermi('edu:refrence:export')")
+    @PreAuthorize("@ss.hasPermi('edu:refrence:export')")
     @Log(title = "流程图", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduFlowRefrence eduFlowRefrence)
@@ -61,7 +61,7 @@ public class EduFlowRefrenceController extends BaseController
     /**
      * 获取流程图详细信息
      */
-    //@PreAuthorize("@ss.hasPermi('edu:refrence:query')")
+    @PreAuthorize("@ss.hasPermi('edu:refrence:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +71,7 @@ public class EduFlowRefrenceController extends BaseController
     /**
      * 新增流程图
      */
-    //@PreAuthorize("@ss.hasPermi('edu:refrence:add')")
+    @PreAuthorize("@ss.hasPermi('edu:refrence:add')")
     @Log(title = "流程图", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduFlowRefrence eduFlowRefrence)
@@ -82,7 +82,7 @@ public class EduFlowRefrenceController extends BaseController
     /**
      * 修改流程图
      */
-    //@PreAuthorize("@ss.hasPermi('edu:refrence:edit')")
+    @PreAuthorize("@ss.hasPermi('edu:refrence:edit')")
     @Log(title = "流程图", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduFlowRefrence eduFlowRefrence)
@@ -93,7 +93,7 @@ public class EduFlowRefrenceController extends BaseController
     /**
      * 删除流程图
      */
-    //@PreAuthorize("@ss.hasPermi('edu:refrence:remove')")
+    @PreAuthorize("@ss.hasPermi('edu:refrence:remove')")
     @Log(title = "流程图", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
