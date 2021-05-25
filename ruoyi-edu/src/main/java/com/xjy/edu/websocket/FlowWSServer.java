@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * WebSocket获取实时任务状态并输出到Web页面
  */
 @Component
-@ServerEndpoint(value = "/websocket/flow", configurator = MyEndpointConfigure.class)
+@ServerEndpoint(value = "/websocket/flow/{templateId}", configurator = MyEndpointConfigure.class)
 public class FlowWSServer {
 
 //    @Value("${spring.application.name}")
@@ -58,7 +58,7 @@ public class FlowWSServer {
             ObjectMapper mapper = new ObjectMapper();
             List<EduTask> eduTaskList;
             List<EduSeat> eduSeatList = new ArrayList<>();
-            Map<String,Object> map = new ConcurrentHashMap();
+            Map<String,Object> map = new ConcurrentHashMap<String,Object>();
             //当属性的值为空（null或者""）时，不进行序列化，可以减少数据传输
             mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
             //设置日期格式
