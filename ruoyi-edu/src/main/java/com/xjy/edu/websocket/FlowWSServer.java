@@ -3,11 +3,14 @@ package com.xjy.edu.websocket;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.xjy.edu.domain.EduSeat;
 import com.xjy.edu.domain.EduTask;
 import com.xjy.edu.service.IEduSeatService;
 import com.xjy.edu.service.IEduTaskService;
 import com.xjy.edu.service.IEduTemplateService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +21,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * WebSocket获取实时任务状态并输出到Web页面
+ * @author wuzh
  */
 @Component
 @ServerEndpoint(value = "/websocket/flow/{templateId}", configurator = MyEndpointConfigure.class)
 public class FlowWSServer {
-
-//    @Value("${spring.application.name}")
-//    private String applicationName;
 
     @Autowired
     private IEduTaskService eduTaskService;
@@ -38,6 +42,12 @@ public class FlowWSServer {
 
     @Autowired
     private IEduSeatService iEduSeatService;
+
+    private static final Logger log = LoggerFactory.getLogger(FlowWSServer.class);
+
+    private final ScheduledExecutorService executor = SpringUtils.getBean("scheduledExecutorService");
+
+    private final int OPERATE_DELAY_TIME = 5000;
 
     /**
      * 连接集合
@@ -53,36 +63,41 @@ public class FlowWSServer {
         sessionMap.put(session.getId(), session);
         EduTask eduTask = new EduTask();
 
-        new Thread(()->{
-            //log.info("MonitorWSServer 任务开始");
-            ObjectMapper mapper = new ObjectMapper();
-            List<EduTask> eduTaskList;
-            List<EduSeat> eduSeatList = new ArrayList<>();
-            Map<String,Object> map = new ConcurrentHashMap<String,Object>();
-            //当属性的值为空（null或者""）时，不进行序列化，可以减少数据传输
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            //设置日期格式
-            mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-            while (sessionMap.get(session.getId()) != null) {
-                try {
-                    //获取任务状态和席位 发送
-                    eduTask.setFlowId(iEduTemplateService.selectEduTemplateById(templateId).getFlowId());
-                    eduTaskList = eduTaskService.selectEduTaskList(eduTask);
-                    for (int i = 0; i< eduTaskList.size(); i++){
-                        eduSeatList.add(iEduSeatService.selectEduSeatById(eduTaskList.get(i).getSeatId())) ;
+        executor.schedule(new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                log.info("FlowWSServer 任务开始");
+                ObjectMapper mapper = new ObjectMapper();
+                List<EduTask> eduTaskList;
+                List<EduSeat> eduSeatList = new ArrayList<>();
+                Map<String,Object> map = new ConcurrentHashMap<String,Object>();
+                //当属性的值为空（null或者""）时，不进行序列化，可以减少数据传输
+                mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+                //设置日期格式
+                mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                while (sessionMap.get(session.getId()) != null) {
+                    try {
+                        //获取任务状态和席位 发送
+                        eduTask.setFlowId(iEduTemplateService.selectEduTemplateById(templateId).getFlowId());
+                        eduTaskList = eduTaskService.selectEduTaskList(eduTask);
+                        for (int i = 0; i< eduTaskList.size(); i++){
+                            eduSeatList.add(iEduSeatService.selectEduSeatById(eduTaskList.get(i).getSeatId())) ;
+                        }
+                        map.put("eduSeatList", eduSeatList);
+                        map.put("eduTaskList", eduTaskList);
+                        send(session,  mapper.writeValueAsString(map));
+                        //休眠五秒
+                        Thread.sleep(5000);
+                    } catch (Exception e) {
+                        //输出到日志文件中
+                        log.error(e.getMessage());
                     }
-                    map.put("eduSeatList", eduSeatList);
-                    map.put("eduTaskList", eduTaskList);
-                    send(session,  mapper.writeValueAsString(map));
-                    //休眠一秒
-                    Thread.sleep(1000);
-                } catch (Exception e) {
-                    //输出到日志文件中
-                    //log.error(ErrorUtil.errorInfoToString(e));
                 }
-            }
-            //log.info("MonitorWSServer 任务结束");
-        }).start();
+                log.info("FlowWSServer 任务结束");
+                }
+            }, OPERATE_DELAY_TIME, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -100,7 +115,7 @@ public class FlowWSServer {
     @OnError
     public void onError(Session session, Throwable error) {
         //输出到日志文件中
-        //log.error(ErrorUtil.errorInfoToString(error));
+        log.error(error.getMessage());
     }
 
     /**
@@ -119,7 +134,7 @@ public class FlowWSServer {
             session.getBasicRemote().sendText(message);
         } catch (Exception e) {
             //输出到日志文件中
-            //log.error(ErrorUtil.errorInfoToString(e));
+            log.error(e.getMessage());
         }
     }
 }
