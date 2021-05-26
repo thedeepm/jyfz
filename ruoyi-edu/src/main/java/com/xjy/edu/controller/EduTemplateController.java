@@ -57,7 +57,7 @@ public class EduTemplateController extends BaseController
      * 查询模板列表
      */
     @ApiOperation("获取模板列表")
-    @PreAuthorize("@ss.hasPermi('edu:template:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTemplate eduTemplate)
     {
@@ -70,7 +70,7 @@ public class EduTemplateController extends BaseController
      * 导出模板列表
      */
     @ApiOperation("导出模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:export')")
     @Log(title = "模板", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduTemplate eduTemplate)
@@ -84,7 +84,7 @@ public class EduTemplateController extends BaseController
      * 获取模板详细信息
      */
     @ApiOperation("获取模板详细信息")
-    @PreAuthorize("@ss.hasPermi('edu:template:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -95,33 +95,37 @@ public class EduTemplateController extends BaseController
      * 新增模板
      */
     @ApiOperation("新增模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:add')")
     @Log(title = "模板", businessType = BusinessType.INSERT)
     @PostMapping
-    public TableDataInfo add(@RequestBody EduTemplateRequestVo eduTemplateVo)
+    public Map<String,Object> add(@RequestBody EduTemplateRequestVo eduTemplateVo)
     {
+        Map<String,Object> map = new HashMap<String,Object>();
         List<EduPartition> eduPartitionList = new ArrayList<>();
         if(eduTemplateService.insertEduTemplate(eduTemplateVo) != 0){
             EduPartition eduPartition = new EduPartition();
             EduTemplate eduTemplate = eduTemplateService.getLastEduTemplate();
             eduPartition.setTemplateId(eduTemplate.getId());
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+            map.put("templateId", eduTemplate.getId());
         }
-        TableDataInfo rspData = new TableDataInfo();
-        rspData.setCode(HttpStatus.SUCCESS);
-        rspData.setMsg("新增成功");
-        rspData.setRows(eduPartitionList);
-        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
-//        Map map = new HashMap<String,Object>();
-//        map.put("code", HttpStatus.SUCCESS);
-        return rspData;
+//        TableDataInfo rspData = new TableDataInfo();
+//        rspData.setCode(HttpStatus.SUCCESS);
+//        rspData.setMsg("新增成功");
+//        rspData.setRows(eduPartitionList);
+//        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
+        map.put("code", HttpStatus.SUCCESS);
+        map.put("eduPartitionList",eduPartitionList);
+        map.put("total", new PageInfo(eduPartitionList).getTotal());
+        map.put("message", "新增成功");
+        return map;
     }
 
     /**
      * 修改模板
      */
     @ApiOperation("修改模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduTemplate eduTemplate)
@@ -133,7 +137,7 @@ public class EduTemplateController extends BaseController
      * 删除模板
      */
     @ApiOperation("删除模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:remove')")
     @Log(title = "模板", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
