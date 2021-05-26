@@ -79,9 +79,6 @@ public class EduGroupServiceImpl implements IEduGroupService
         List<EduGroup> eduGroupList;
         EduGroupRequestVo eduGroupRequestVo = new EduGroupRequestVo();
         EduSeat seat = new EduSeat();
-        //List<EduSeat> seatList;
-//        int count = 0;
-//        Double index = 1d, groupIndex = 1d;
         for(int i = 0; i < eduGroupRequestVoList.size(); i++){
             eduGroupRequestVo = eduGroupRequestVoList.get(i);
             eduGroupList = eduGroupRequestVo.getEduGroupList();
@@ -93,25 +90,6 @@ public class EduGroupServiceImpl implements IEduGroupService
                 rows = eduGroupMapper.insertEduGroup(eduGroup);
                 if(rows != 0){
                     eduGroup = this.getLastEduGroup();
-                    //修改席位及index
-//                    seat.setTemplateId(eduGroupRequestVo.getTemplateId());
-//                    seatList = eduSeatMapper.selectEduSeatList(seat);
-//                    for (int k = count; k < seatList.size(); k++){
-//                        if(k!=0){
-//                            index = Math.ceil(Arith.div((eduGroupList.size()*eduGroupRequestVoList.size())*(k), seatList.size()));
-//                        }else{
-//                            index = Math.ceil(Arith.div((eduGroupList.size()*eduGroupRequestVoList.size())*(k+1), seatList.size()));
-//                        }
-//                        groupIndex = Math.ceil(Arith.div((eduGroupList.size()*eduGroupRequestVoList.size())*(k+1), seatList.size()));
-//                        seat = seatList.get(k);
-//                        seat.setGroupId(eduGroupList.get(j).getId());
-//                        seat.setGroupIndex(groupIndex.longValue());
-//                        eduSeatMapper.updateEduSeat(seat);
-//                        if(!index.equals(groupIndex)){
-//                            count = k;
-//                            //break;
-//                        }
-//                    }
                     //创建席位
                     seat.setGroupId(eduGroup.getId());
                     seat.setTemplateId(eduGroupRequestVo.getTemplateId());
@@ -130,13 +108,42 @@ public class EduGroupServiceImpl implements IEduGroupService
     /**
      * 修改分组
      * 
-     * @param eduGroup 分组
+     * @param eduGroupRequestVoList 分组
      * @return 结果
      */
     @Override
-    public int updateEduGroup(EduGroup eduGroup)
+    @Transactional
+    public int updateEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
-        return eduGroupMapper.updateEduGroup(eduGroup);
+        int rows = 0;
+        EduGroup eduGroup = new EduGroup();
+        List<EduGroup> eduGroupList;
+        EduGroupRequestVo eduGroupRequestVo = new EduGroupRequestVo();
+        EduSeat seat = new EduSeat();
+        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
+            eduGroupRequestVo = eduGroupRequestVoList.get(i);
+            eduGroupList = eduGroupRequestVo.getEduGroupList();
+            for(int j = 0; j< eduGroupList.size(); j++){
+                eduGroup = eduGroupList.get(j);
+                eduGroup.setPartitionId(eduGroupRequestVo.getId());
+                //创建分组后 修改席位关联起分组id 并计算出index
+                //TODO 更新分区中的分组数量
+                rows = eduGroupMapper.updateEduGroup(eduGroup);
+                if(rows != 0){
+                    eduGroup = this.getLastEduGroup();
+                    //创建席位
+                    seat.setGroupId(eduGroup.getId());
+                    seat.setTemplateId(eduGroupRequestVo.getTemplateId());
+                    seat.setCreateTime(DateUtils.getNowDate());
+                    for (int k = 0; k < eduGroup.getTotalSeats(); k++){
+                        seat.setGroupIndex(new Long(eduGroup.getGroupInterval().split("-")[0])+k);
+                        eduSeatMapper.insertEduSeat(seat);
+                    }
+
+                }
+            }
+        }
+        return rows;
     }
 
     /**

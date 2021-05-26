@@ -33,7 +33,7 @@ public class EduTemplateRequestVo extends EduTemplate
         EduTemplate eduTemplate = new EduTemplate();
         eduTemplate.setFlowId(this.getFlowId());
         eduTemplate.setHallName(this.getHallName());
-        eduTemplate.setId(this.getFlowId());
+        eduTemplate.setId(this.getId());
         eduTemplate.setPartitionNumber(this.getPartitionNumber());
         eduTemplate.setTbc1(this.getTbc1());
         eduTemplate.setTbc2(this.getTbc2());

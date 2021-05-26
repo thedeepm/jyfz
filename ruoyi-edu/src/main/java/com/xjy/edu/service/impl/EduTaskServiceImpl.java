@@ -2,11 +2,14 @@ package com.xjy.edu.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.xjy.edu.domain.EduSeat;
+import com.xjy.edu.mapper.EduSeatMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduTaskMapper;
 import com.xjy.edu.domain.EduTask;
 import com.xjy.edu.service.IEduTaskService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 任务Service业务层处理
@@ -17,8 +20,11 @@ import com.xjy.edu.service.IEduTaskService;
 @Service
 public class EduTaskServiceImpl implements IEduTaskService 
 {
-    @Autowired(required = false)
+    @Autowired
     private EduTaskMapper eduTaskMapper;
+
+    @Autowired
+    private EduSeatMapper eduSeatMapper;
 
     /**
      * 查询任务
@@ -51,10 +57,19 @@ public class EduTaskServiceImpl implements IEduTaskService
      * @return 结果
      */
     @Override
-    public int insertEduTask(EduTask eduTask)
+    @Transactional
+    public EduTask insertEduTask(EduTask eduTask)
     {
+        EduSeat eduSeat;
         eduTask.setCreateTime(DateUtils.getNowDate());
-        return eduTaskMapper.insertEduTask(eduTask);
+        int rows = eduTaskMapper.insertEduTask(eduTask);
+        if(rows != 0){
+            eduTask = eduTaskMapper.getLastEduTask();
+            eduSeat = eduSeatMapper.selectEduSeatById(eduTask.getSeatId());
+            eduSeat.setOccupied(true);
+            eduSeatMapper.updateEduSeat(eduSeat);
+        }
+        return eduTask;
     }
 
     /**

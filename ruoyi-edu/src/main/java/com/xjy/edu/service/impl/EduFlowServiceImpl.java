@@ -76,7 +76,7 @@ public class EduFlowServiceImpl implements IEduFlowService
      */
     @Override
     @Transactional
-    public int insertEduFlow(EduFlowRequestVo eduFlowRequestVo)
+    public EduFlow insertEduFlow(EduFlowRequestVo eduFlowRequestVo)
     {
         EduFlow eduFlow = eduFlowRequestVo.getEduflow();
         List<EduTask> eduTaskList = eduFlowRequestVo.getEduTaskList();
@@ -97,7 +97,7 @@ public class EduFlowServiceImpl implements IEduFlowService
             eduTemplate.setFlowId(eduFlow.getId());
         }
 
-        return rows;
+        return eduFlow;
     }
 
     /**

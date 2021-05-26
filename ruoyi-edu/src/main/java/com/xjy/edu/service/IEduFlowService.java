@@ -41,7 +41,7 @@ public interface IEduFlowService
      * @param eduFlowRequestVo 流程
      * @return 结果
      */
-    int insertEduFlow(EduFlowRequestVo eduFlowRequestVo);
+    EduFlow insertEduFlow(EduFlowRequestVo eduFlowRequestVo);
 
     /**
      * 修改流程

@@ -13,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="position"    column="position"    />
         <result property="templateId"    column="template_id"    />
+        <result property="occupied"    column="occupied"    />
         <result property="tbc1"    column="TBC1"    />
         <result property="tbc2"    column="TBC2"    />
         <result property="tbc3"    column="TBC3"    />
@@ -21,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectEduSeatVo">
-        select id, seat_name, group_id, group_index, tag, create_time, template_id, position, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_seat
+        select id, seat_name, group_id, group_index, tag, create_time, template_id,occupied, position, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_seat
     </sql>
 
     <select id="getLastEduSeat" parameterType="Long" resultMap="EduSeatResult">
@@ -38,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tag != null  and tag != ''"> and tag = #{tag}</if>
             <if test="position != null  and position != ''"> and position = #{position}</if>
             <if test="templateId != null  and templateId != ''"> and template_id = #{templateId}</if>
+            <if test="occupied != null"> and occupied = #{occupied}</if>
             <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
             <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>
             <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
@@ -61,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="position != null">position,</if>
             <if test="templateId != null">template_id,</if>
+            <if test="occupied != null">occupied,</if>
             <if test="tbc1 != null">TBC1,</if>
             <if test="tbc2 != null">TBC2,</if>
             <if test="tbc3 != null">TBC3,</if>
@@ -75,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="position != null">#{position},</if>
             <if test="templateId != null">#{templateId},</if>
+            <if test="occupied != null">#{occupied},</if>
             <if test="tbc1 != null">#{tbc1},</if>
             <if test="tbc2 != null">#{tbc2},</if>
             <if test="tbc3 != null">#{tbc3},</if>
@@ -93,6 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="position != null">position = #{position},</if>
             <if test="templateId != null">template_id = #{templateId},</if>
+            <if test="occupied != null">occupied = #{occupied},</if>
             <if test="tbc1 != null">TBC1 = #{tbc1},</if>
             <if test="tbc2 != null">TBC2 = #{tbc2},</if>
             <if test="tbc3 != null">TBC3 = #{tbc3},</if>

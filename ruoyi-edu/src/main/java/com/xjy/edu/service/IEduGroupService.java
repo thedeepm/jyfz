@@ -49,7 +49,7 @@ public interface IEduGroupService
      * @param eduGroup 分组
      * @return 结果
      */
-    int updateEduGroup(EduGroup eduGroup);
+    int updateEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList);
 
     /**
      * 批量删除分组

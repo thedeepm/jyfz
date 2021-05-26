@@ -128,9 +128,29 @@ public class EduTemplateController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EduTemplate eduTemplate)
+    public Map<String,Object> edit(@RequestBody EduTemplateRequestVo eduTemplateVo)
     {
-        return toAjax(eduTemplateService.updateEduTemplate(eduTemplate));
+        Map<String,Object> map = new HashMap<String,Object>();
+        EduTemplate eduTemplate;
+        List<EduPartition> eduPartitionList = new ArrayList<>();
+        //eduTemplate = eduTemplateVo.getTemplate();
+        if(eduTemplateService.updateEduTemplate(eduTemplateVo) != 0){
+            EduPartition eduPartition = new EduPartition();
+            eduTemplate = eduTemplateService.getLastEduTemplate();
+            eduPartition.setTemplateId(eduTemplate.getId());
+            eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+            map.put("templateId", eduTemplate.getId());
+        }
+//        TableDataInfo rspData = new TableDataInfo();
+//        rspData.setCode(HttpStatus.SUCCESS);
+//        rspData.setMsg("新增成功");
+//        rspData.setRows(eduPartitionList);
+//        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
+        map.put("code", HttpStatus.SUCCESS);
+        map.put("eduPartitionList",eduPartitionList);
+        map.put("total", new PageInfo(eduPartitionList).getTotal());
+        map.put("message", "修改成功");
+        return map;
     }
 
     /**

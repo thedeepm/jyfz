@@ -1,6 +1,11 @@
 package com.xjy.edu.controller;
 
 import java.util.List;
+
+import com.xjy.edu.util.DataPacketUtil;
+import com.xjy.edu.util.ResponseData;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +31,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author wuzh
  * @date 2021-05-19
  */
+@Api(value = "/edu/case", description = "任务管理")
 @RestController
 @RequestMapping("/edu/task")
 public class EduTaskController extends BaseController
@@ -36,6 +42,7 @@ public class EduTaskController extends BaseController
     /**
      * 查询任务列表
      */
+    @ApiOperation("获取任务列表")
     //@PreAuthorize("@ss.hasPermi('edu:task:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTask eduTask)
@@ -48,6 +55,7 @@ public class EduTaskController extends BaseController
     /**
      * 导出任务列表
      */
+    @ApiOperation("导出任务列表")
     //@PreAuthorize("@ss.hasPermi('edu:task:export')")
     @Log(title = "任务", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -61,6 +69,7 @@ public class EduTaskController extends BaseController
     /**
      * 获取任务详细信息
      */
+    @ApiOperation("获取任务详细信息")
     //@PreAuthorize("@ss.hasPermi('edu:task:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -71,17 +80,20 @@ public class EduTaskController extends BaseController
     /**
      * 新增任务
      */
+    @ApiOperation("新增任务")
     //@PreAuthorize("@ss.hasPermi('edu:task:add')")
     @Log(title = "任务", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody EduTask eduTask)
+    public ResponseData add(@RequestBody EduTask eduTask)
     {
-        return toAjax(eduTaskService.insertEduTask(eduTask));
+        eduTask = eduTaskService.insertEduTask(eduTask);
+        return DataPacketUtil.jsonResult(eduTask);
     }
 
     /**
      * 修改任务
      */
+    @ApiOperation("修改任务")
     //@PreAuthorize("@ss.hasPermi('edu:task:edit')")
     @Log(title = "任务", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -93,6 +105,7 @@ public class EduTaskController extends BaseController
     /**
      * 删除任务
      */
+    @ApiOperation("删除任务")
     //@PreAuthorize("@ss.hasPermi('edu:task:remove')")
     @Log(title = "任务", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")

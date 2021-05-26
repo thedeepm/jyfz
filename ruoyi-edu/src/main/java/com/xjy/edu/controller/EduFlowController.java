@@ -3,6 +3,8 @@ package com.xjy.edu.controller;
 import java.util.List;
 
 import com.xjy.edu.domain.vo.EduFlowRequestVo;
+import com.xjy.edu.util.DataPacketUtil;
+import com.xjy.edu.util.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -83,9 +85,9 @@ public class EduFlowController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:flow:add')")
     @Log(title = "流程", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody EduFlowRequestVo eduFlowRequestVo)
+    public ResponseData add(@RequestBody EduFlowRequestVo eduFlowRequestVo)
     {
-        return toAjax(eduFlowService.insertEduFlow(eduFlowRequestVo));
+        return DataPacketUtil.jsonResult(eduFlowService.insertEduFlow(eduFlowRequestVo),"新增成功！");
     }
 
     /**

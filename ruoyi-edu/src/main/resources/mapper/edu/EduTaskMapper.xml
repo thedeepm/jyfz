@@ -53,6 +53,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectEduTaskVo"/>
         where id = #{id}
     </select>
+
+    <select id="getLastEduTask" parameterType="Long" resultMap="EduTaskResult">
+        <include refid="selectEduTaskVo"/>
+        order by id DESC LIMIT 1
+    </select>
         
     <insert id="insertEduTask" parameterType="EduTask" useGeneratedKeys="true" keyProperty="id">
         insert into edu_task

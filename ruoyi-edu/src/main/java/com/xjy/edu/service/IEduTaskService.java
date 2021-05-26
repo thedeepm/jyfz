@@ -33,7 +33,7 @@ public interface IEduTaskService
      * @param eduTask 任务
      * @return 结果
      */
-    int insertEduTask(EduTask eduTask);
+    EduTask insertEduTask(EduTask eduTask);
 
     /**
      * 修改任务

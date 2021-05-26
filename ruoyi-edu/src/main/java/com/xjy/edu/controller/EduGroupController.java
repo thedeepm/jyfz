@@ -2,6 +2,8 @@ package com.xjy.edu.controller;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.constant.HttpStatus;
 import com.xjy.edu.domain.vo.EduGroupRequestVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -83,13 +85,22 @@ public class EduGroupController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:group:add')")
     @Log(title = "分组", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
+    public TableDataInfo add(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
     {
         //新增分组数据
-//        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
-//            eduGroupService.insertEduGroup(eduGroupRequestVoList.get(i).getEduGroupList());
-//        }
-        return toAjax(eduGroupService.insertEduGroup(eduGroupRequestVoList));
+        EduGroup eduGroup = new EduGroup();
+        eduGroupService.insertEduGroup(eduGroupRequestVoList);
+        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
+            eduGroup.setPartitionId(eduGroupRequestVoList.get(i).getId());
+            List<EduGroup> eduGroupList = eduGroupService.selectEduGroupList(eduGroup);
+            eduGroupRequestVoList.get(i).setEduGroupList(eduGroupList);
+        }
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("新增成功");
+        rspData.setRows(eduGroupRequestVoList);
+        rspData.setTotal(new PageInfo(eduGroupRequestVoList).getTotal());
+        return rspData;
     }
 
     /**
@@ -99,9 +110,22 @@ public class EduGroupController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:group:edit')")
     @Log(title = "分组", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EduGroup eduGroup)
+    public TableDataInfo edit(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
     {
-        return toAjax(eduGroupService.updateEduGroup(eduGroup));
+        //修改分组数据
+        EduGroup eduGroup = new EduGroup();
+        eduGroupService.updateEduGroup(eduGroupRequestVoList);
+        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
+            eduGroup.setPartitionId(eduGroupRequestVoList.get(i).getId());
+            List<EduGroup> eduGroupList = eduGroupService.selectEduGroupList(eduGroup);
+            eduGroupRequestVoList.get(i).setEduGroupList(eduGroupList);
+        }
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("修改成功");
+        rspData.setRows(eduGroupRequestVoList);
+        rspData.setTotal(new PageInfo(eduGroupRequestVoList).getTotal());
+        return rspData;
     }
 
     /**
