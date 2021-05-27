@@ -82,9 +82,8 @@ public class EduTemplateServiceImpl implements IEduTemplateService
         if(rows != 0){
             eduTemplate = this.getLastEduTemplate();
             EduPartition eduPartition;
-            EduSeat eduSeat = new EduSeat();
             //创建分区
-            for(int i = 0; i < eduTemplate.getPartitionNumber(); i++){
+            for(int i = 0; i < eduTemplateVo.getPartitionsList().size(); i++){
                 eduPartition = eduTemplateVo.getPartitionsList().get(i);
                 eduPartition.setTemplateId(eduTemplate.getId());
                 eduPartitionMapper.insertEduPartition(eduPartition);
@@ -106,14 +105,15 @@ public class EduTemplateServiceImpl implements IEduTemplateService
         EduTemplate eduTemplate = eduTemplateVo.getTemplate();
         int rows = eduTemplateMapper.updateEduTemplate(eduTemplate);
         if(rows != 0){
-            eduTemplate = this.getLastEduTemplate();
+            eduTemplate = this.selectEduTemplateById(eduTemplate.getId());
             EduPartition eduPartition;
-            EduSeat eduSeat = new EduSeat();
             //修改分区
-            for(int i = 0; i < eduTemplate.getPartitionNumber(); i++){
-                eduPartition = eduTemplateVo.getPartitionsList().get(i);
-                //eduPartition.setTemplateId(eduTemplate.getId());
-                eduPartitionMapper.updateEduPartition(eduPartition);
+            if(eduTemplateVo.getPartitionsList() != null){
+                for(int i = 0; i < eduTemplateVo.getPartitionsList().size(); i++){
+                    eduPartition = eduTemplateVo.getPartitionsList().get(i);
+                    eduPartition.setTemplateId(eduTemplate.getId());
+                    eduPartitionMapper.insertEduPartition(eduPartition);
+                }
             }
         };
         return rows;

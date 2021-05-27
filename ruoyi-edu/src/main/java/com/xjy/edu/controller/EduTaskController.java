@@ -1,9 +1,17 @@
 package com.xjy.edu.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.xjy.edu.util.DataPacketUtil;
-import com.xjy.edu.util.ResponseData;
+import com.ruoyi.common.constant.HttpStatus;
+import com.xjy.edu.domain.EduGroup;
+import com.xjy.edu.domain.EduPartition;
+import com.xjy.edu.domain.EduSeat;
+import com.xjy.edu.service.IEduGroupService;
+import com.xjy.edu.service.IEduPartitionService;
+import com.xjy.edu.service.IEduSeatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +47,15 @@ public class EduTaskController extends BaseController
     @Autowired
     private IEduTaskService eduTaskService;
 
+    @Autowired
+    private IEduGroupService eduGroupService;
+
+    @Autowired
+    private IEduPartitionService eduPartitionService;
+
+    @Autowired
+    private IEduSeatService eduSeatService;
+
     /**
      * 查询任务列表
      */
@@ -49,7 +66,24 @@ public class EduTaskController extends BaseController
     {
         startPage();
         List<EduTask> list = eduTaskService.selectEduTaskList(eduTask);
-        return getDataTable(list);
+        List<Map<String,Object>> response = new ArrayList<>();
+        Map<String,Object> map;
+        EduGroup group;
+        EduPartition partition;
+        EduSeat seat;
+        for (int i = 0;i < list.size();i++){
+            eduTask = list.get(i);
+            group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
+            partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
+            seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+            map = new HashMap<>();
+            map.put("group", group);
+            map.put("partition", partition);
+            map.put("seat", seat);
+            map.put("eduTask", eduTask);
+            response.add(map);
+        }
+        return getDataTable(response);
     }
 
     /**
@@ -84,10 +118,21 @@ public class EduTaskController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:task:add')")
     @Log(title = "任务", businessType = BusinessType.INSERT)
     @PostMapping
-    public ResponseData add(@RequestBody EduTask eduTask)
+    public AjaxResult add(@RequestBody EduTask eduTask)
     {
+        AjaxResult ajax;
         eduTask = eduTaskService.insertEduTask(eduTask);
-        return DataPacketUtil.jsonResult(eduTask);
+        EduGroup group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
+        EduPartition partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
+        EduSeat seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+        ajax = AjaxResult.success();
+        ajax.put(AjaxResult.CODE_TAG, HttpStatus.SUCCESS);
+        ajax.put(AjaxResult.MSG_TAG,"新增成功");
+        ajax.put("group",group);
+        ajax.put("partition",partition);
+        ajax.put("seat",seat);
+        ajax.put("eduTask",eduTask);
+        return ajax;
     }
 
     /**

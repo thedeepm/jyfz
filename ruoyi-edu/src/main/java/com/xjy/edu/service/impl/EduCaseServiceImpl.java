@@ -17,7 +17,7 @@ import com.xjy.edu.service.IEduCaseService;
 @Service
 public class EduCaseServiceImpl implements IEduCaseService 
 {
-    @Autowired(required = false)
+    @Autowired
     private EduCaseMapper eduCaseMapper;
 
     /**

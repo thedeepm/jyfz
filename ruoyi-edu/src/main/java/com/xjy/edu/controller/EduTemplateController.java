@@ -1,9 +1,7 @@
 package com.xjy.edu.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.constant.HttpStatus;
@@ -128,29 +126,36 @@ public class EduTemplateController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
-    public Map<String,Object> edit(@RequestBody EduTemplateRequestVo eduTemplateVo)
+    public AjaxResult edit(@RequestBody EduTemplateRequestVo eduTemplateVo)
     {
-        Map<String,Object> map = new HashMap<String,Object>();
+        AjaxResult ajax = AjaxResult.success();
+//        Map<String,Object> map = new HashMap<String,Object>();
         EduTemplate eduTemplate;
         List<EduPartition> eduPartitionList = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
         //eduTemplate = eduTemplateVo.getTemplate();
+        EduPartition eduPartition = new EduPartition();
+        eduPartition.setTemplateId(eduTemplateVo.getId());
+        eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+        for (int i = 0;i < eduPartitionList.size();i++){
+            ids.add(eduPartitionList.get(i).getId());
+        }
+        //delete partition that relate to the template
+        if(ids.size() > 0){
+            eduPartitionService.deleteEduPartitionByIds(ids.toArray(new Long[ids.size()]));
+        }
         if(eduTemplateService.updateEduTemplate(eduTemplateVo) != 0){
-            EduPartition eduPartition = new EduPartition();
-            eduTemplate = eduTemplateService.getLastEduTemplate();
+            eduPartition = new EduPartition();
+            eduTemplate = eduTemplateService.selectEduTemplateById(eduTemplateVo.getId());
             eduPartition.setTemplateId(eduTemplate.getId());
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
-            map.put("templateId", eduTemplate.getId());
+            ajax.put("templateId",eduTemplate.getId());
         }
-//        TableDataInfo rspData = new TableDataInfo();
-//        rspData.setCode(HttpStatus.SUCCESS);
-//        rspData.setMsg("新增成功");
-//        rspData.setRows(eduPartitionList);
-//        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
-        map.put("code", HttpStatus.SUCCESS);
-        map.put("eduPartitionList",eduPartitionList);
-        map.put("total", new PageInfo(eduPartitionList).getTotal());
-        map.put("message", "修改成功");
-        return map;
+        ajax.put(AjaxResult.CODE_TAG,HttpStatus.SUCCESS);
+        ajax.put(AjaxResult.MSG_TAG,"修改成功");
+        ajax.put("eduPartitionList",eduPartitionList);
+        ajax.put("total",new PageInfo(eduPartitionList).getTotal());
+        return ajax;
     }
 
     /**

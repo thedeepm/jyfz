@@ -16,7 +16,7 @@ import com.xjy.edu.service.IEduPartitionService;
 @Service
 public class EduPartitionServiceImpl implements IEduPartitionService 
 {
-    @Autowired(required = false)
+    @Autowired
     private EduPartitionMapper eduPartitionMapper;
 
     /**

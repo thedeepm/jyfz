@@ -85,22 +85,26 @@ public class EduGroupController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:group:add')")
     @Log(title = "分组", businessType = BusinessType.INSERT)
     @PostMapping
-    public TableDataInfo add(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
+    public AjaxResult add(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
     {
         //新增分组数据
+        AjaxResult ajax;
         EduGroup eduGroup = new EduGroup();
-        eduGroupService.insertEduGroup(eduGroupRequestVoList);
+        int rows = eduGroupService.insertEduGroup(eduGroupRequestVoList);
+        if(rows == 0){
+            return AjaxResult.error("数据校验失败！");
+        }
         for(int i = 0; i < eduGroupRequestVoList.size(); i++){
             eduGroup.setPartitionId(eduGroupRequestVoList.get(i).getId());
             List<EduGroup> eduGroupList = eduGroupService.selectEduGroupList(eduGroup);
             eduGroupRequestVoList.get(i).setEduGroupList(eduGroupList);
         }
-        TableDataInfo rspData = new TableDataInfo();
-        rspData.setCode(HttpStatus.SUCCESS);
-        rspData.setMsg("新增成功");
-        rspData.setRows(eduGroupRequestVoList);
-        rspData.setTotal(new PageInfo(eduGroupRequestVoList).getTotal());
-        return rspData;
+        ajax = AjaxResult.success();
+        ajax.put(AjaxResult.CODE_TAG,HttpStatus.SUCCESS);
+        ajax.put(AjaxResult.MSG_TAG,"新增成功");
+        ajax.put("rows",eduGroupRequestVoList);
+        ajax.put("total",new PageInfo(eduGroupRequestVoList).getTotal());
+        return ajax;
     }
 
     /**
@@ -110,22 +114,26 @@ public class EduGroupController extends BaseController
     //@PreAuthorize("@ss.hasPermi('edu:group:edit')")
     @Log(title = "分组", businessType = BusinessType.UPDATE)
     @PutMapping
-    public TableDataInfo edit(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
+    public AjaxResult edit(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
     {
         //修改分组数据
+        AjaxResult ajax;
         EduGroup eduGroup = new EduGroup();
-        eduGroupService.updateEduGroup(eduGroupRequestVoList);
+        int rows = eduGroupService.updateEduGroup(eduGroupRequestVoList);
+        if(rows == 0){
+            return AjaxResult.error("数据校验失败！");
+        }
         for(int i = 0; i < eduGroupRequestVoList.size(); i++){
             eduGroup.setPartitionId(eduGroupRequestVoList.get(i).getId());
             List<EduGroup> eduGroupList = eduGroupService.selectEduGroupList(eduGroup);
             eduGroupRequestVoList.get(i).setEduGroupList(eduGroupList);
         }
-        TableDataInfo rspData = new TableDataInfo();
-        rspData.setCode(HttpStatus.SUCCESS);
-        rspData.setMsg("修改成功");
-        rspData.setRows(eduGroupRequestVoList);
-        rspData.setTotal(new PageInfo(eduGroupRequestVoList).getTotal());
-        return rspData;
+        ajax = AjaxResult.success();
+        ajax.put(AjaxResult.CODE_TAG,HttpStatus.SUCCESS);
+        ajax.put(AjaxResult.MSG_TAG,"新增成功");
+        ajax.put("rows",eduGroupRequestVoList);
+        ajax.put("total",new PageInfo(eduGroupRequestVoList).getTotal());
+        return ajax;
     }
 
     /**

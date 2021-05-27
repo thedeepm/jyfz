@@ -1,5 +1,6 @@
 package com.xjy.edu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.common.utils.Arith;
@@ -9,6 +10,7 @@ import com.xjy.edu.domain.EduPartition;
 import com.xjy.edu.domain.EduSeat;
 import com.xjy.edu.domain.vo.EduGroupRequestVo;
 import com.xjy.edu.mapper.EduSeatMapper;
+import com.xjy.edu.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduGroupMapper;
@@ -74,6 +76,9 @@ public class EduGroupServiceImpl implements IEduGroupService
     @Transactional
     public int insertEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
+        if(!validateGroupListData(eduGroupRequestVoList)){
+            return 0;
+        }
         int rows = 0;
         EduGroup eduGroup = new EduGroup();
         List<EduGroup> eduGroupList;
@@ -115,6 +120,9 @@ public class EduGroupServiceImpl implements IEduGroupService
     @Transactional
     public int updateEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
+        if(!validateGroupListData(eduGroupRequestVoList)){
+            return 0;
+        }
         int rows = 0;
         EduGroup eduGroup = new EduGroup();
         List<EduGroup> eduGroupList;
@@ -170,12 +178,37 @@ public class EduGroupServiceImpl implements IEduGroupService
         return eduGroupMapper.deleteEduGroupById(id);
     }
 
-//    public void setGroupIndex(GenTable table)
-//    {
-//        String subTableName = table.getSubTableName();
-//        if (StringUtils.isNotEmpty(subTableName))
-//        {
-//            table.setSubTable(genTableMapper.selectGenTableByName(subTableName));
-//        }
-//    }
+    public boolean validateGroupListData(List<EduGroupRequestVo> eduGroupRequestVoList)
+    {
+        EduGroup eduGroup;
+        List<EduGroup> eduGroupList;
+        EduGroupRequestVo eduGroupRequestVo;
+        EduSeat seat = new EduSeat();
+        List<String> prev = new ArrayList<>();
+        List<String> next = new ArrayList<>();
+        String groupInterval;
+        Long partitionTotalseats;
+        Long countSeats = 0L;
+        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
+            eduGroupRequestVo = eduGroupRequestVoList.get(i);
+            eduGroupList = eduGroupRequestVo.getEduGroupList();
+            partitionTotalseats = eduGroupRequestVo.getTotalSeats();
+            for(int j = 0; j< eduGroupList.size(); j++){
+                eduGroup = eduGroupList.get(j);
+                countSeats += eduGroup.getTotalSeats();
+                groupInterval = eduGroup.getGroupInterval();
+                if(groupInterval.contains("-")){
+                    prev.add(groupInterval.split("-")[0]);
+                    next.add(groupInterval.split("-")[1]);
+                } else {
+                    prev.add(groupInterval.split("-")[0]);
+                    next.add(groupInterval.split("-")[0]);
+                }
+            }
+            if(partitionTotalseats.compareTo(countSeats) < 0){
+                return false;
+            }
+        }
+        return CommonUtils.cheakIsRepeat(prev) && CommonUtils.cheakIsRepeat(next);
+    }
 }
