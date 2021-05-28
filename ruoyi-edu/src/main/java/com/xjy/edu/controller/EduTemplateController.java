@@ -136,20 +136,22 @@ public class EduTemplateController extends BaseController
         //eduTemplate = eduTemplateVo.getTemplate();
         EduPartition eduPartition = new EduPartition();
         eduPartition.setTemplateId(eduTemplateVo.getId());
-        eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
-        for (int i = 0;i < eduPartitionList.size();i++){
-            ids.add(eduPartitionList.get(i).getId());
-        }
-        //delete partition that relate to the template
-        if(ids.size() > 0){
-            eduPartitionService.deleteEduPartitionByIds(ids.toArray(new Long[ids.size()]));
-        }
-        if(eduTemplateService.updateEduTemplate(eduTemplateVo) != 0){
-            eduPartition = new EduPartition();
-            eduTemplate = eduTemplateService.selectEduTemplateById(eduTemplateVo.getId());
-            eduPartition.setTemplateId(eduTemplate.getId());
+        if(eduTemplateVo.getPartitionsList() != null && eduTemplateVo.getPartitionsList().size()>0){
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
-            ajax.put("templateId",eduTemplate.getId());
+            for (int i = 0;i < eduPartitionList.size();i++){
+                ids.add(eduPartitionList.get(i).getId());
+            }
+            //delete partition that relate to the template
+            if(ids.size() > 0){
+                eduPartitionService.deleteEduPartitionByIds(ids.toArray(new Long[ids.size()]));
+            }
+            if(eduTemplateService.updateEduTemplate(eduTemplateVo) != 0){
+                eduPartition = new EduPartition();
+                eduTemplate = eduTemplateService.selectEduTemplateById(eduTemplateVo.getId());
+                eduPartition.setTemplateId(eduTemplate.getId());
+                eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+                ajax.put("templateId",eduTemplate.getId());
+            }
         }
         ajax.put(AjaxResult.CODE_TAG,HttpStatus.SUCCESS);
         ajax.put(AjaxResult.MSG_TAG,"修改成功");
