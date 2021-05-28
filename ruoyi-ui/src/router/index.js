@@ -6,7 +6,9 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import ParentView from '@/components/ParentView';
-
+import Home from '../views/Home.vue'
+import LayoutFront from "../layoutFront"
+import searchLayout from "../layoutFront/searchIndex"
 /**
  * Note: 路由配置项
  *
@@ -67,6 +69,83 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/home',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    redirect: 'search/list',
+    hidden: true,
+    component: searchLayout,
+    children: [
+      {
+        path: '/search/list',
+        component: (resolve) => require(['@/views/searchList'], resolve),
+        name: 'caseList',
+        meta: { title: '搜索结果' },
+      },
+      {
+        path: '/search/details',
+        component: (resolve) => require(['@/views/searchDetails'], resolve),
+        name: 'details',
+        meta: { title: '详情' },
+      }
+    ]
+  },
+  {
+    path: '/system',
+    name: 'System',
+    redirect: 'caseList',
+    hidden: true,
+    component: LayoutFront,
+    children: [
+      {
+        path: '/caseList',
+        component: (resolve) => require(['@/views/caseList'], resolve),
+        name: 'caseList',
+        meta: { title: '教学案例管理' },
+      },
+      {
+        path: '/createCase',
+        component: (resolve) => require(['@/views/createCase'], resolve),
+        name: 'createCase',
+        meta: { title: '新增案例' }
+      },
+      {
+        path: '/updateCase',
+        component: (resolve) => require(['@/views/createCase'], resolve),
+        name: 'updateCase',
+        meta: { title: '修改案例' }
+      },
+      {
+        path: '/templateList',
+        component: (resolve) => require(['@/views/templateList'], resolve),
+        name: 'createCase',
+        meta: { title: '分区模板管理' }
+      },
+      {
+        path: '/createTemplate',
+        component: (resolve) => require(['@/views/createTemplate'], resolve),
+        name: 'createTemplate',
+        meta: { title: '新增模板' }
+      },
+      {
+        path: '/updateTemplate',
+        component: (resolve) => require(['@/views/createTemplate'], resolve),
+        name: 'updateTemplate',
+        meta: { title: '修改模板' }
+      },
+      {
+        path: '/process',
+        component: (resolve) => require(['@/views/process'], resolve),
+        name: 'process',
+        meta: { title: '开始流程' }
+      },
+    ]
+  },
+  {
     path: '/user',
     component: Layout,
     hidden: true,
@@ -122,7 +201,7 @@ export const constantRoutes = [
 ]
 
 export default new Router({
-  mode: 'history', // 去掉url中的#
+  mode: 'hash', // 去掉url中的#
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
