@@ -1,12 +1,15 @@
 package com.xjy.edu.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.xjy.edu.domain.EduFlowRefrence;
+import com.xjy.edu.domain.EduPersonInfo;
 import com.xjy.edu.domain.EduSeat;
 import com.xjy.edu.domain.vo.SearchRequestVo;
 import com.xjy.edu.service.IEduFlowRefrenceService;
+import com.xjy.edu.service.IEduPersonInfoService;
 import com.xjy.edu.service.IEduSeatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,11 +31,14 @@ import java.util.List;
 @RequestMapping("/edu/search")
 public class SearchController extends BaseController
 {
-    @Autowired
-    private IEduSeatService eduSeatService;
+//    @Autowired
+//    private IEduSeatService eduSeatService;
 
     @Autowired
     private IEduFlowRefrenceService eduFlowRefrenceService;
+
+    @Autowired
+    private IEduPersonInfoService eduPersonInfoService;
 
     /**
      * 查询列表
@@ -41,33 +47,42 @@ public class SearchController extends BaseController
     @ApiOperation("查询列表")
     //@PreAuthorize("@ss.hasPermi('edu:case:list')")
     @GetMapping("/list")
-    public TableDataInfo list(@ApiParam(value = "查询列表", required = true) SearchRequestVo searchRequestVo)
+    public AjaxResult list(@ApiParam(value = "查询列表", required = true) SearchRequestVo searchRequestVo)
     {
         startPage();
         String keyword = searchRequestVo.getKeyword();;
         String category = searchRequestVo.getCategory();
-        EduSeat eduSeat = new EduSeat();
+        //EduSeat eduSeat = new EduSeat();
+        EduPersonInfo eduPersonInfo = new EduPersonInfo();
         EduFlowRefrence eduFlowRefrence = new EduFlowRefrence();
-        List<EduSeat> seatList;
+        List<EduPersonInfo> personInfoList;
         List<EduFlowRefrence> flowRefrenceList;
         List<Object> responseList = new ArrayList<>();
         eduFlowRefrence.setSearchValue(keyword);
-        eduSeat.setSearchValue(keyword);
+        eduPersonInfo.setSearchValue(keyword);
+        AjaxResult ajaxResult = AjaxResult.success();
         if(StringUtils.isNull(category) || StringUtils.isEmpty(category)){
-            seatList = eduSeatService.selectEduSeatList(eduSeat);
-            responseList = new ArrayList<>(seatList);
+            personInfoList = eduPersonInfoService.selectEduPersonInfoList(eduPersonInfo);
+            responseList = new ArrayList<>(personInfoList);
             flowRefrenceList = eduFlowRefrenceService.selectEduFlowRefrenceList(eduFlowRefrence);
             responseList.addAll(flowRefrenceList);
+            ajaxResult.put("personInfoListNum", new PageInfo(personInfoList).getTotal());
+            ajaxResult.put("flowRefrenceListNum", new PageInfo(flowRefrenceList).getTotal());
         } else{
             if("flowRefrence".equals(category)){
                 flowRefrenceList = eduFlowRefrenceService.selectEduFlowRefrenceList(eduFlowRefrence);
                 responseList.addAll(flowRefrenceList);
+                ajaxResult.put("flowRefrenceListNum", new PageInfo(responseList).getTotal());
             }else{
-                seatList = eduSeatService.selectEduSeatList(eduSeat);
-                responseList.addAll(seatList);
+                personInfoList = eduPersonInfoService.selectEduPersonInfoList(eduPersonInfo);
+                ajaxResult.put("personInfoListNum", new PageInfo(responseList).getTotal());
+                responseList.addAll(personInfoList);
             }
         }
-        return getDataTable(responseList);
+        ajaxResult.put(AjaxResult.MSG_TAG, "查询成功");
+        ajaxResult.put("total", new PageInfo(responseList).getTotal());
+        ajaxResult.put("rows", responseList);
+        return ajaxResult;
     }
 
 }
