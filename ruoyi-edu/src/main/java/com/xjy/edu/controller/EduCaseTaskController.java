@@ -82,7 +82,7 @@ public class EduCaseTaskController extends BaseController
     /**
      * 修改案例任务关联
      */
-    //@PreAuthorize("@ss.hasPermi('edu:caseTask:edit')")
+    @PreAuthorize("@ss.hasPermi('edu:caseTask:edit')")
     @Log(title = "案例任务关联", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduCaseTask eduCaseTask)

@@ -60,7 +60,7 @@ public class EduTaskController extends BaseController
      * 查询任务列表
      */
     @ApiOperation("获取任务列表")
-    //@PreAuthorize("@ss.hasPermi('edu:task:list')")
+    @PreAuthorize("@ss.hasPermi('edu:task:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTask eduTask)
     {
@@ -90,7 +90,7 @@ public class EduTaskController extends BaseController
      * 导出任务列表
      */
     @ApiOperation("导出任务列表")
-    //@PreAuthorize("@ss.hasPermi('edu:task:export')")
+    @PreAuthorize("@ss.hasPermi('edu:task:export')")
     @Log(title = "任务", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduTask eduTask)
@@ -104,7 +104,7 @@ public class EduTaskController extends BaseController
      * 获取任务详细信息
      */
     @ApiOperation("获取任务详细信息")
-    //@PreAuthorize("@ss.hasPermi('edu:task:query')")
+    @PreAuthorize("@ss.hasPermi('edu:task:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -115,7 +115,7 @@ public class EduTaskController extends BaseController
      * 新增任务
      */
     @ApiOperation("新增任务")
-    //@PreAuthorize("@ss.hasPermi('edu:task:add')")
+    @PreAuthorize("@ss.hasPermi('edu:task:add')")
     @Log(title = "任务", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduTask eduTask)
@@ -139,7 +139,7 @@ public class EduTaskController extends BaseController
      * 修改任务
      */
     @ApiOperation("修改任务")
-    //@PreAuthorize("@ss.hasPermi('edu:task:edit')")
+    @PreAuthorize("@ss.hasPermi('edu:task:edit')")
     @Log(title = "任务", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduTask eduTask)
@@ -151,7 +151,7 @@ public class EduTaskController extends BaseController
      * 删除任务
      */
     @ApiOperation("删除任务")
-    //@PreAuthorize("@ss.hasPermi('edu:task:remove')")
+    @PreAuthorize("@ss.hasPermi('edu:task:remove')")
     @Log(title = "任务", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class SearchController extends BaseController
      * 搜索
      */
     @ApiOperation("查询列表")
-    //@PreAuthorize("@ss.hasPermi('edu:case:list')")
+    @PreAuthorize("@ss.hasPermi('edu:case:list')")
     @GetMapping("/list")
     public AjaxResult list(@ApiParam(value = "查询列表", required = true) SearchRequestVo searchRequestVo)
     {

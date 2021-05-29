@@ -7,10 +7,9 @@ import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.constant.HttpStatus;
 import com.xjy.edu.domain.EduPartition;
 import com.xjy.edu.domain.EduSeat;
+import com.xjy.edu.domain.EduTask;
 import com.xjy.edu.domain.vo.EduTemplateRequestVo;
-import com.xjy.edu.service.IEduGroupService;
-import com.xjy.edu.service.IEduPartitionService;
-import com.xjy.edu.service.IEduSeatService;
+import com.xjy.edu.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +27,6 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.xjy.edu.domain.EduTemplate;
-import com.xjy.edu.service.IEduTemplateService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -50,12 +48,15 @@ public class EduTemplateController extends BaseController
     private IEduPartitionService eduPartitionService;
 
     @Autowired
+    private IEduTaskService eduTaskService;
+
+    @Autowired
     private IEduSeatService eduSeatService;
     /**
      * 查询模板列表
      */
     @ApiOperation("获取模板列表")
-    //@PreAuthorize("@ss.hasPermi('edu:template:list')")
+    @PreAuthorize("@ss.hasPermi('edu:template:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTemplate eduTemplate)
     {
@@ -68,7 +69,7 @@ public class EduTemplateController extends BaseController
      * 导出模板列表
      */
     @ApiOperation("导出模板")
-    //@PreAuthorize("@ss.hasPermi('edu:template:export')")
+    @PreAuthorize("@ss.hasPermi('edu:template:export')")
     @Log(title = "模板", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduTemplate eduTemplate)
@@ -82,7 +83,7 @@ public class EduTemplateController extends BaseController
      * 获取模板详细信息
      */
     @ApiOperation("获取模板详细信息")
-    //@PreAuthorize("@ss.hasPermi('edu:template:query')")
+    @PreAuthorize("@ss.hasPermi('edu:template:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -93,7 +94,7 @@ public class EduTemplateController extends BaseController
      * 新增模板
      */
     @ApiOperation("新增模板")
-    //@PreAuthorize("@ss.hasPermi('edu:template:add')")
+    @PreAuthorize("@ss.hasPermi('edu:template:add')")
     @Log(title = "模板", businessType = BusinessType.INSERT)
     @PostMapping
     public Map<String,Object> add(@RequestBody EduTemplateRequestVo eduTemplateVo)
@@ -118,7 +119,7 @@ public class EduTemplateController extends BaseController
      * 修改模板
      */
     @ApiOperation("修改模板")
-    //@PreAuthorize("@ss.hasPermi('edu:template:edit')")
+    @PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduTemplateRequestVo eduTemplateVo)
@@ -130,6 +131,8 @@ public class EduTemplateController extends BaseController
         List<Long> ids = new ArrayList<>();
         //eduTemplate = eduTemplateVo.getTemplate();
         EduPartition eduPartition = new EduPartition();
+        List<EduTask> eduTaskTempList = new ArrayList<>();
+        EduTask eduTask = new EduTask();
         eduPartition.setTemplateId(eduTemplateVo.getId());
         if(eduTemplateVo.getPartitionsList() != null && eduTemplateVo.getPartitionsList().size()>0){
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
@@ -146,6 +149,16 @@ public class EduTemplateController extends BaseController
             eduTemplate = eduTemplateService.selectEduTemplateById(eduTemplateVo.getId());
             eduPartition.setTemplateId(eduTemplate.getId());
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+            for (int i = 0; i < ids.size(); i++){
+                //更新task中的id
+                eduTask.setPartitionId(ids.get(i));
+                eduTaskTempList = eduTaskService.selectEduTaskList(eduTask);
+                for (int j = 0; j < eduTaskTempList.size(); j++){
+                    eduTask = eduTaskTempList.get(j);
+                    eduTask.setPartitionId(eduPartitionList.get(i).getId());
+                    eduTaskService.updateEduTask(eduTask);
+                }
+            }
             ajax.put("templateId",eduTemplate.getId());
             ajax.put("template",eduTemplate);
         }
@@ -160,7 +173,7 @@ public class EduTemplateController extends BaseController
      * 删除模板
      */
     @ApiOperation("删除模板")
-    //@PreAuthorize("@ss.hasPermi('edu:template:remove')")
+    @PreAuthorize("@ss.hasPermi('edu:template:remove')")
     @Log(title = "模板", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
