@@ -186,16 +186,17 @@ public class EduGroupServiceImpl implements IEduGroupService
         EduSeat seat = new EduSeat();
         List<String> prev = new ArrayList<>();
         List<String> next = new ArrayList<>();
+        List<String> toatalList = new ArrayList<>();
         String groupInterval;
-        Long partitionTotalseats;
-        Long countSeats = 0L;
+        Long partitionTotalseats = 0L;
+        Long countTotalSeats = 0L;
         for(int i = 0; i < eduGroupRequestVoList.size(); i++){
             eduGroupRequestVo = eduGroupRequestVoList.get(i);
             eduGroupList = eduGroupRequestVo.getEduGroupList();
-            partitionTotalseats = eduGroupRequestVo.getTotalSeats();
+            partitionTotalseats += eduGroupRequestVo.getTotalSeats();
             for(int j = 0; j< eduGroupList.size(); j++){
                 eduGroup = eduGroupList.get(j);
-                countSeats += eduGroup.getTotalSeats();
+                countTotalSeats += eduGroup.getTotalSeats();
                 groupInterval = eduGroup.getGroupInterval();
                 if(groupInterval.contains("-")){
                     prev.add(groupInterval.split("-")[0]);
@@ -204,11 +205,16 @@ public class EduGroupServiceImpl implements IEduGroupService
                     prev.add(groupInterval.split("-")[0]);
                     next.add(groupInterval.split("-")[0]);
                 }
-            }
-            if(partitionTotalseats.compareTo(countSeats) < 0){
-                return false;
+                if(eduGroupRequestVo.getTotalSeats().compareTo(eduGroup.getTotalSeats()) < 0){
+                    return false;
+                }
             }
         }
-        return CommonUtils.cheakIsRepeat(prev) && CommonUtils.cheakIsRepeat(next);
+        if(partitionTotalseats.compareTo(countTotalSeats) < 0){
+            return false;
+        }
+        toatalList.addAll(prev);
+        toatalList.addAll(next);
+        return CommonUtils.cheakIsRepeat(prev) && CommonUtils.cheakIsRepeat(next) && CommonUtils.cheakIsRepeat(toatalList);
     }
 }

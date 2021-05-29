@@ -68,20 +68,42 @@ public class SearchController extends BaseController
             responseList.addAll(flowRefrenceList);
             ajaxResult.put("personInfoListNum", new PageInfo(personInfoList).getTotal());
             ajaxResult.put("flowRefrenceListNum", new PageInfo(flowRefrenceList).getTotal());
+            ajaxResult.put("personInfoList",personInfoList);
+            ajaxResult.put("flowRefrenceList",flowRefrenceList);
         } else{
             if("flowRefrence".equals(category)){
                 flowRefrenceList = eduFlowRefrenceService.selectEduFlowRefrenceList(eduFlowRefrence);
                 responseList.addAll(flowRefrenceList);
                 ajaxResult.put("flowRefrenceListNum", new PageInfo(responseList).getTotal());
+                ajaxResult.put("flowRefrenceList",flowRefrenceList);
             }else{
                 personInfoList = eduPersonInfoService.selectEduPersonInfoList(eduPersonInfo);
                 ajaxResult.put("personInfoListNum", new PageInfo(responseList).getTotal());
                 responseList.addAll(personInfoList);
+                ajaxResult.put("personInfoList",personInfoList);
             }
         }
         ajaxResult.put(AjaxResult.MSG_TAG, "查询成功");
         ajaxResult.put("total", new PageInfo(responseList).getTotal());
         ajaxResult.put("rows", responseList);
+        return ajaxResult;
+    }
+
+    @GetMapping("/detail")
+    public AjaxResult detail(
+            @RequestParam Long id,
+            @RequestParam(defaultValue = "") String category
+            ){
+        AjaxResult ajaxResult = AjaxResult.success();
+        EduFlowRefrence flowRefrence;
+        EduPersonInfo personInfo;
+        if("flowRefrence".equals(category)){
+            flowRefrence = eduFlowRefrenceService.selectEduFlowRefrenceById(id);
+            ajaxResult.put(AjaxResult.DATA_TAG, flowRefrence);
+        } else {
+            personInfo = eduPersonInfoService.selectEduPersonInfoById(id);
+            ajaxResult.put(AjaxResult.DATA_TAG, personInfo);
+        }
         return ajaxResult;
     }
 

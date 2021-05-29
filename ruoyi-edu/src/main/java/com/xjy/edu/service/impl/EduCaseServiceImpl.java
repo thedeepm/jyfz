@@ -2,6 +2,12 @@ package com.xjy.edu.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.xjy.edu.domain.EduCaseTask;
+import com.xjy.edu.domain.EduTask;
+import com.xjy.edu.domain.EduTemplate;
+import com.xjy.edu.mapper.EduCaseTaskMapper;
+import com.xjy.edu.mapper.EduTaskMapper;
+import com.xjy.edu.mapper.EduTemplateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduCaseMapper;
@@ -19,6 +25,15 @@ public class EduCaseServiceImpl implements IEduCaseService
 {
     @Autowired
     private EduCaseMapper eduCaseMapper;
+
+    @Autowired
+    private EduTemplateMapper eduTemplateMapper;
+
+    @Autowired
+    private EduTaskMapper eduTaskMapper;
+
+    @Autowired
+    private EduCaseTaskMapper eduCaseTaskMapper;
 
     /**
      * 查询案例
@@ -54,7 +69,21 @@ public class EduCaseServiceImpl implements IEduCaseService
     public int insertEduCase(EduCase eduCase)
     {
         eduCase.setCreateTime(DateUtils.getNowDate());
-        return eduCaseMapper.insertEduCase(eduCase);
+        EduTemplate eduTemplate = eduTemplateMapper.selectEduTemplateById(eduCase.getTemplateId());
+        EduTask eduTask = new EduTask();
+        EduCaseTask eduCaseTask = new EduCaseTask();
+        int rows = eduCaseMapper.insertEduCase(eduCase);
+        if(rows != 0){
+            eduTask.setFlowId(eduTemplate.getFlowId());
+            List<EduTask> eduTaskList = eduTaskMapper.selectEduTaskList(eduTask);
+            for (int i = 0; i < eduTaskList.size();i++){
+                eduCaseTask.setCaseId(eduCase.getId());
+                eduCaseTask.setTaskId(eduTaskList.get(i).getId());
+                eduCaseTask.setCreateTime(DateUtils.getNowDate());
+                eduCaseTaskMapper.insertEduCaseTask(eduCaseTask);
+            }
+        }
+        return rows;
     }
 
     /**

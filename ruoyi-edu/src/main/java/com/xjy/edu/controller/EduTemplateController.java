@@ -107,11 +107,6 @@ public class EduTemplateController extends BaseController
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
             map.put("templateId", eduTemplate.getId());
         }
-//        TableDataInfo rspData = new TableDataInfo();
-//        rspData.setCode(HttpStatus.SUCCESS);
-//        rspData.setMsg("新增成功");
-//        rspData.setRows(eduPartitionList);
-//        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
         map.put("code", HttpStatus.SUCCESS);
         map.put("eduPartitionList",eduPartitionList);
         map.put("total", new PageInfo(eduPartitionList).getTotal());
@@ -145,13 +140,14 @@ public class EduTemplateController extends BaseController
             if(ids.size() > 0){
                 eduPartitionService.deleteEduPartitionByIds(ids.toArray(new Long[ids.size()]));
             }
-            if(eduTemplateService.updateEduTemplate(eduTemplateVo) != 0){
-                eduPartition = new EduPartition();
-                eduTemplate = eduTemplateService.selectEduTemplateById(eduTemplateVo.getId());
-                eduPartition.setTemplateId(eduTemplate.getId());
-                eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
-                ajax.put("templateId",eduTemplate.getId());
-            }
+        }
+        if(eduTemplateService.updateEduTemplate(eduTemplateVo) != 0){
+            eduPartition = new EduPartition();
+            eduTemplate = eduTemplateService.selectEduTemplateById(eduTemplateVo.getId());
+            eduPartition.setTemplateId(eduTemplate.getId());
+            eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+            ajax.put("templateId",eduTemplate.getId());
+            ajax.put("template",eduTemplate);
         }
         ajax.put(AjaxResult.CODE_TAG,HttpStatus.SUCCESS);
         ajax.put(AjaxResult.MSG_TAG,"修改成功");
