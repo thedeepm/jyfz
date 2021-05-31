@@ -20,15 +20,20 @@
                 <div>预警时间{{ item.warningTime }}</div>
               </div>
             </el-step>
-            <!-- <el-step title="asasd" />
-            <el-step title="asasd" />
-            <el-step title="asasd" /> -->
           </el-steps>
         </div>
       </el-scrollbar>
     </header>
     <main>
-      <Zone :cells="cells" :activeSeat="seat.groupIndex - 1" />
+      <div class="time">
+        <el-progress
+          :percentage="percentage"
+          :color="customColors"
+          :stroke-width="20"
+          :format="timeRemaining"
+        ></el-progress>
+      </div>
+      <Zone :cells="cells" :activeSeat="seat" v-if="cellShow" />
     </main>
     <div class="operation">
       <el-button type="primary" @click="next" v-if="!finish">下一步</el-button>
@@ -58,49 +63,43 @@ export default {
       step: 0,
       id: null,
       show: false,
+      cellShow: false,
       websocket: null,
       taskList: [],
       length: 0,
       cells: null,
       seat: {
+        warning: false,
         groupIndex: null,
       },
       taskId: null,
       finish: false,
+      customColors: [
+        { color: "#f56c6c", percentage: 20 },
+        { color: "#e6a23c", percentage: 40 },
+        { color: "#5cb87a", percentage: 60 },
+      ],
+      time: 0,
+      totalTime: 0,
     };
   },
-  watch: {
-    // taskList: {
-    //   handler(val) {
-    //     for (let i = 0; i < val.length; i++) {
-    //       if (val[i].completed == 0) {
-    //         this.step = i;
-    //         break;
-    //       }
-    //     }
-    //   },
-    //   deep: true,
-    // },
+  computed: {
+    percentage() {
+      return this.time / this.totalTime;
+    },
   },
   created() {
     this.id = this.$route.query.id;
-    getTemplate(this.id).then((res) => {
+    this.templateId = this.$route.query.templateId;
+    getTemplate(this.templateId).then((res) => {
       this.cells = JSON.parse(res.data.tbc1);
+      setTimeout(() => {
+        this.cellShow = true;
+      }, 500);
     });
     this.initSocket();
   },
-  computed: {
-    // taskId() {
-    //   let id = null;
-    //   for (let i = 0; i < this.taskList.length; i++) {
-    //     if (this.taskList[i].completed == 0) {
-    //       id = this.taskList[i].id;
-    //       break;
-    //     }
-    //   }
-    //   return id;
-    // },
-  },
+
   beforeDestroy() {
     this.websocket?.close();
   },
@@ -135,24 +134,42 @@ export default {
         if (event.data) {
           let monitonJson = JSON.parse(event.data);
           // this.taskList = monitonJson.eduTaskList;
+          this.time = monitonJson.seconds;
+          this.totalTime = monitonJson.totalSeconds;
+          if (
+            new Date().getTime() >
+            new Date(monitonJson.currentEduTask.warningTime).getTime()
+          ) {
+            this.seat.warning = true;
+          } else {
+            this.seat.warning = false;
+          }
           this.length = monitonJson.eduTaskList.length;
-          this.$set(this, "taskList", monitonJson.eduTaskList);
-          for (let i = 0; i < this.taskList.length; i++) {
-            if (this.taskList[i].completed == 0) {
-              this.taskId = this.taskList[i].id;
+          for (let i = 0; i < monitonJson.eduTaskList.length; i++) {
+            if (monitonJson.eduTaskList[i].completed == 0) {
+              this.taskId = monitonJson.eduTaskList[i].id;
               this.step = i;
               break;
-            } else if (i == this.taskList.length - 1) {
+            } else if (i == monitonJson.eduTaskList.length - 1) {
               this.step = i + 1;
               this.finish = true;
             }
           }
-          this.$set(this, "seat", monitonJson.eduSeat);
+          // this.step=monitonJson.currentEduTask.stepLevel-1;
+
+          if (this.taskList.length == 0) {
+            this.$set(
+              this,
+              "taskList",
+              JSON.parse(JSON.stringify(monitonJson.eduTaskList))
+            );
+          }
+          this.$set(this.seat, "groupIndex", monitonJson.eduSeat.groupIndex-1);
           setTimeout(() => {
             this.show = true;
             this.$nextTick(() => {
               const scroll = this.$refs["scroll"].wrap;
-              scroll.scrollLeft = (this.length - 1) * 300;
+              scroll.scrollLeft = (this.step - 1) * 300;
             });
           }, 100);
 
@@ -178,6 +195,39 @@ export default {
           this.websocket.send(this.id);
         });
       });
+    },
+    timeRemaining() {
+      let theTime = parseInt(this.time); // 需要转换的时间秒
+      let theTime1 = 0; // 分
+      let theTime2 = 0; // 小时
+      let theTime3 = 0; // 天
+      if (theTime > 60) {
+        theTime1 = parseInt(theTime / 60);
+        theTime = parseInt(theTime % 60);
+        if (theTime1 > 60) {
+          theTime2 = parseInt(theTime1 / 60);
+          theTime1 = parseInt(theTime1 % 60);
+          if (theTime2 > 24) {
+            //大于24小时
+            theTime3 = parseInt(theTime2 / 24);
+            theTime2 = parseInt(theTime2 % 24);
+          }
+        }
+      }
+      let result = "";
+      if (theTime > 0) {
+        result = "" + parseInt(theTime) + "秒";
+      }
+      if (theTime1 > 0) {
+        result = "" + parseInt(theTime1) + "分" + result;
+      }
+      if (theTime2 > 0) {
+        result = "" + parseInt(theTime2) + "小时" + result;
+      }
+      if (theTime3 > 0) {
+        result = "" + parseInt(theTime3) + "天" + result;
+      }
+      return "剩余时间：" + result;
     },
   },
 };
@@ -206,6 +256,23 @@ export default {
     padding: 50px 20px 40px;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    .time {
+      width: 30%;
+      margin-bottom: 40px;
+    }
+  }
+  ::v-deep .el-progress-bar {
+    padding-right: 0;
+    margin-right: 0;
+  }
+  ::v-deep .el-progress__text {
+    margin-top: 10px;
+  }
+  ::v-deep .el-progress-bar__inner {
+    left: unset;
+    right: 0;
   }
   .operation {
     padding: 0 50px 40px;

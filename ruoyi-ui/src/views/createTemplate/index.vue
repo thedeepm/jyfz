@@ -75,8 +75,9 @@
                     label="分区座位"
                     :prop="'partitionsList.' + index + '.partitionInterval'"
                     :rules="{
-                      required: true,
-                      message: '分区座位不能为空',
+                      validator: (rule, value, callback) => {
+                        return partitionsValid(rule, value, callback, item);
+                      },
                       trigger: 'blur',
                     }"
                   >
@@ -161,15 +162,6 @@
           <div class="partition-contianer">
             <h4>{{ groupSelecter.partitionName }}-分组设置</h4>
             <el-form-item label="分组数量" prop="groupCount">
-              <!-- <el-select
-                v-model="groupSelecter.groupCount"
-                placeholder="请选择分组数量"
-                @change="groupsCountChange"
-              >
-                <el-option :value="1" label="1个分组" />
-                <el-option :value="2" label="2个分组" />
-                <el-option :value="3" label="3个分组" />
-              </el-select> -->
               <el-input-number
                 v-model="groupSelecter.groupCount"
                 @change="groupsCountChange"
@@ -205,15 +197,15 @@
                       label="分组座位"
                       :prop="'eduGroupList.' + index + '.groupInterval'"
                       :rules="{
-                        required: true,
-                        message: '分组座位不能为空',
+                        validator: (rule, value, callback) => {
+                          return groupValid(rule, value, callback, item);
+                        },
                         trigger: 'blur',
                       }"
                     >
                       <el-input
                         v-model="item.groupInterval"
                         placeholder="书写方式如：1-5,10-20"
-                        @change="groupsParse(item)"
                       ></el-input>
                     </el-form-item>
                   </el-col>
@@ -238,7 +230,7 @@
                   <el-col :span="6">
                     <el-form-item
                       label="颜色选择"
-                      :prop="'partitionsList.' + index + '.color'"
+                      :prop="'eduGroupList.' + index + '.color'"
                       :rules="{
                         required: true,
                         message: '请选择颜色',
@@ -267,13 +259,7 @@
         <el-button type="primary" @click="submitGroup">下一步</el-button>
       </div>
     </template>
-    <!-- <template v-if="step == 3">
-      <flowList :step.sync="step" />
-      <div class="save-template">
-        <el-button type="info" @click="step--">上一步</el-button>
-        <el-button type="primary" @click="">保存模板</el-button>
-      </div>
-    </template> -->
+
     <template v-if="step == 3">
       <createFlow ref="flow" :step.sync="step" :id="form.id" :data="form" />
       <el-button type="info" @click="step--">上一步</el-button>
@@ -471,7 +457,7 @@ export default {
     },
     partitionNumberChange(val) {
       this.$set(this.form, "partitionsList", []);
-
+      this.cells = JSON.parse(JSON.stringify(cells));
       for (let i = 1; i <= val; i++) {
         this.form.partitionsList.push({
           tbc1: i,
@@ -518,9 +504,125 @@ export default {
         // fileId: this.$refs.flow.form.fileId,
         fileId: 12,
       }).then((res) => {
+        createTemplate(
+          { id: this.form.id, flowId: this.$refs.flow.data.flowId },
+          this.form.id
+        );
         this.$message.success("新增模板成功");
         this.$router.push("/templateList");
       });
+    },
+    partitionsValid(rule, value, callback, partition) {
+      if (value === "") {
+        callback(new Error("分区座位不能为空"));
+      } else {
+        //校验分区座位
+        let partitions = value.split(",");
+        let valid = true;
+        if (partitions[0]) {
+          partitions.forEach((item) => {
+            let seat = item.split("-");
+            if (seat.length == 2) {
+              if (
+                seat[0] > seat[1] ||
+                isNaN(Number(seat[0])) ||
+                isNaN(Number(seat[1]))
+              ) {
+                valid = false;
+                callback(new Error("请按格式填入座位分区"));
+              }
+              for (let i = Number(seat[0]); i <= Number(seat[1]); i++) {
+                if (i > 64 || i < 1) {
+                  valid = false;
+                  callback(new Error("请输入1至64之间的座位号"));
+                } else if (
+                  this.cells[i - 1].group != "" &&
+                  this.cells[i - 1].group != partition.tbc1
+                ) {
+                  valid = false;
+                  callback(new Error("存在座位已被占用"));
+                }
+              }
+            } else if (seat.length == 1) {
+              if (seat[0] > 64 || seat[0] < 1 || isNaN(Number(seat[0]))) {
+                valid = false;
+                callback(new Error("请输入1至64之间的座位号"));
+              } else if (
+                this.cells[Number(seat[0]) - 1].group != "" &&
+                this.cells[Number(seat[0]) - 1].group != partition.tbc1
+              ) {
+                valid = false;
+                callback(new Error("存在座位已被占用"));
+              }
+            }
+          });
+        }
+        if (valid) {
+          this.partitionsParse(partition);
+          callback();
+        }
+      }
+    },
+    groupValid(rule, value, callback, group) {
+      if (value === "") {
+        callback(new Error("分组座位不能为空"));
+      } else {
+        //校验分组座位
+        let valid = true;
+        let groups = value.split(",");
+        if (groups[0]) {
+          groups.forEach((item) => {
+            let seat = item.split("-");
+            if (seat.length == 2) {
+              if (
+                seat[0] > seat[1] ||
+                isNaN(Number(seat[0])) ||
+                isNaN(Number(seat[1]))
+              ) {
+                valid = false;
+                callback(new Error("请按格式填入座位分区"));
+              }
+              for (let i = Number(seat[0]); i <= Number(seat[1]); i++) {
+                if (i > 64 || i < 1) {
+                  valid = false;
+                  callback(new Error("请输入1至64之间的座位号"));
+                } else if (
+                  this.cells[i - 1].siteGroup != "" &&
+                  this.cells[i - 1].siteGroup != undefined &&
+                  this.cells[i - 1].siteGroup != group.tbc1
+                ) {
+                  valid = false;
+                  callback(new Error("存在座位已被占用"));
+                } else if (this.cells[i - 1].group != this.groupSelecter.tbc1) {
+                  valid = false;
+                  callback(new Error("超出父级分区范围"));
+                }
+              }
+            } else if (seat.length == 1) {
+              if (seat[0] > 64 || seat[0] < 1 || isNaN(Number(seat[0]))) {
+                valid = false;
+                callback(new Error("请输入1至64之间的座位号"));
+              } else if (
+                this.cells[Number(seat[0]) - 1].siteGroup != "" &&
+                this.cells[Number(seat[0]) - 1].siteGroup != undefined &&
+                this.cells[Number(seat[0]) - 1].siteGroup != group.tbc1
+              ) {
+                valid = false;
+                callback(new Error("存在座位已被占用"));
+              } else if (
+                this.cells[Number(seat[0]) - 1].group != this.groupSelecter.tbc1
+              ) {
+                valid = false;
+                callback(new Error("超出父级分区范围"));
+              }
+            }
+          });
+        }
+        if (valid) {
+          this.groupsParse(group);
+          callback();
+        }
+      }
     },
   },
 };

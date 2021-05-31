@@ -8,9 +8,9 @@
           @click="$router.push('/createTemplate')"
           >新增模板</el-button
         >
-        <el-button type="success" size="small" @click="inputTemplateShow = true"
+        <!-- <el-button type="success" size="small" @click="inputTemplateShow = true"
           >导入模板</el-button
-        >
+        > -->
       </div>
     </div>
     <div class="templateList">
@@ -105,17 +105,19 @@ export default {
     this.getList();
   },
   mounted() {
-    this.width = document.querySelector(".templateList").clientWidth * 0.3 - 40;
-    this.margin =
-      (document.querySelector(".templateList").clientWidth * 0.1) / 6;
-    window.onresize = () => {
+    this.listenResizeFn();
+    window.addEventListener("resize", this.listenResizeFn);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.listenResizeFn);
+  },
+  methods: {
+    listenResizeFn() {
       this.width =
         document.querySelector(".templateList").clientWidth * 0.3 - 40;
       this.margin =
         (document.querySelector(".templateList").clientWidth * 0.1) / 6;
-    };
-  },
-  methods: {
+    },
     downloadTemplate() {
       window.open("./template.xlsx");
     },
@@ -207,6 +209,15 @@ export default {
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
+      .left {
+        width: calc(100% - 120px);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: left;
+      }
+      .right {
+        width: 110px;
+      }
     }
   }
   .pagination-container ::v-deep .el-pagination {

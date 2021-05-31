@@ -34,7 +34,7 @@
             @click="
               $router.push({
                 path: '/process',
-                query: { id: scope.row.templateId },
+                query: { id: scope.row.id,templateId:scope.row.templateId },
               })
             "
             >开始</el-button

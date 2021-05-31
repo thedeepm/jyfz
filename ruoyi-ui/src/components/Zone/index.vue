@@ -22,7 +22,11 @@
           :color="value.siteColor"
       /></el-tooltip>
       <template v-else>
-        <el-badge is-dot v-if="index == activeSeat && activeSeat != ''">
+        <el-badge
+          is-dot
+          v-if="index == activeSeat.groupIndex && activeSeat.groupIndex != ''"
+          :class="activeSeat.warning ? 'warning' : ''"
+        >
           <site
             :style="siteStyle"
             :width="(width * 25) / 400 + 'px'"
@@ -65,8 +69,10 @@ export default {
       default: "view", //edit 编辑模式 显示tooltips
     },
     activeSeat: {
-      type: [String, Number],
-      default: "",
+      type: Object,
+      default() {
+        return { warning: false, groupIndex: null };
+      },
     },
   },
   data() {
@@ -165,9 +171,12 @@ export default {
   top: 12px;
 }
 ::v-deep .el-badge__content {
-  // transition: all .5s;
   background-color: #13ce66;
   animation: changeColor 2s infinite;
+}
+.warning ::v-deep .el-badge__content {
+  background-color: red;
+  animation: changeWarningColor 2s infinite;
 }
 @keyframes changeColor {
   0% {
@@ -178,6 +187,17 @@ export default {
   }
   100% {
     background-color: #13ce66;
+  }
+}
+@keyframes changeWarningColor {
+  0% {
+    background-color: red;
+  }
+  50% {
+    background-color: #dff0d9;
+  }
+  100% {
+    background-color: red;
   }
 }
 </style>

@@ -102,6 +102,7 @@ export default {
   background-size: 150% 150%;
   background-position: center;
   animation: bg 60s infinite;
+  text-align: center;
   .el-main {
     height: calc(100vh - 100px);
     display: flex;

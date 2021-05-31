@@ -31,6 +31,7 @@
         >
           <div class="step-name">
             <span>步骤{{ index + 1 }}</span>
+            <span style="margin-left: 60px">用户账号：{{ item.userName }}</span>
           </div>
           <el-form-item
             label="任务名称"
@@ -184,7 +185,7 @@
       <el-button type="success" @click="addStep">新增步骤</el-button>
     </el-form>
 
-    <el-dialog title="新增步骤" :visible.sync="addShow" width="600px">
+    <el-dialog title="新增步骤" :visible.sync="addShow" width="800px">
       <el-form
         :model="addForm"
         status-icon
@@ -210,8 +211,8 @@
         </el-form-item>
         <el-row :gutter="24">
           <el-col :span="24">
-            <el-form-item label="具体位置">
-              <el-col :span="7" style="padding-left: 0">
+            <el-form-item label="具体位置" required>
+              <el-col :span="6" style="padding-left: 0">
                 <el-form-item
                   label-width="0"
                   prop="partitionId"
@@ -235,7 +236,7 @@
                     />
                   </el-select> </el-form-item
               ></el-col>
-              <el-col :span="7">
+              <el-col :span="6">
                 <el-form-item
                   label-width="0"
                   prop="groupId"
@@ -257,7 +258,7 @@
                       :value="item.id"
                   /></el-select> </el-form-item
               ></el-col>
-              <el-col :span="7">
+              <el-col :span="6">
                 <el-form-item
                   label-width="0"
                   prop="seatId"
@@ -271,23 +272,41 @@
                     ><el-option
                       v-for="(item, index) in addForm.seatOptions"
                       :key="index"
-                      :label="item.seatName"
+                      :label="item.groupIndex"
                       :value="item.id"
                   /></el-select> </el-form-item
               ></el-col>
+              <el-col :span="6">
+                <el-form-item
+                  label-width="0"
+                  prop="personid"
+                  :rules="{
+                    required: true,
+                    message: '选择作业人',
+                    trigger: 'change',
+                  }"
+                >
+                  <el-select v-model="addForm.personid" placeholder="作业人"
+                    ><el-option
+                      v-for="(item, index) in personOptions"
+                      :key="index"
+                      :label="item.personName"
+                      :value="item.id"
+                    >
+                      <span style="float: left">{{ item.personName }}</span>
+                      <span
+                        style="float: right; color: #8492a6; font-size: 13px"
+                        >{{ item.position }}</span
+                      >
+                    </el-option></el-select
+                  >
+                </el-form-item></el-col
+              >
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item
-              label="时间/时长"
-              prop="time"
-              :rules="{
-                required: true,
-                message: '时间不能为空',
-                trigger: 'blur',
-              }"
-            >
-              <el-date-picker
+            <el-form-item label="时间/时长" required>
+              <!-- <el-date-picker
                 v-model="addForm.time"
                 type="datetimerange"
                 start-placeholder="开始时间"
@@ -295,7 +314,50 @@
                 @change="timePicker(addForm)"
                 value-format="yyyy-MM-dd HH:mm:ss"
               >
-              </el-date-picker>
+              </el-date-picker> -->
+              <el-row>
+                <el-col :span="10">
+                  <el-form-item
+                    prop="startTime"
+                    :rules="{
+                      required: true,
+                      message: '开始时间不能为空',
+                      trigger: 'blur',
+                    }"
+                  >
+                    <el-date-picker
+                      style="width: 100%"
+                      v-model="addForm.startTime"
+                      type="datetime"
+                      placeholder="开始时间"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      :disabled="startTimeDisabled"
+                      :picker-options="startOptions"
+                    >
+                    </el-date-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                  <el-form-item
+                    prop="endTime"
+                    :rules="{
+                      required: true,
+                      message: '结束时间不能为空',
+                      trigger: 'blur',
+                    }"
+                  >
+                    <el-date-picker
+                      style="width: 100%; margin-left: 15px"
+                      v-model="addForm.endTime"
+                      type="datetime"
+                      placeholder="结束时间"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      :picker-options="endOptions"
+                    >
+                    </el-date-picker>
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </el-form-item>
           </el-col>
         </el-row>
@@ -313,6 +375,7 @@
             type="datetime"
             placeholder="预警时间"
             value-format="yyyy-MM-dd HH:mm:ss"
+            :picker-options="warningOptions"
           >
           </el-date-picker>
         </el-form-item>
@@ -336,6 +399,7 @@ import {
   createTask,
   getFlow,
   getTask,
+  getPersonInfoList,
 } from "@/api/jxfz/template";
 import FileUpload from "@/components/FileUpload";
 export default {
@@ -371,19 +435,42 @@ export default {
         ],
       },
       addShow: false,
+      startTimeDisabled: false,
       addForm: {
         taskName: "",
         partitionId: "",
         groupId: "",
         seatId: "",
+        personid: "",
         time: null,
         warningTime: null,
         startTime: "",
         endTime: "",
       },
+      startOptions: {
+        disabledDate: (time) => {
+          if (this.addForm.endTime)
+            return time.getTime() > new Date(this.addForm.endTime).getTime();
+        },
+      },
+      endOptions: {
+        disabledDate: (time) => {
+          if (this.addForm.startTime)
+            return time.getTime() < new Date(this.addForm.startTime).getTime();
+        },
+      },
+      warningOptions: {
+        disabledDate: (time) => {
+          return (
+            time.getTime() < new Date(this.addForm.startTime).getTime() ||
+            time.getTime() > new Date(this.addForm.endTime).getTime()
+          );
+        },
+      },
       partitionOptions: [],
       groupOptions: [],
       seatOptions: [],
+      personOptions: [],
     };
   },
   filters: {
@@ -422,23 +509,41 @@ export default {
       });
     },
     getSeat(item) {
-      getSeatList({ groupId: item.groupId }).then((res) => {
+      getSeatList({ groupId: item.groupId, occupied: false }).then((res) => {
         item.seatOptions = res.rows;
         this.$forceUpdate();
       });
     },
     addStep() {
       this.addShow = true;
-      this.$refs.addForm.resetFields();
+      getPersonInfoList({ seatId: -1 }).then((res) => {
+        this.personOptions = res.rows;
+      });
+      this.$nextTick(() => {
+        this.$refs.addForm.resetFields();
+        const length = this.form.stepsList.length;
+        if (length > 0) {
+          this.startTimeDisabled = true;
+          this.addForm.startTime = this.form.stepsList[
+            length - 1
+          ].eduTask.endTime;
+        } else {
+          this.startTimeDisabled = false;
+        }
+      });
     },
     submitStep() {
-      createTask({
-        flowId: this.data.flowId,
-        ...this.addForm,
-        stepLevel: this.form.stepsList.length + 1,
-      }).then((res) => {
-        this.form.stepsList.push(res);
-        this.addShow = false;
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          createTask({
+            flowId: this.data.flowId,
+            ...this.addForm,
+            stepLevel: this.form.stepsList.length + 1,
+          }).then((res) => {
+            this.form.stepsList.push(res);
+            this.addShow = false;
+          });
+        }
       });
     },
     stepsCountChange(val) {

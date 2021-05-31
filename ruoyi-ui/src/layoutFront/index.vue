@@ -75,6 +75,7 @@ export default {
         width: 300px;
         padding-left: 20px;
         text-align: left;
+        margin: 0;
       }
       .tools {
         display: flex;

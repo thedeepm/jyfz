@@ -35,13 +35,18 @@ export default {
       return `transform: scale(${x});height:${this.width}px`;
     },
   },
+
   mounted() {
-    this.width = this.$refs.home.parentElement.clientWidth;
-    window.onresize = () => {
-      this.width = this.$refs.home.parentElement.clientWidth;
-    };
+    this.listenResizeFn();
+    window.addEventListener("resize", this.listenResizeFn);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.listenResizeFn);
   },
   methods: {
+    listenResizeFn() {
+      this.width = this.$refs.home.parentElement.clientWidth;
+    },
     margin(value, index) {
       let top = "4px";
       let right = "4px";

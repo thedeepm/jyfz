@@ -8,7 +8,7 @@ import request from '@/utils/request'
 // }
 export function taskCompleted(data) {
     return request({
-        url: '/edu/task',
+        url: '/edu/caseTask',
         method: 'put',
         data
     })

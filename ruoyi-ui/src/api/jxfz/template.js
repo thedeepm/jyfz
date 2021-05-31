@@ -115,3 +115,11 @@ export function getTemplateList(params) {
         params
     })
 }
+//获取席位人员列表 seatId=-1
+export function getPersonInfoList(params) {
+    return request({
+        url: '/edu/personInfo/list',
+        method: 'get',
+        params
+    })
+}
