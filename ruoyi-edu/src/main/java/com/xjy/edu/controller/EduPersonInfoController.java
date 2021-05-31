@@ -36,7 +36,7 @@ public class EduPersonInfoController extends BaseController
     /**
      * 查询人员信息列表
      */
-    //@PreAuthorize("@ss.hasPermi('edu:personInfo:list')")
+    @PreAuthorize("@ss.hasPermi('edu:personInfo:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduPersonInfo eduPersonInfo)
     {

@@ -76,7 +76,7 @@ public class EduGroupServiceImpl implements IEduGroupService
     @Transactional
     public int insertEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
-        if(!validateGroupListData(eduGroupRequestVoList)){
+        if(validateGroupListData(eduGroupRequestVoList)){
             return 0;
         }
         int rows = 0;
@@ -120,7 +120,7 @@ public class EduGroupServiceImpl implements IEduGroupService
     @Transactional
     public int updateEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
-        if(!validateGroupListData(eduGroupRequestVoList)){
+        if(validateGroupListData(eduGroupRequestVoList)){
             return 0;
         }
         int rows = 0;
@@ -183,9 +183,6 @@ public class EduGroupServiceImpl implements IEduGroupService
         EduGroup eduGroup;
         List<EduGroup> eduGroupList;
         EduGroupRequestVo eduGroupRequestVo;
-        EduSeat seat = new EduSeat();
-        List<String> prev = new ArrayList<>();
-        List<String> next = new ArrayList<>();
         List<String> toatalList = new ArrayList<>();
         String groupInterval;
         Long partitionTotalseats = 0L;
@@ -199,11 +196,13 @@ public class EduGroupServiceImpl implements IEduGroupService
                 countTotalSeats += eduGroup.getTotalSeats();
                 groupInterval = eduGroup.getGroupInterval();
                 if(groupInterval.contains("-")){
-                    prev.add(groupInterval.split("-")[0]);
-                    next.add(groupInterval.split("-")[1]);
+                    Long start = new Long(groupInterval.split("-")[0]);
+                    Long end = new Long(groupInterval.split("-")[1]);
+                    for (int k = start.intValue(); k <= end.intValue(); k++){
+                        toatalList.add(String.valueOf(k));
+                    }
                 } else {
-                    prev.add(groupInterval.split("-")[0]);
-                    next.add(groupInterval.split("-")[0]);
+                    toatalList.add(groupInterval.split("-")[0]);
                 }
                 if(eduGroupRequestVo.getTotalSeats().compareTo(eduGroup.getTotalSeats()) < 0){
                     return false;
@@ -213,11 +212,6 @@ public class EduGroupServiceImpl implements IEduGroupService
         if(partitionTotalseats.compareTo(countTotalSeats) < 0){
             return false;
         }
-        toatalList.addAll(prev);
-        toatalList.addAll(next);
-//        for (int i = 0; i < prev.size(); i++){
-//            for (int j = 0; j)
-//        }
-        return CommonUtils.cheakIsRepeat(prev) && CommonUtils.cheakIsRepeat(next) && CommonUtils.cheakIsRepeat(toatalList);
+        return !CommonUtils.cheakIsRepeat(toatalList);
     }
 }

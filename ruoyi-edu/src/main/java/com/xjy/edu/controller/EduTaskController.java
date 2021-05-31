@@ -118,17 +118,21 @@ public class EduTaskController extends BaseController
      * 新增任务
      */
     @ApiOperation("新增任务")
-    //@PreAuthorize("@ss.hasPermi('edu:task:add')")
+    @PreAuthorize("@ss.hasPermi('edu:task:add')")
     @Log(title = "任务", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduTask eduTask)
     {
         //校验seatid是否绑定
         AjaxResult ajax = AjaxResult.success();
+        EduSeat seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+        if(seat.getOccupied()){
+            return AjaxResult.error("seat已被占用");
+        }
         eduTask = eduTaskService.insertEduTask(eduTask, ajax);
         EduGroup group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
         EduPartition partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
-        EduSeat seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+        seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
         ajax.put(AjaxResult.CODE_TAG, HttpStatus.SUCCESS);
         ajax.put(AjaxResult.MSG_TAG,"新增成功");
         ajax.put("group",group);
