@@ -1,8 +1,15 @@
 package com.xjy.edu.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.xjy.edu.domain.EduPersonInfo;
 import com.xjy.edu.domain.EduSeat;
+import com.xjy.edu.mapper.EduPersonInfoMapper;
 import com.xjy.edu.mapper.EduSeatMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +33,11 @@ public class EduTaskServiceImpl implements IEduTaskService
     @Autowired
     private EduSeatMapper eduSeatMapper;
 
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private EduPersonInfoMapper eduPersonInfoMapper;
     /**
      * 查询任务
      * 
@@ -58,8 +70,10 @@ public class EduTaskServiceImpl implements IEduTaskService
      */
     @Override
     @Transactional
-    public EduTask insertEduTask(EduTask eduTask)
+    public EduTask insertEduTask(EduTask eduTask, AjaxResult ajaxResult)
     {
+        EduPersonInfo eduPersonInfo = new EduPersonInfo();
+        eduPersonInfo.setId(eduTask.getPersonId());
         EduSeat eduSeat;
         eduTask.setCreateTime(DateUtils.getNowDate());
         int rows = eduTaskMapper.insertEduTask(eduTask);
@@ -68,6 +82,21 @@ public class EduTaskServiceImpl implements IEduTaskService
             eduSeat = eduSeatMapper.selectEduSeatById(eduTask.getSeatId());
             eduSeat.setOccupied(true);
             eduSeatMapper.updateEduSeat(eduSeat);
+            StringBuilder userName = new StringBuilder(32);
+            userName.append(eduTask.getPartitionId());
+            userName.append(eduTask.getGroupId());
+            userName.append(eduTask.getSeatId());
+            userName.append(eduTask.getStepLevel());
+            SysUser user = new SysUser();
+            user.setUserName(userName.toString());
+            //user.setCreateBy(SecurityUtils.getUsername());
+            user.setPassword(SecurityUtils.encryptPassword("P@ssword"));
+            user.setNickName("AutoGenerate");
+            sysUserMapper.insertUser(user);
+            eduPersonInfo.setUserId(user.getUserId());
+            eduPersonInfo.setSeatId(eduSeat.getId());
+            eduPersonInfoMapper.updateEduPersonInfo(eduPersonInfo);
+            ajaxResult.put("userName", user.getUserName());
         }
         return eduTask;
     }

@@ -1,6 +1,8 @@
 package com.xjy.edu.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.xjy.edu.domain.EduTask;
 
 /**
@@ -33,7 +35,7 @@ public interface IEduTaskService
      * @param eduTask 任务
      * @return 结果
      */
-    EduTask insertEduTask(EduTask eduTask);
+    EduTask insertEduTask(EduTask eduTask, AjaxResult ajaxResult);
 
     /**
      * 修改任务

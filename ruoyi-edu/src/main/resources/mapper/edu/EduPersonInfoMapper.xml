@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="tag"    column="tag"    />
         <result property="personName"    column="person_name"    />
+        <result property="userId"    column="user_id"    />
         <result property="tbc1"    column="TBC1"    />
         <result property="tbc2"    column="TBC2"    />
         <result property="tbc3"    column="TBC3"    />
@@ -23,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectEduPersonInfoVo">
-        select id, brief_introduction, position, seat_id, remark, file_id, tag, person_name, create_time, update_time, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_person_info
+        select id, brief_introduction, position, seat_id, remark, file_id, tag, person_name, create_time, update_time, user_id, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_person_info
     </sql>
 
     <select id="selectEduPersonInfoList" parameterType="EduPersonInfo" resultMap="EduPersonInfoResult">
@@ -62,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileId != null">file_id,</if>
             <if test="tag != null">tag,</if>
             <if test="personName != null ">person_name,</if>
+            <if test="userId != null ">user_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="tbc1 != null">TBC1,</if>
@@ -78,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileId != null">#{fileId},</if>
             <if test="tag != null">#{tag},</if>
             <if test="personName != null">#{personName},</if>
+            <if test="userId != null">#{user_id},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="tbc1 != null">#{tbc1},</if>
@@ -98,6 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileId != null">file_id = #{fileId},</if>
             <if test="tag != null">file_id = #{tag},</if>
             <if test="personName != null">person_name = #{personName},</if>
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="tbc1 != null">TBC1 = #{tbc1},</if>

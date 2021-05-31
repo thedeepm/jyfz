@@ -42,6 +42,10 @@ public class EduPersonInfo extends BaseEntity
     @Excel(name = "人物姓名")
     private String personName;
 
+    /** 关联用户id */
+    @Excel(name = "关联用户id")
+    private Long userId;
+
     /** $column.columnComment */
     @Excel(name = "关联文件id")
     private String tbc1;
@@ -128,6 +132,14 @@ public class EduPersonInfo extends BaseEntity
         this.personName = personName;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public String getTbc1()
     {
         return tbc1;
@@ -180,6 +192,7 @@ public class EduPersonInfo extends BaseEntity
             .append("fileId", getFileId())
             .append("tag", getTag())
             .append("personName", getPersonName())
+            .append("userId", getUserId())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
             .append("tbc1", getTbc1())

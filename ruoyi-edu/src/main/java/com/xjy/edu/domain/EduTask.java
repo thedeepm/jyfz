@@ -63,6 +63,9 @@ public class EduTask extends BaseEntity
     @Excel(name = "是否完成", readConverterExp = "0=否1是")
     private Long completed;
 
+    /** 人员Id */
+    private Long personId;
+
     /** $column.columnComment */
     @Excel(name = "是否完成", readConverterExp = "$column.readConverterExp()")
     private String tbc1;
@@ -225,6 +228,14 @@ public class EduTask extends BaseEntity
     public String getTbc5() 
     {
         return tbc5;
+    }
+
+    public Long getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Long personId) {
+        this.personId = personId;
     }
 
     @Override

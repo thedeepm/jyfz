@@ -215,6 +215,9 @@ public class EduGroupServiceImpl implements IEduGroupService
         }
         toatalList.addAll(prev);
         toatalList.addAll(next);
+//        for (int i = 0; i < prev.size(); i++){
+//            for (int j = 0; j)
+//        }
         return CommonUtils.cheakIsRepeat(prev) && CommonUtils.cheakIsRepeat(next) && CommonUtils.cheakIsRepeat(toatalList);
     }
 }

@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.common.constant.HttpStatus;
-import com.xjy.edu.domain.EduGroup;
-import com.xjy.edu.domain.EduPartition;
-import com.xjy.edu.domain.EduSeat;
-import com.xjy.edu.service.IEduGroupService;
-import com.xjy.edu.service.IEduPartitionService;
-import com.xjy.edu.service.IEduSeatService;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.service.ISysUserService;
+import com.xjy.edu.domain.*;
+import com.xjy.edu.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,8 +27,6 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.xjy.edu.domain.EduTask;
-import com.xjy.edu.service.IEduTaskService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -55,6 +52,12 @@ public class EduTaskController extends BaseController
 
     @Autowired
     private IEduSeatService eduSeatService;
+
+    @Autowired
+    private ISysUserService userService;
+
+    @Autowired
+    private IEduPersonInfoService eduPersonInfoService;
 
     /**
      * 查询任务列表
@@ -115,17 +118,17 @@ public class EduTaskController extends BaseController
      * 新增任务
      */
     @ApiOperation("新增任务")
-    @PreAuthorize("@ss.hasPermi('edu:task:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:task:add')")
     @Log(title = "任务", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduTask eduTask)
     {
-        AjaxResult ajax;
-        eduTask = eduTaskService.insertEduTask(eduTask);
+        //校验seatid是否绑定
+        AjaxResult ajax = AjaxResult.success();
+        eduTask = eduTaskService.insertEduTask(eduTask, ajax);
         EduGroup group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
         EduPartition partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
         EduSeat seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
-        ajax = AjaxResult.success();
         ajax.put(AjaxResult.CODE_TAG, HttpStatus.SUCCESS);
         ajax.put(AjaxResult.MSG_TAG,"新增成功");
         ajax.put("group",group);
