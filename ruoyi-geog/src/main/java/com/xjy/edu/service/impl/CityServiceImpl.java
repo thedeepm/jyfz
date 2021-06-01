@@ -43,9 +43,15 @@ public class CityServiceImpl implements ICityService
         return cityMapper.selectCityList(city);
     }
 
+    /**
+     * 查询国内主要城市信息列表
+     *
+     * @param keyword 国内主要城市信息
+     * @return 国内主要城市信息
+     */
     @Override
     public List<City> selectCityListByKeyword(String keyword) {
-        return null;
+        return cityMapper.selectCityListByKeyword(keyword);
     }
 
     /**

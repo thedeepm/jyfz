@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProvinceVo">
-        select province_id, chinese_name, foreign_name, category, ruled_area, area, population, belong_to, position, add_msg from province
+        select province_id, chinese_name, foreign_name, category, ruled_area, area, population, belong_to, position, add_msg, 'province' as type from province
     </sql>
 
     <select id="selectProvinceList" parameterType="Province" resultMap="ProvinceResult">

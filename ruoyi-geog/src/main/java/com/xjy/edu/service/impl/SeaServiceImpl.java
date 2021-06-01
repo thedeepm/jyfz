@@ -47,7 +47,7 @@ public class SeaServiceImpl implements ISeaService
 
     @Override
     public List<Sea> selectSeaListByKeyword(String keyword) {
-        return null;
+        return seaMapper.selectSeaListByKeyword(keyword);
     }
 
     /**

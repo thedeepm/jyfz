@@ -36,7 +36,7 @@ public class CityController extends BaseController
     /**
      * 查询国内主要城市信息列表
      */
-    //@PreAuthorize("@ss.hasPermi('edu:city:list')")
+    @PreAuthorize("@ss.hasPermi('edu:city:list')")
     @GetMapping("/list")
     public TableDataInfo list(City city)
     {

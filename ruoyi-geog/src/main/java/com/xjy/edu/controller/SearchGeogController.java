@@ -12,9 +12,11 @@ import com.xjy.edu.domain.*;
 import com.xjy.edu.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/geog/searchAll")
-public class SearchController extends BaseController
+public class SearchGeogController extends BaseController
 {
     @Autowired
     private ICityService cityService;
@@ -41,17 +43,18 @@ public class SearchController extends BaseController
     /**
      * 速查地理信息
      */
-    //@PreAuthorize("@ss.hasPermi('edu:city:list')")
+    @PreAuthorize("@ss.hasPermi('edu:city:list')")
     @GetMapping("/list")
     public AjaxResult list(@RequestParam(defaultValue = "") String keyword)
     {
         startPage();
+        List<Object> totalList = new ArrayList<>();
         List<City> cityList = cityService.selectCityListByKeyword(keyword);
-        List<BaseEntity> totalList = new ArrayList<>(cityList);
         List<Country> countryList = countryService.selectCountryListByKeyword(keyword);
         List<Port> portList = portService.selectPortListByKeyword(keyword);
         List<Province> provinceList = provinceService.selectProvinceListByKeyword(keyword);
         List<Sea> seaList = seaService.selectSeaListByKeyword(keyword);
+        totalList.addAll(cityList);
         totalList.addAll(countryList);
         totalList.addAll(portList);
         totalList.addAll(provinceList);

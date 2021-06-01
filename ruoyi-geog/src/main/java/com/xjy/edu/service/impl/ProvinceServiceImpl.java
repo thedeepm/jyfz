@@ -47,7 +47,7 @@ public class ProvinceServiceImpl implements IProvinceService
 
     @Override
     public List<Province> selectProvinceListByKeyword(String keyword) {
-        return null;
+        return provinceMapper.selectProvinceListByKeyword(keyword);
     }
 
     /**

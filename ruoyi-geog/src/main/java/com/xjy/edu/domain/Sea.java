@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author wuzh
  * @date 2021-05-31
  */
-public class Sea extends BaseEntity
+public class Sea extends BaseSearchEntity
 {
     private static final long serialVersionUID = 1L;
 

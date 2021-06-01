@@ -22,7 +22,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCountryVo">
-        select country_id, chinese_name, foreign_name, abbreviation, belong_to, population, population_density, area, capital, code, language, add_msg, add_msg1, add_msg2 from country
+        select country_id, chinese_name, foreign_name, abbreviation, belong_to,
+         population, population_density, area, capital, code, language, add_msg, add_msg1, add_msg2, 'country' as type from country
     </sql>
 
     <select id="selectCountryList" parameterType="Country" resultMap="CountryResult">

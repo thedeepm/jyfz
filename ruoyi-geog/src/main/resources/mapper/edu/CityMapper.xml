@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectCityVo">
-        select city_id, chinese_name, foreign_name, other_name, category, area, population, position, add_msg from city
+        select city_id, chinese_name, foreign_name, other_name, category, area, population, position, add_msg, 'city' as type from city
     </sql>
 
     <select id="selectCityList" parameterType="City" resultMap="CityResult">

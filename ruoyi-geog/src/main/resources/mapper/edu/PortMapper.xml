@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPortVo">
-        select port_id, chinese_name, foreign_name, region, throughput, core_business, add_msg from port
+        select port_id, chinese_name, foreign_name, region, throughput, core_business, add_msg, 'port' as type from port
     </sql>
 
     <select id="selectPortList" parameterType="Port" resultMap="PortResult">
