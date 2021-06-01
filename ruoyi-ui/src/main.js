@@ -58,7 +58,11 @@ Vue.use(permission)
  * Currently MockJs will be used in the production environment,
  * please remove it before going online! ! !
  */
+import animated from 'animate.css'
+Vue.use(animated)
 
+import 'hover.css'
+import './style/index.scss'
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
