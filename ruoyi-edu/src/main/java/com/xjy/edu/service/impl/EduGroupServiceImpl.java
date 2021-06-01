@@ -76,8 +76,9 @@ public class EduGroupServiceImpl implements IEduGroupService
     @Transactional
     public int insertEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
-        if(validateGroupListData(eduGroupRequestVoList)){
-            return 0;
+        int validResult = validateGroupListData(eduGroupRequestVoList);
+        if(validResult != 1){
+            return validResult;
         }
         int rows = 0;
         EduGroup eduGroup = new EduGroup();
@@ -91,7 +92,6 @@ public class EduGroupServiceImpl implements IEduGroupService
                 eduGroup = eduGroupList.get(j);
                 eduGroup.setPartitionId(eduGroupRequestVo.getId());
                 //创建分组后 修改席位关联起分组id 并计算出index
-                //TODO 更新分区中的分组数量
                 rows = eduGroupMapper.insertEduGroup(eduGroup);
                 if(rows != 0){
                     eduGroup = this.getLastEduGroup();
@@ -120,8 +120,9 @@ public class EduGroupServiceImpl implements IEduGroupService
     @Transactional
     public int updateEduGroup(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
-        if(validateGroupListData(eduGroupRequestVoList)){
-            return 0;
+        int validResult = validateGroupListData(eduGroupRequestVoList);
+        if(validResult != 1){
+            return validResult;
         }
         int rows = 0;
         EduGroup eduGroup = new EduGroup();
@@ -178,7 +179,7 @@ public class EduGroupServiceImpl implements IEduGroupService
         return eduGroupMapper.deleteEduGroupById(id);
     }
 
-    public boolean validateGroupListData(List<EduGroupRequestVo> eduGroupRequestVoList)
+    public int validateGroupListData(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
         EduGroup eduGroup;
         List<EduGroup> eduGroupList;
@@ -205,13 +206,13 @@ public class EduGroupServiceImpl implements IEduGroupService
                     toatalList.add(groupInterval.split("-")[0]);
                 }
                 if(eduGroupRequestVo.getTotalSeats().compareTo(eduGroup.getTotalSeats()) < 0){
-                    return false;
+                    return -1;
                 }
             }
         }
         if(partitionTotalseats.compareTo(countTotalSeats) < 0){
-            return false;
+            return -1;
         }
-        return !CommonUtils.cheakIsRepeat(toatalList);
+        return !CommonUtils.cheakIsRepeat(toatalList) ? 1 : 0;
     }
 }

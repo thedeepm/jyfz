@@ -91,8 +91,8 @@ public class EduGroupController extends BaseController
         AjaxResult ajax;
         EduGroup eduGroup = new EduGroup();
         int rows = eduGroupService.insertEduGroup(eduGroupRequestVoList);
-        if(rows == 0){
-            return AjaxResult.error("数据校验失败！");
+        if(rows != 1){
+            return rows == 0 ? AjaxResult.error("区间有问题，请重新填写！") : AjaxResult.error("席位数量填写有问题，请重新填写！");
         }
         for(int i = 0; i < eduGroupRequestVoList.size(); i++){
             eduGroup.setPartitionId(eduGroupRequestVoList.get(i).getId());

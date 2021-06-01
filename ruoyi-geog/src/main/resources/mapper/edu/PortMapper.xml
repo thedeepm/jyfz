@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.PortMapper">
+    
+    <resultMap type="Port" id="PortResult">
+        <result property="portId"    column="port_id"    />
+        <result property="chineseName"    column="chinese_name"    />
+        <result property="foreignName"    column="foreign_name"    />
+        <result property="region"    column="region"    />
+        <result property="throughput"    column="throughput"    />
+        <result property="coreBusiness"    column="core_business"    />
+        <result property="addMsg"    column="add_msg"    />
+    </resultMap>
+
+    <sql id="selectPortVo">
+        select port_id, chinese_name, foreign_name, region, throughput, core_business, add_msg from port
+    </sql>
+
+    <select id="selectPortList" parameterType="Port" resultMap="PortResult">
+        <include refid="selectPortVo"/>
+        <where>  
+            <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
+            <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
+            <if test="region != null  and region != ''"> and region = #{region}</if>
+            <if test="throughput != null  and throughput != ''"> and throughput = #{throughput}</if>
+            <if test="coreBusiness != null  and coreBusiness != ''"> and core_business = #{coreBusiness}</if>
+            <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+        </where>
+    </select>
+
+    <select id="selectPortListByKeyword" parameterType="String" resultMap="PortResult">
+        <include refid="selectPortVo"/>
+        <where>
+            <if test="chineseName != null  and chineseName != ''">
+             and chinese_name like concat('%', #{keyword}, '%')
+             or foreign_name like concat('%', #{keyword}, '%')
+             or region like concat('%', #{keyword}, '%')
+             </if>
+        </where>
+    </select>
+    
+    <select id="selectPortById" parameterType="Long" resultMap="PortResult">
+        <include refid="selectPortVo"/>
+        where port_id = #{portId}
+    </select>
+        
+    <insert id="insertPort" parameterType="Port">
+        insert into port
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="portId != null">port_id,</if>
+            <if test="chineseName != null and chineseName != ''">chinese_name,</if>
+            <if test="foreignName != null">foreign_name,</if>
+            <if test="region != null">region,</if>
+            <if test="throughput != null">throughput,</if>
+            <if test="coreBusiness != null">core_business,</if>
+            <if test="addMsg != null">add_msg,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="portId != null">#{portId},</if>
+            <if test="chineseName != null and chineseName != ''">#{chineseName},</if>
+            <if test="foreignName != null">#{foreignName},</if>
+            <if test="region != null">#{region},</if>
+            <if test="throughput != null">#{throughput},</if>
+            <if test="coreBusiness != null">#{coreBusiness},</if>
+            <if test="addMsg != null">#{addMsg},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePort" parameterType="Port">
+        update port
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name = #{chineseName},</if>
+            <if test="foreignName != null">foreign_name = #{foreignName},</if>
+            <if test="region != null">region = #{region},</if>
+            <if test="throughput != null">throughput = #{throughput},</if>
+            <if test="coreBusiness != null">core_business = #{coreBusiness},</if>
+            <if test="addMsg != null">add_msg = #{addMsg},</if>
+        </trim>
+        where port_id = #{portId}
+    </update>
+
+    <delete id="deletePortById" parameterType="Long">
+        delete from port where port_id = #{portId}
+    </delete>
+
+    <delete id="deletePortByIds" parameterType="String">
+        delete from port where port_id in 
+        <foreach item="portId" collection="array" open="(" separator="," close=")">
+            #{portId}
+        </foreach>
+    </delete>
+</mapper>
