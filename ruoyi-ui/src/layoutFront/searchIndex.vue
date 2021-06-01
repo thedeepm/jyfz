@@ -15,7 +15,7 @@
 </template>
 <script>
 import topBar from "./components/topBar.vue";
-import breadcrumb from "@/components/Breadcrumb";
+import breadcrumb from "@/components/Breadcrumb/index2";
 export default {
   name: "Layout",
   components: {

@@ -85,7 +85,11 @@ export default {
   },
   computed: {
     percentage() {
-      return this.time / this.totalTime;
+      if (this.time < 0) {
+        return 0;
+      } else {
+        return this.time / this.totalTime;
+      }
     },
   },
   created() {
@@ -164,7 +168,11 @@ export default {
               JSON.parse(JSON.stringify(monitonJson.eduTaskList))
             );
           }
-          this.$set(this.seat, "groupIndex", monitonJson.eduSeat.groupIndex-1);
+          this.$set(
+            this.seat,
+            "groupIndex",
+            monitonJson.eduSeat.groupIndex - 1
+          );
           setTimeout(() => {
             this.show = true;
             this.$nextTick(() => {
@@ -197,7 +205,16 @@ export default {
       });
     },
     timeRemaining() {
-      let theTime = parseInt(this.time); // 需要转换的时间秒
+      let time = 0;
+      let warning = false;
+      let label = "剩余时间：";
+      if (this.time < 0) {
+        time = Math.abs(this.time);
+        label = "已超时：";
+      } else {
+        time = this.time;
+      }
+      let theTime = parseInt(time); // 需要转换的时间秒
       let theTime1 = 0; // 分
       let theTime2 = 0; // 小时
       let theTime3 = 0; // 天
@@ -227,7 +244,7 @@ export default {
       if (theTime3 > 0) {
         result = "" + parseInt(theTime3) + "天" + result;
       }
-      return "剩余时间：" + result;
+      return label + result;
     },
   },
 };

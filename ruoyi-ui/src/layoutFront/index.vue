@@ -33,7 +33,7 @@
 </template>
 <script>
 import topBar from "./components/topBar.vue";
-import breadcrumb from "@/components/Breadcrumb";
+import breadcrumb from "@/components/Breadcrumb/index2";
 export default {
   name: "Layout",
   components: {
@@ -72,7 +72,7 @@ export default {
       display: flex;
       justify-content: space-between;
       .title {
-        width: 300px;
+        width: 400px;
         padding-left: 20px;
         text-align: left;
         margin: 0;

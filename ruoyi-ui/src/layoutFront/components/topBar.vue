@@ -8,7 +8,7 @@
       />
       <div class="operation">
         <div class="left-menu">
-          <el-menu router default-active="/caseList" mode="horizontal">
+          <el-menu router :default-active="activeMenu" mode="horizontal">
             <el-menu-item index="/caseList">案例</el-menu-item>
             <el-menu-item index="/templateList">模板管理</el-menu-item>
           </el-menu>
@@ -43,6 +43,30 @@ export default {
   name: "topBar",
   components: {
     search,
+  },
+  computed: {
+    // 默认激活的菜单
+    activeMenu() {
+      const path = this.$route.path;
+      // debugger
+      // let activePath = this.routers[0].path;
+      // if (path.lastIndexOf("/") > 0) {
+      //   const tmpPath = path.substring(1, path.length);
+      //   activePath = "/" + tmpPath.substring(0, tmpPath.indexOf("/"));
+      // } else if ("/index" == path || "" == path) {
+      //   if (!this.isFrist) {
+      //     this.isFrist = true;
+      //   } else {
+      //     activePath = "index";
+      //   }
+      // }
+      // var routes = this.activeRoutes(activePath);
+      // if (routes.length === 0) {
+      //   activePath = this.currentIndex || this.routers[0].path;
+      //   this.activeRoutes(activePath);
+      // }
+      return path;
+    },
   },
 };
 </script>

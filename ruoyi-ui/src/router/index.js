@@ -83,7 +83,7 @@ export const constantRoutes = [
       {
         path: '/search/list',
         component: (resolve) => require(['@/views/searchList'], resolve),
-        name: 'caseList',
+        name: 'searchList',
         meta: { title: '搜索结果' },
       },
       {
@@ -117,12 +117,12 @@ export const constantRoutes = [
         path: '/updateCase',
         component: (resolve) => require(['@/views/createCase'], resolve),
         name: 'updateCase',
-        meta: { title: '修改案例' }
+        meta: { title: '修改案例' },
       },
       {
         path: '/templateList',
         component: (resolve) => require(['@/views/templateList'], resolve),
-        name: 'createCase',
+        name: 'templateList',
         meta: { title: '分区模板管理' }
       },
       {
@@ -135,7 +135,7 @@ export const constantRoutes = [
         path: '/updateTemplate',
         component: (resolve) => require(['@/views/createTemplate'], resolve),
         name: 'updateTemplate',
-        meta: { title: '修改模板' }
+        meta: { title: '修改模板' },
       },
       {
         path: '/process',
