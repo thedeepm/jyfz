@@ -98,23 +98,27 @@ public class EduTemplateController extends BaseController
     @PreAuthorize("@ss.hasPermi('edu:template:add')")
     @Log(title = "模板", businessType = BusinessType.INSERT)
     @PostMapping
-    public TableDataInfo add(@RequestBody EduTemplateRequestVo eduTemplateVo)
+    public Map<String,Object> add(@RequestBody EduTemplateRequestVo eduTemplateVo)
     {
+        Map<String,Object> map = new HashMap<String,Object>();
         List<EduPartition> eduPartitionList = new ArrayList<>();
         if(eduTemplateService.insertEduTemplate(eduTemplateVo) != 0){
             EduPartition eduPartition = new EduPartition();
             EduTemplate eduTemplate = eduTemplateService.getLastEduTemplate();
             eduPartition.setTemplateId(eduTemplate.getId());
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+            map.put("templateId", eduTemplate.getId());
         }
-        TableDataInfo rspData = new TableDataInfo();
-        rspData.setCode(HttpStatus.SUCCESS);
-        rspData.setMsg("新增成功");
-        rspData.setRows(eduPartitionList);
-        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
-//        Map map = new HashMap<String,Object>();
-//        map.put("code", HttpStatus.SUCCESS);
-        return rspData;
+//        TableDataInfo rspData = new TableDataInfo();
+//        rspData.setCode(HttpStatus.SUCCESS);
+//        rspData.setMsg("新增成功");
+//        rspData.setRows(eduPartitionList);
+//        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
+        map.put("code", HttpStatus.SUCCESS);
+        map.put("eduPartitionList",eduPartitionList);
+        map.put("total", new PageInfo(eduPartitionList).getTotal());
+        map.put("message", "新增成功");
+        return map;
     }
 
     /**
