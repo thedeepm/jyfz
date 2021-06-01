@@ -6,6 +6,7 @@ const state = {
     withoutAnimation: false
   },
   device: 'desktop',
+  keyword:"",
   size: Cookies.get('size') || 'medium'
 }
 
@@ -30,6 +31,9 @@ const mutations = {
   SET_SIZE: (state, size) => {
     state.size = size
     Cookies.set('size', size)
+  },
+  KEYWORD(state,keyword) {
+    state.keyword = keyword
   }
 }
 
