@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import javax.validation.constraints.Size;
+
 /**
  * 模板对象 edu_template
  * 
@@ -68,6 +70,7 @@ public class EduTemplate extends BaseEntity
         this.hallName = hallName;
     }
 
+    @Size(min = 0, max = 100, message = "分区大厅名长度不能超过100个字符")
     public String getHallName() 
     {
         return hallName;

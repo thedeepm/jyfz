@@ -37,7 +37,7 @@ public interface IEduTemplateService
     /**
      * 新增模板
      * 
-     * @param eduTemplate 模板
+     * @param eduTemplateVo 模板
      * @return 结果
      */
     int insertEduTemplate(EduTemplateRequestVo eduTemplateVo);
@@ -45,7 +45,7 @@ public interface IEduTemplateService
     /**
      * 修改模板
      * 
-     * @param eduTemplate 模板
+     * @param eduTemplateVo 模板
      * @return 结果
      */
     int updateEduTemplate(EduTemplateRequestVo eduTemplateVo);

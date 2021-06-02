@@ -1,8 +1,16 @@
 package com.xjy.edu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.xjy.edu.domain.EduCaseTask;
+import com.xjy.edu.domain.EduPersonInfo;
+import com.xjy.edu.domain.EduTask;
+import com.xjy.edu.service.IEduCaseTaskService;
+import com.xjy.edu.service.IEduPersonInfoService;
+import com.xjy.edu.service.IEduTaskService;
 import io.swagger.annotations.*;
+import org.apache.ibatis.annotations.Case;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +45,15 @@ public class EduCaseController extends BaseController
     @Autowired
     private IEduCaseService eduCaseService;
 
+    @Autowired
+    private IEduPersonInfoService eduPersonInfoService;
+
+    @Autowired
+    private IEduTaskService eduTaskService;
+
+    @Autowired
+    private IEduCaseTaskService eduCaseTaskService;
+
     /**
      * 查询案例列表
      */
@@ -48,6 +65,43 @@ public class EduCaseController extends BaseController
         startPage();
         List<EduCase> list = eduCaseService.selectEduCaseList(eduCase);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询我的案例列表
+     */
+    @ApiOperation("查询我的案例列表")
+    @PreAuthorize("@ss.hasPermi('edu:case:myList')")
+    @GetMapping("/myList")
+    public TableDataInfo myList(@ApiParam(value = "查询我的案例列表", required = true) Long userId)
+    {
+        startPage();
+        EduPersonInfo eduPersonInfo = new EduPersonInfo();
+        EduTask eduTask = new EduTask();
+        EduCaseTask eduCaseTask = new EduCaseTask();
+        eduPersonInfo.setUserId(userId);
+        List<EduPersonInfo> personInfoList = eduPersonInfoService.selectEduPersonInfoList(eduPersonInfo);
+        if(personInfoList != null && !personInfoList.isEmpty()){
+            eduPersonInfo = personInfoList.get(0);
+        }
+        eduTask.setSeatId(eduPersonInfo.getSeatId());
+        List<EduTask> eduTaskList = eduTaskService.selectEduTaskList(eduTask);
+        if(eduTaskList != null && !eduTaskList.isEmpty()){
+            eduTask = eduTaskList.get(0);
+        }
+        eduCaseTask.setTaskId(eduTask.getId());
+        List<EduCaseTask> eduCaseTaskList = eduCaseTaskService.selectEduCaseTaskList(eduCaseTask);
+        List<Long> caseIds = new ArrayList<>();
+        if(eduCaseTaskList != null && !eduCaseTaskList.isEmpty()){
+            for (EduCaseTask caseTask: eduCaseTaskList) {
+                caseIds.add(caseTask.getCaseId());
+            }
+        }
+        List<EduCase> caseList = new ArrayList<>();
+        for ( Long id: caseIds) {
+           caseList.add(eduCaseService.selectEduCaseById(id));
+        }
+        return getDataTable(caseList);
     }
 
     /**

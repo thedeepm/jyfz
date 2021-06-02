@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -97,7 +98,7 @@ public class EduTemplateController extends BaseController
     @PreAuthorize("@ss.hasPermi('edu:template:add')")
     @Log(title = "模板", businessType = BusinessType.INSERT)
     @PostMapping
-    public Map<String,Object> add(@RequestBody EduTemplateRequestVo eduTemplateVo)
+    public Map<String,Object> add(@Validated @RequestBody EduTemplateRequestVo eduTemplateVo)
     {
         Map<String,Object> map = new HashMap<String,Object>();
         List<EduPartition> eduPartitionList = new ArrayList<>();
@@ -122,7 +123,7 @@ public class EduTemplateController extends BaseController
     @PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EduTemplateRequestVo eduTemplateVo)
+    public AjaxResult edit(@Validated @RequestBody EduTemplateRequestVo eduTemplateVo)
     {
         AjaxResult ajax = AjaxResult.success();
 //        Map<String,Object> map = new HashMap<String,Object>();

@@ -76,6 +76,7 @@ public class EduPersonInfoController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody EduPersonInfo eduPersonInfo)
     {
+        eduPersonInfo.setSeatId(-1L);
         return toAjax(eduPersonInfoService.insertEduPersonInfo(eduPersonInfo));
     }
 
