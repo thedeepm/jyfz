@@ -2,6 +2,8 @@ package com.xjy.edu.controller;
 
 import java.util.List;
 
+import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.constant.HttpStatus;
 import com.xjy.edu.domain.vo.EduGroupRequestVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -86,10 +88,23 @@ public class EduGroupController extends BaseController
     public AjaxResult add(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
     {
         //新增分组数据
-//        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
-//            eduGroupService.insertEduGroup(eduGroupRequestVoList.get(i).getEduGroupList());
-//        }
-        return toAjax(eduGroupService.insertEduGroup(eduGroupRequestVoList));
+        AjaxResult ajax;
+        EduGroup eduGroup = new EduGroup();
+        int rows = eduGroupService.insertEduGroup(eduGroupRequestVoList);
+        if(rows != 1){
+            return rows == 0 ? AjaxResult.error("区间有问题，请重新填写！") : AjaxResult.error("席位数量填写有问题，请重新填写！");
+        }
+        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
+            eduGroup.setPartitionId(eduGroupRequestVoList.get(i).getId());
+            List<EduGroup> eduGroupList = eduGroupService.selectEduGroupList(eduGroup);
+            eduGroupRequestVoList.get(i).setEduGroupList(eduGroupList);
+        }
+        ajax = AjaxResult.success();
+        ajax.put(AjaxResult.CODE_TAG,HttpStatus.SUCCESS);
+        ajax.put(AjaxResult.MSG_TAG,"新增成功");
+        ajax.put("rows",eduGroupRequestVoList);
+        ajax.put("total",new PageInfo(eduGroupRequestVoList).getTotal());
+        return ajax;
     }
 
     /**
@@ -99,9 +114,26 @@ public class EduGroupController extends BaseController
     @PreAuthorize("@ss.hasPermi('edu:group:edit')")
     @Log(title = "分组", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EduGroup eduGroup)
+    public AjaxResult edit(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
     {
-        return toAjax(eduGroupService.updateEduGroup(eduGroup));
+        //修改分组数据
+        AjaxResult ajax;
+        EduGroup eduGroup = new EduGroup();
+        int rows = eduGroupService.updateEduGroup(eduGroupRequestVoList);
+        if(rows == 0){
+            return AjaxResult.error("数据校验失败！");
+        }
+        for(int i = 0; i < eduGroupRequestVoList.size(); i++){
+            eduGroup.setPartitionId(eduGroupRequestVoList.get(i).getId());
+            List<EduGroup> eduGroupList = eduGroupService.selectEduGroupList(eduGroup);
+            eduGroupRequestVoList.get(i).setEduGroupList(eduGroupList);
+        }
+        ajax = AjaxResult.success();
+        ajax.put(AjaxResult.CODE_TAG,HttpStatus.SUCCESS);
+        ajax.put(AjaxResult.MSG_TAG,"新增成功");
+        ajax.put("rows",eduGroupRequestVoList);
+        ajax.put("total",new PageInfo(eduGroupRequestVoList).getTotal());
+        return ajax;
     }
 
     /**

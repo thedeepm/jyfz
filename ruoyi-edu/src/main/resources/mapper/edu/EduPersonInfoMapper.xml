@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.EduPersonInfoMapper">
+    
+    <resultMap type="EduPersonInfo" id="EduPersonInfoResult">
+        <result property="id"    column="id"    />
+        <result property="briefIntroduction"    column="brief_introduction"    />
+        <result property="position"    column="position"    />
+        <result property="seatId"    column="seat_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="fileId"    column="file_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="tag"    column="tag"    />
+        <result property="personName"    column="person_name"    />
+        <result property="userId"    column="user_id"    />
+        <result property="tbc1"    column="TBC1"    />
+        <result property="tbc2"    column="TBC2"    />
+        <result property="tbc3"    column="TBC3"    />
+        <result property="tbc4"    column="TBC4"    />
+        <result property="tbc5"    column="TBC5"    />
+    </resultMap>
+
+    <sql id="selectEduPersonInfoVo">
+        select id, brief_introduction, position, seat_id, remark, file_id, tag, person_name, create_time, update_time, user_id, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_person_info
+    </sql>
+
+    <select id="selectEduPersonInfoList" parameterType="EduPersonInfo" resultMap="EduPersonInfoResult">
+        <include refid="selectEduPersonInfoVo"/>
+        <where>  
+            <if test="briefIntroduction != null  and briefIntroduction != ''"> and brief_introduction = #{briefIntroduction}</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="seatId != null "> and seat_id = #{seatId}</if>
+            <if test="fileId != null "> and file_id = #{fileId}</if>
+            <if test="tag != null "> and tag = #{tag}</if>
+            <if test="personName != null "> and person_name = #{personName}</if>
+            <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
+            <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>
+            <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
+            <if test="tbc4 != null  and tbc4 != ''"> and TBC4 = #{tbc4}</if>
+            <if test="tbc5 != null  and tbc5 != ''"> and TBC5 = #{tbc5}</if>
+            <if test="searchValue != null  and searchValue != ''"> and position like concat('%', #{searchValue}, '%')
+                or brief_introduction like concat('%', #{searchValue}, '%') or tag like concat('%', #{searchValue}, '%')
+                or person_name like concat('%', #{searchValue}, '%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectEduPersonInfoById" parameterType="Long" resultMap="EduPersonInfoResult">
+        <include refid="selectEduPersonInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduPersonInfo" parameterType="EduPersonInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into edu_person_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="briefIntroduction != null">brief_introduction,</if>
+            <if test="position != null">position,</if>
+            <if test="seatId != null">seat_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="fileId != null">file_id,</if>
+            <if test="tag != null">tag,</if>
+            <if test="personName != null ">person_name,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="tbc1 != null">TBC1,</if>
+            <if test="tbc2 != null">TBC2,</if>
+            <if test="tbc3 != null">TBC3,</if>
+            <if test="tbc4 != null">TBC4,</if>
+            <if test="tbc5 != null">TBC5,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="briefIntroduction != null">#{briefIntroduction},</if>
+            <if test="position != null">#{position},</if>
+            <if test="seatId != null">#{seatId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="fileId != null">#{fileId},</if>
+            <if test="tag != null">#{tag},</if>
+            <if test="personName != null">#{personName},</if>
+            <if test="userId != null">#{user_id},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="tbc1 != null">#{tbc1},</if>
+            <if test="tbc2 != null">#{tbc2},</if>
+            <if test="tbc3 != null">#{tbc3},</if>
+            <if test="tbc4 != null">#{tbc4},</if>
+            <if test="tbc5 != null">#{tbc5},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduPersonInfo" parameterType="EduPersonInfo">
+        update edu_person_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="briefIntroduction != null">brief_introduction = #{briefIntroduction},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="seatId != null">seat_id = #{seatId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="fileId != null">file_id = #{fileId},</if>
+            <if test="tag != null">file_id = #{tag},</if>
+            <if test="personName != null">person_name = #{personName},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="tbc1 != null">TBC1 = #{tbc1},</if>
+            <if test="tbc2 != null">TBC2 = #{tbc2},</if>
+            <if test="tbc3 != null">TBC3 = #{tbc3},</if>
+            <if test="tbc4 != null">TBC4 = #{tbc4},</if>
+            <if test="tbc5 != null">TBC5 = #{tbc5},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduPersonInfoById" parameterType="Long">
+        delete from edu_person_info where id = #{id}
+    </delete>
+
+    <delete id="deleteEduPersonInfoByIds" parameterType="String">
+        delete from edu_person_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

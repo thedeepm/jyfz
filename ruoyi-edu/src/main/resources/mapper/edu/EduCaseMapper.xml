@@ -35,6 +35,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
             <if test="tbc4 != null  and tbc4 != ''"> and TBC4 = #{tbc4}</if>
             <if test="tbc5 != null  and tbc5 != ''"> and TBC5 = #{tbc5}</if>
+            <if test="searchValue != null  and searchValue != ''"> and case_name like concat('%', #{searchValue}, '%')
+             or type like concat('%', #{searchValue}, '%')</if>
         </where>
     </select>
     

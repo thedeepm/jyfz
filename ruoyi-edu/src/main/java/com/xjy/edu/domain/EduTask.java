@@ -37,18 +37,18 @@ public class EduTask extends BaseEntity
     private Long seatId;
 
     /** 开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开始时间", width = 30, dateFormat =  "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
     /** 结束时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern =  "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "结束时间", width = 30, dateFormat =  "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     /** 预警时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "预警时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern =  "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "预警时间", width = 30, dateFormat =  "yyyy-MM-dd HH:mm:ss")
     private Date warningTime;
 
     /** 关联流程id */
@@ -62,6 +62,9 @@ public class EduTask extends BaseEntity
     /** 是否完成（0否1是） */
     @Excel(name = "是否完成", readConverterExp = "0=否1是")
     private Long completed;
+
+    /** 人员Id */
+    private Long personId;
 
     /** $column.columnComment */
     @Excel(name = "是否完成", readConverterExp = "$column.readConverterExp()")
@@ -225,6 +228,14 @@ public class EduTask extends BaseEntity
     public String getTbc5() 
     {
         return tbc5;
+    }
+
+    public Long getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Long personId) {
+        this.personId = personId;
     }
 
     @Override

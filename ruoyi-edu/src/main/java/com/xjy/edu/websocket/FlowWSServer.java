@@ -4,8 +4,10 @@ package com.xjy.edu.websocket;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.xjy.edu.domain.EduCaseTask;
 import com.xjy.edu.domain.EduSeat;
 import com.xjy.edu.domain.EduTask;
+import com.xjy.edu.service.IEduCaseTaskService;
 import com.xjy.edu.service.IEduSeatService;
 import com.xjy.edu.service.IEduTaskService;
 import com.xjy.edu.service.IEduTemplateService;
@@ -18,10 +20,9 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TimerTask;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * @author wuzh
  */
 @Component
-@ServerEndpoint(value = "/websocket/flow/{templateId}", configurator = MyEndpointConfigure.class)
+@ServerEndpoint(value = "/websocket/flow/{caseId}", configurator = MyEndpointConfigure.class)
 public class FlowWSServer {
 
     @Autowired
@@ -43,26 +44,29 @@ public class FlowWSServer {
     @Autowired
     private IEduSeatService iEduSeatService;
 
+    @Autowired
+    private IEduCaseTaskService eduCaseTaskService;
+
     private static final Logger log = LoggerFactory.getLogger(FlowWSServer.class);
 
     private final ScheduledExecutorService executor = SpringUtils.getBean("scheduledExecutorService");
 
-    private final int OPERATE_DELAY_TIME = 5000;
+    private final int OPERATE_DELAY_TIME = 100;
 
     /**
      * 连接集合
+     * 根据caseid查询关联表出任务列表
      */
     private static Map<String, Session> sessionMap = new ConcurrentHashMap<String, Session>();
+
 
     /**
      * 连接建立成功调用的方法
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("templateId") Long templateId) {
+    public void onOpen(Session session, @PathParam("caseId") Long caseId) {
         //添加到集合中
         sessionMap.put(session.getId(), session);
-        EduTask eduTask = new EduTask();
-
         executor.schedule(new TimerTask()
         {
             @Override
@@ -70,23 +74,59 @@ public class FlowWSServer {
             {
                 log.info("FlowWSServer 任务开始");
                 ObjectMapper mapper = new ObjectMapper();
-                List<EduTask> eduTaskList;
-                List<EduSeat> eduSeatList = new ArrayList<>();
+                EduSeat eduSeat = new EduSeat();
                 Map<String,Object> map = new ConcurrentHashMap<String,Object>();
+                EduTask eduTask = new EduTask();
                 //当属性的值为空（null或者""）时，不进行序列化，可以减少数据传输
                 mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
                 //设置日期格式
                 mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                Long seconds = 0L;
+                Long totalSeconds = 0L;
+                Instant nowInstant;
+                Instant startInstant;
+                Instant endInstant;
                 while (sessionMap.get(session.getId()) != null) {
+                    List<EduTask> eduTaskList = new ArrayList<>();
                     try {
-                        //获取任务状态和席位 发送
-                        eduTask.setFlowId(iEduTemplateService.selectEduTemplateById(templateId).getFlowId());
-                        eduTaskList = eduTaskService.selectEduTaskList(eduTask);
-                        for (int i = 0; i< eduTaskList.size(); i++){
-                            eduSeatList.add(iEduSeatService.selectEduSeatById(eduTaskList.get(i).getSeatId())) ;
+                        if(caseId == null){
+                            send(session,  mapper.writeValueAsString("no caseId"));
+                            break;
                         }
-                        map.put("eduSeatList", eduSeatList);
+                        EduCaseTask eduCaseTask = new EduCaseTask();
+                        eduCaseTask.setCaseId(caseId);
+                        List<EduCaseTask> eduCaseTaskList = eduCaseTaskService.selectEduCaseTaskList(eduCaseTask);
+
+                        if(eduCaseTaskList != null && eduCaseTaskList.size() > 0){
+                            for (int i = 0; i < eduCaseTaskList.size(); i++){
+                                eduTask = new EduTask();
+                                eduTask = eduTaskService.selectEduTaskById(eduCaseTaskList.get(i).getTaskId());
+                                eduTask.setCompleted(eduCaseTaskList.get(i).getCompleted());
+                                eduTask.setId(eduCaseTaskList.get(i).getId());
+                                eduTaskList.add(eduTask);
+                            }
+                        }else{
+                            send(session,  mapper.writeValueAsString("the template do not have task!"));
+                        }
+                        nowInstant = Instant.now();
+                        for (int i = 0; i< eduCaseTaskList.size(); i++){
+                            if(eduCaseTaskList.get(i).getCompleted() == 0L){
+                                eduTask = eduTaskService.selectEduTaskById(eduCaseTaskList.get(i).getTaskId());
+                                eduSeat = iEduSeatService.selectEduSeatById(eduTask.getSeatId());
+                                startInstant = eduTask.getStartTime().toInstant();
+                                endInstant = eduTask.getEndTime().toInstant();
+                                if(startInstant.isBefore(nowInstant)){
+                                    seconds = Duration.between(nowInstant, endInstant).getSeconds();
+                                    map.put("seconds", seconds);
+                                }
+                                 totalSeconds = Duration.between(startInstant, endInstant).getSeconds();
+                                break;
+                            }
+                        }
+                        map.put("eduSeat", eduSeat);
                         map.put("eduTaskList", eduTaskList);
+                        map.put("currentEduTask", eduTask);
+                        map.put("totalSeconds", totalSeconds);
                         send(session,  mapper.writeValueAsString(map));
                         //休眠五秒
                         Thread.sleep(5000);
@@ -123,7 +163,60 @@ public class FlowWSServer {
      */
     @OnMessage
     public void onMessage(String message, Session session) {
+        Long caseId = new Long(message);
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String,Object> map = new ConcurrentHashMap<String,Object>();
+        EduSeat eduSeat = new EduSeat();
+        //当属性的值为空（null或者""）时，不进行序列化，可以减少数据传输
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        //设置日期格式
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        EduTask eduTask = new EduTask();
+        Long seconds = 0L;
+        Long totalSeconds = 0L;
+        List<EduTask> eduTaskList = new ArrayList<>();
+        Instant nowInstant;
+        Instant startInstant;
+        Instant endInstant;
+        try {
+            if(caseId == null){
+                send(session,  mapper.writeValueAsString("no caseId"));
+            }
+            EduCaseTask eduCaseTask = new EduCaseTask();
+            eduCaseTask.setCaseId(caseId);
+            List<EduCaseTask> eduCaseTaskList = eduCaseTaskService.selectEduCaseTaskList(eduCaseTask);
+            if(eduCaseTaskList != null && eduCaseTaskList.size() > 0){
+                for (int i = 0; i < eduCaseTaskList.size(); i++){
+                    eduTaskList.add(eduTaskService.selectEduTaskById(eduCaseTaskList.get(i).getTaskId()));
+                }
+            }else{
+                send(session,  mapper.writeValueAsString("the template do not have task!"));
+            }
 
+            nowInstant = Instant.now();
+            for (int i = 0; i< eduCaseTaskList.size(); i++){
+                if(eduCaseTaskList.get(i).getCompleted() == 0L){
+                    eduTask = eduTaskService.selectEduTaskById(eduCaseTaskList.get(i).getTaskId());
+                    eduSeat = iEduSeatService.selectEduSeatById(eduTask.getSeatId());
+                    startInstant = eduTask.getStartTime().toInstant();
+                    endInstant = eduTask.getEndTime().toInstant();
+                    if(startInstant.isBefore(nowInstant)){
+                        seconds = Duration.between(nowInstant, endInstant).getSeconds();
+                        map.put("seconds", seconds);
+                    }
+                    totalSeconds = Duration.between(startInstant, endInstant).getSeconds();
+                    break;
+                }
+            }
+            map.put("eduSeat", eduSeat);
+            map.put("eduTaskList", eduTaskList);
+            map.put("currentEduTask", eduTask);
+            map.put("totalSeconds", totalSeconds);
+            send(session,  mapper.writeValueAsString(map));
+        } catch (Exception e) {
+            //输出到日志文件中
+            log.error(e.getMessage());
+        }
     }
 
     /**

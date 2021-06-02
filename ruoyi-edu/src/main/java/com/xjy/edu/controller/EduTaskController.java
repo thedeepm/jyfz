@@ -1,6 +1,18 @@
 package com.xjy.edu.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.common.constant.HttpStatus;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.system.service.ISysUserService;
+import com.xjy.edu.domain.*;
+import com.xjy.edu.service.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +27,6 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.xjy.edu.domain.EduTask;
-import com.xjy.edu.service.IEduTaskService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -26,6 +36,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author wuzh
  * @date 2021-05-19
  */
+@Api(value = "/edu/case", description = "任务管理")
 @RestController
 @RequestMapping("/edu/task")
 public class EduTaskController extends BaseController
@@ -33,21 +44,66 @@ public class EduTaskController extends BaseController
     @Autowired
     private IEduTaskService eduTaskService;
 
+    @Autowired
+    private IEduGroupService eduGroupService;
+
+    @Autowired
+    private IEduPartitionService eduPartitionService;
+
+    @Autowired
+    private IEduSeatService eduSeatService;
+
+    @Autowired
+    private ISysUserService userService;
+
+    @Autowired
+    private IEduPersonInfoService eduPersonInfoService;
+
     /**
      * 查询任务列表
      */
+    @ApiOperation("获取任务列表")
     @PreAuthorize("@ss.hasPermi('edu:task:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTask eduTask)
     {
         startPage();
         List<EduTask> list = eduTaskService.selectEduTaskList(eduTask);
-        return getDataTable(list);
+        List<Map<String,Object>> response = new ArrayList<>();
+        List<EduPersonInfo> eduPersonInfoList = new ArrayList<>();
+        Map<String,Object> map;
+        EduGroup group;
+        EduPartition partition;
+        EduSeat seat;
+        String userName;
+        Long userId;
+        for (int i = 0;i < list.size();i++){
+            eduTask = list.get(i);
+            group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
+            partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
+            seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+            EduPersonInfo eduPersonInfo = new EduPersonInfo();
+            map = new HashMap<>(5);
+            eduPersonInfo.setSeatId(seat.getId());
+            eduPersonInfoList = eduPersonInfoService.selectEduPersonInfoList(eduPersonInfo);
+            if(eduPersonInfoList != null && eduPersonInfoList.size() > 0){
+                userId = eduPersonInfoList.get(0).getUserId();
+                userName = userService.selectUserById(userId).getUserName();
+                map.put("userName", userName);
+            }
+            map.put("group", group);
+            map.put("partition", partition);
+            map.put("seat", seat);
+            map.put("eduTask", eduTask);
+            response.add(map);
+        }
+        return getDataTable(response);
     }
 
     /**
      * 导出任务列表
      */
+    @ApiOperation("导出任务列表")
     @PreAuthorize("@ss.hasPermi('edu:task:export')")
     @Log(title = "任务", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
@@ -61,6 +117,7 @@ public class EduTaskController extends BaseController
     /**
      * 获取任务详细信息
      */
+    @ApiOperation("获取任务详细信息")
     @PreAuthorize("@ss.hasPermi('edu:task:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -71,17 +128,35 @@ public class EduTaskController extends BaseController
     /**
      * 新增任务
      */
+    @ApiOperation("新增任务")
     @PreAuthorize("@ss.hasPermi('edu:task:add')")
     @Log(title = "任务", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduTask eduTask)
     {
-        return toAjax(eduTaskService.insertEduTask(eduTask));
+        //校验seatid是否绑定
+        AjaxResult ajax = AjaxResult.success();
+        EduSeat seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+        if(seat.getOccupied()){
+            return AjaxResult.error("seat已被占用");
+        }
+        eduTask = eduTaskService.insertEduTask(eduTask, ajax);
+        EduGroup group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
+        EduPartition partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
+        seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+        ajax.put(AjaxResult.CODE_TAG, HttpStatus.SUCCESS);
+        ajax.put(AjaxResult.MSG_TAG,"新增成功");
+        ajax.put("group",group);
+        ajax.put("partition",partition);
+        ajax.put("seat",seat);
+        ajax.put("eduTask",eduTask);
+        return ajax;
     }
 
     /**
      * 修改任务
      */
+    @ApiOperation("修改任务")
     @PreAuthorize("@ss.hasPermi('edu:task:edit')")
     @Log(title = "任务", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -93,6 +168,7 @@ public class EduTaskController extends BaseController
     /**
      * 删除任务
      */
+    @ApiOperation("删除任务")
     @PreAuthorize("@ss.hasPermi('edu:task:remove')")
     @Log(title = "任务", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")

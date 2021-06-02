@@ -2,6 +2,7 @@ package com.xjy.edu.mapper;
 
 import java.util.List;
 import com.xjy.edu.domain.EduTask;
+import com.xjy.edu.domain.EduTemplate;
 
 /**
  * 任务Mapper接口
@@ -18,6 +19,9 @@ public interface EduTaskMapper
      * @return 任务
      */
         EduTask selectEduTaskById(Long id);
+
+
+    EduTask getLastEduTask();
 
     /**
      * 查询任务列表

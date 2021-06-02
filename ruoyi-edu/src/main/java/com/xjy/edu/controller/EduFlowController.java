@@ -5,8 +5,8 @@ import java.util.List;
 import com.xjy.edu.domain.vo.EduFlowRequestVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -85,7 +85,10 @@ public class EduFlowController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody EduFlowRequestVo eduFlowRequestVo)
     {
-        return toAjax(eduFlowService.insertEduFlow(eduFlowRequestVo));
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put(AjaxResult.MSG_TAG, "新增成功！");
+        ajax.put(AjaxResult.DATA_TAG, eduFlowService.insertEduFlow(eduFlowRequestVo)) ;
+        return ajax;
     }
 
     /**

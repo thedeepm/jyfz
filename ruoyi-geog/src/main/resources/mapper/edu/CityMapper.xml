@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.CityMapper">
+    
+    <resultMap type="City" id="CityResult">
+        <result property="cityId"    column="city_id"    />
+        <result property="chineseName"    column="chinese_name"    />
+        <result property="foreignName"    column="foreign_name"    />
+        <result property="otherName"    column="other_name"    />
+        <result property="category"    column="category"    />
+        <result property="area"    column="area"    />
+        <result property="population"    column="population"    />
+        <result property="position"    column="position"    />
+        <result property="addMsg"    column="add_msg"    />
+    </resultMap>
+
+    <sql id="selectCityVo">
+        select city_id, chinese_name, foreign_name, other_name, category, area, population, position, add_msg, 'city' as type from city
+    </sql>
+
+    <select id="selectCityList" parameterType="City" resultMap="CityResult">
+        <include refid="selectCityVo"/>
+        <where>  
+            <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
+            <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
+            <if test="otherName != null  and otherName != ''"> and other_name like concat('%', #{otherName}, '%')</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="population != null  and population != ''"> and population = #{population}</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+        </where>
+    </select>
+
+    <select id="selectCityListByKeyword" parameterType="String" resultMap="CityResult">
+        <include refid="selectCityVo"/>
+        <where>
+            <if test="keyWord != null  and keyWord != ''">
+             and chinese_name like concat('%', #{keyword}, '%')
+             or foreign_name like concat('%', #{keyword}, '%')
+             or other_name like concat('%', #{keyword}, '%')
+             or position like concat('%', #{keyword}, '%')
+           </if>
+        </where>
+    </select>
+    
+    <select id="selectCityById" parameterType="Long" resultMap="CityResult">
+        <include refid="selectCityVo"/>
+        where city_id = #{cityId}
+    </select>
+        
+    <insert id="insertCity" parameterType="City" useGeneratedKeys="true" keyProperty="cityId">
+        insert into city
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name,</if>
+            <if test="foreignName != null">foreign_name,</if>
+            <if test="otherName != null">other_name,</if>
+            <if test="category != null">category,</if>
+            <if test="area != null">area,</if>
+            <if test="population != null">population,</if>
+            <if test="position != null">position,</if>
+            <if test="addMsg != null">add_msg,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">#{chineseName},</if>
+            <if test="foreignName != null">#{foreignName},</if>
+            <if test="otherName != null">#{otherName},</if>
+            <if test="category != null">#{category},</if>
+            <if test="area != null">#{area},</if>
+            <if test="population != null">#{population},</if>
+            <if test="position != null">#{position},</if>
+            <if test="addMsg != null">#{addMsg},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCity" parameterType="City">
+        update city
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name = #{chineseName},</if>
+            <if test="foreignName != null">foreign_name = #{foreignName},</if>
+            <if test="otherName != null">other_name = #{otherName},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="population != null">population = #{population},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="addMsg != null">add_msg = #{addMsg},</if>
+        </trim>
+        where city_id = #{cityId}
+    </update>
+
+    <delete id="deleteCityById" parameterType="Long">
+        delete from city where city_id = #{cityId}
+    </delete>
+
+    <delete id="deleteCityByIds" parameterType="String">
+        delete from city where city_id in 
+        <foreach item="cityId" collection="array" open="(" separator="," close=")">
+            #{cityId}
+        </foreach>
+    </delete>
+</mapper>

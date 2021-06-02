@@ -48,7 +48,7 @@ public interface IEduTemplateService
      * @param eduTemplate 模板
      * @return 结果
      */
-    int updateEduTemplate(EduTemplate eduTemplate);
+    int updateEduTemplate(EduTemplateRequestVo eduTemplateVo);
 
     /**
      * 批量删除模板

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.SeaMapper">
+    
+    <resultMap type="Sea" id="SeaResult">
+        <result property="seaId"    column="sea_id"    />
+        <result property="chineseName"    column="chinese_name"    />
+        <result property="foreignName"    column="foreign_name"    />
+        <result property="area"    column="area"    />
+        <result property="position"    column="position"    />
+        <result property="deep"    column="deep"    />
+        <result property="addMsg"    column="add_msg"    />
+    </resultMap>
+
+    <sql id="selectSeaVo">
+        select sea_id, chinese_name, foreign_name, area, position, deep, add_msg, 'sea' as type from sea
+    </sql>
+
+    <select id="selectSeaList" parameterType="Sea" resultMap="SeaResult">
+        <include refid="selectSeaVo"/>
+        <where>  
+            <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
+            <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="deep != null  and deep != ''"> and deep = #{deep}</if>
+            <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+        </where>
+    </select>
+
+    <select id="selectSeaListByKeyword" parameterType="String" resultMap="SeaResult">
+        <include refid="selectSeaVo"/>
+        <where>
+            <if test="chineseName != null  and chineseName != ''">
+                and chinese_name like concat('%', #{keyword}, '%')
+                or foreign_name like concat('%', #{keyword}, '%')
+             </if>
+        </where>
+    </select>
+    
+    <select id="selectSeaById" parameterType="Long" resultMap="SeaResult">
+        <include refid="selectSeaVo"/>
+        where sea_id = #{seaId}
+    </select>
+        
+    <insert id="insertSea" parameterType="Sea" useGeneratedKeys="true" keyProperty="seaId">
+        insert into sea
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name,</if>
+            <if test="foreignName != null">foreign_name,</if>
+            <if test="area != null">area,</if>
+            <if test="position != null">position,</if>
+            <if test="deep != null">deep,</if>
+            <if test="addMsg != null">add_msg,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">#{chineseName},</if>
+            <if test="foreignName != null">#{foreignName},</if>
+            <if test="area != null">#{area},</if>
+            <if test="position != null">#{position},</if>
+            <if test="deep != null">#{deep},</if>
+            <if test="addMsg != null">#{addMsg},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSea" parameterType="Sea">
+        update sea
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name = #{chineseName},</if>
+            <if test="foreignName != null">foreign_name = #{foreignName},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="deep != null">deep = #{deep},</if>
+            <if test="addMsg != null">add_msg = #{addMsg},</if>
+        </trim>
+        where sea_id = #{seaId}
+    </update>
+
+    <delete id="deleteSeaById" parameterType="Long">
+        delete from sea where sea_id = #{seaId}
+    </delete>
+
+    <delete id="deleteSeaByIds" parameterType="String">
+        delete from sea where sea_id in 
+        <foreach item="seaId" collection="array" open="(" separator="," close=")">
+            #{seaId}
+        </foreach>
+    </delete>
+</mapper>

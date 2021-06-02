@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.CountryMapper">
+    
+    <resultMap type="Country" id="CountryResult">
+        <result property="countryId"    column="country_id"    />
+        <result property="chineseName"    column="chinese_name"    />
+        <result property="foreignName"    column="foreign_name"    />
+        <result property="abbreviation"    column="abbreviation"    />
+        <result property="belongTo"    column="belong_to"    />
+        <result property="population"    column="population"    />
+        <result property="populationDensity"    column="population_density"    />
+        <result property="area"    column="area"    />
+        <result property="capital"    column="capital"    />
+        <result property="code"    column="code"    />
+        <result property="language"    column="language"    />
+        <result property="addMsg"    column="add_msg"    />
+        <result property="addMsg1"    column="add_msg1"    />
+        <result property="addMsg2"    column="add_msg2"    />
+    </resultMap>
+
+    <sql id="selectCountryVo">
+        select country_id, chinese_name, foreign_name, abbreviation, belong_to,
+         population, population_density, area, capital, code, language, add_msg, add_msg1, add_msg2, 'country' as type from country
+    </sql>
+
+    <select id="selectCountryList" parameterType="Country" resultMap="CountryResult">
+        <include refid="selectCountryVo"/>
+        <where>  
+            <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
+            <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
+            <if test="abbreviation != null  and abbreviation != ''"> and abbreviation = #{abbreviation}</if>
+            <if test="belongTo != null  and belongTo != ''"> and belong_to = #{belongTo}</if>
+            <if test="population != null  and population != ''"> and population = #{population}</if>
+            <if test="populationDensity != null  and populationDensity != ''"> and population_density = #{populationDensity}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="capital != null  and capital != ''"> and capital = #{capital}</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="language != null  and language != ''"> and language = #{language}</if>
+            <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+            <if test="addMsg1 != null  and addMsg1 != ''"> and add_msg1 = #{addMsg1}</if>
+            <if test="addMsg2 != null  and addMsg2 != ''"> and add_msg2 = #{addMsg2}</if>
+        </where>
+    </select>
+
+    <select id="selectCountryListByKeyword" parameterType="String" resultMap="CountryResult">
+        <include refid="selectCountryVo"/>
+        <where>
+            <if test="chineseName != null  and chineseName != ''">
+             and chinese_name like concat('%', #{keyword}, '%')
+             or foreign_name like concat('%', #{keyword}, '%')
+             or abbreviation like concat('%', #{keyword}, '%')
+             and capital = #{keyword}
+             </if>
+        </where>
+    </select>
+    
+    <select id="selectCountryById" parameterType="Long" resultMap="CountryResult">
+        <include refid="selectCountryVo"/>
+        where country_id = #{countryId}
+    </select>
+        
+    <insert id="insertCountry" parameterType="Country" useGeneratedKeys="true" keyProperty="countryId">
+        insert into country
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name,</if>
+            <if test="foreignName != null">foreign_name,</if>
+            <if test="abbreviation != null">abbreviation,</if>
+            <if test="belongTo != null">belong_to,</if>
+            <if test="population != null">population,</if>
+            <if test="populationDensity != null">population_density,</if>
+            <if test="area != null">area,</if>
+            <if test="capital != null">capital,</if>
+            <if test="code != null">code,</if>
+            <if test="language != null">language,</if>
+            <if test="addMsg != null">add_msg,</if>
+            <if test="addMsg1 != null">add_msg1,</if>
+            <if test="addMsg2 != null">add_msg2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">#{chineseName},</if>
+            <if test="foreignName != null">#{foreignName},</if>
+            <if test="abbreviation != null">#{abbreviation},</if>
+            <if test="belongTo != null">#{belongTo},</if>
+            <if test="population != null">#{population},</if>
+            <if test="populationDensity != null">#{populationDensity},</if>
+            <if test="area != null">#{area},</if>
+            <if test="capital != null">#{capital},</if>
+            <if test="code != null">#{code},</if>
+            <if test="language != null">#{language},</if>
+            <if test="addMsg != null">#{addMsg},</if>
+            <if test="addMsg1 != null">#{addMsg1},</if>
+            <if test="addMsg2 != null">#{addMsg2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCountry" parameterType="Country">
+        update country
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name = #{chineseName},</if>
+            <if test="foreignName != null">foreign_name = #{foreignName},</if>
+            <if test="abbreviation != null">abbreviation = #{abbreviation},</if>
+            <if test="belongTo != null">belong_to = #{belongTo},</if>
+            <if test="population != null">population = #{population},</if>
+            <if test="populationDensity != null">population_density = #{populationDensity},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="capital != null">capital = #{capital},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="language != null">language = #{language},</if>
+            <if test="addMsg != null">add_msg = #{addMsg},</if>
+            <if test="addMsg1 != null">add_msg1 = #{addMsg1},</if>
+            <if test="addMsg2 != null">add_msg2 = #{addMsg2},</if>
+        </trim>
+        where country_id = #{countryId}
+    </update>
+
+    <delete id="deleteCountryById" parameterType="Long">
+        delete from country where country_id = #{countryId}
+    </delete>
+
+    <delete id="deleteCountryByIds" parameterType="String">
+        delete from country where country_id in 
+        <foreach item="countryId" collection="array" open="(" separator="," close=")">
+            #{countryId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.EduCaseTaskMapper">
+    
+    <resultMap type="EduCaseTask" id="EduCaseTaskResult">
+        <result property="id"    column="id"    />
+        <result property="caseId"    column="case_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="completed"    column="completed"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectEduCaseTaskVo">
+        select id, case_id, task_id, completed, create_time from edu_case_task
+    </sql>
+
+    <select id="selectEduCaseTaskList" parameterType="EduCaseTask" resultMap="EduCaseTaskResult">
+        <include refid="selectEduCaseTaskVo"/>
+        <where>  
+            <if test="caseId != null "> and case_id = #{caseId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="completed != null "> and completed = #{completed}</if>
+        </where>
+        order by id
+    </select>
+    
+    <select id="selectEduCaseTaskById" parameterType="Long" resultMap="EduCaseTaskResult">
+        <include refid="selectEduCaseTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEduCaseTask" parameterType="EduCaseTask">
+        insert into edu_case_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="caseId != null">case_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="completed != null">completed,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="caseId != null">#{caseId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="completed != null">#{completed},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEduCaseTask" parameterType="EduCaseTask">
+        update edu_case_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseId != null">case_id = #{caseId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="completed != null">completed = #{completed},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEduCaseTaskById" parameterType="Long">
+        delete from edu_case_task where id = #{id}
+    </delete>
+
+    <delete id="deleteEduCaseTaskByIds" parameterType="String">
+        delete from edu_case_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
