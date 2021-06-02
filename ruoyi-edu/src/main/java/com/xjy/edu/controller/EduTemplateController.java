@@ -135,12 +135,12 @@ public class EduTemplateController extends BaseController
         List<EduTask> eduTaskTempList = new ArrayList<>();
         EduTask eduTask = new EduTask();
         eduPartition.setTemplateId(eduTemplateVo.getId());
+        //delete partition that relate to the template
         if(eduTemplateVo.getPartitionsList() != null && eduTemplateVo.getPartitionsList().size()>0){
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
             for (int i = 0;i < eduPartitionList.size();i++){
                 ids.add(eduPartitionList.get(i).getId());
             }
-            //delete partition that relate to the template
             if(ids.size() > 0){
                 eduPartitionService.deleteEduPartitionByIds(ids.toArray(new Long[ids.size()]));
             }
@@ -151,7 +151,7 @@ public class EduTemplateController extends BaseController
             eduPartition.setTemplateId(eduTemplate.getId());
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
             for (int i = 0; i < ids.size(); i++){
-                //更新task中的id
+                //更新task中的分区id
                 eduTask.setPartitionId(ids.get(i));
                 eduTaskTempList = eduTaskService.selectEduTaskList(eduTask);
                 for (int j = 0; j < eduTaskTempList.size(); j++){

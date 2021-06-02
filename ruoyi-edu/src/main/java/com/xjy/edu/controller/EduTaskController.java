@@ -77,19 +77,22 @@ public class EduTaskController extends BaseController
         EduSeat seat;
         String userName;
         Long userId;
+        EduPersonInfo eduPersonInfo;
         for (int i = 0;i < list.size();i++){
             eduTask = list.get(i);
             group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
             partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
             seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
-            EduPersonInfo eduPersonInfo = new EduPersonInfo();
+            eduPersonInfo = new EduPersonInfo();
             map = new HashMap<>(5);
             eduPersonInfo.setSeatId(seat.getId());
             eduPersonInfoList = eduPersonInfoService.selectEduPersonInfoList(eduPersonInfo);
             if(eduPersonInfoList != null && eduPersonInfoList.size() > 0){
-                userId = eduPersonInfoList.get(0).getUserId();
+                eduPersonInfo = eduPersonInfoList.get(0);
+                userId = eduPersonInfo.getUserId();
                 userName = userService.selectUserById(userId).getUserName();
                 map.put("userName", userName);
+                map.put("eduPersonInfo", eduPersonInfo);
             }
             map.put("group", group);
             map.put("partition", partition);

@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="totalSeats"    column="total_seats"    />
         <result property="partitionNumber"    column="partition_number"    />
         <result property="flowId"    column="flow_id"    />
+        <result property="occupied"    column="occupied"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="tbc1"    column="TBC1"    />
@@ -20,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectEduTemplateVo">
-        select id, hall_name, total_seats, partition_number, flow_id, create_time, update_time, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_template
+        select id, hall_name, total_seats, partition_number, flow_id, create_time, update_time, occupied, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_template
     </sql>
 
     <select id="selectEduTemplateList" parameterType="EduTemplate" resultMap="EduTemplateResult">
@@ -30,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalSeats != null "> and total_seats = #{totalSeats}</if>
             <if test="partitionNumber != null  and partitionNumber != ''"> and partition_number = #{partitionNumber}</if>
             <if test="flowId != null "> and flow_id = #{flowId}</if>
+            <if test="occupied != null "> and occupied = #{occupied}</if>
             <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
             <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>
             <if test="tbc3 != null  and tbc3 != ''"> and TBC3 = #{tbc3}</if>
@@ -57,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="flowId != null">flow_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="occupied != null">occupied,</if>
             <if test="tbc1 != null">TBC1,</if>
             <if test="tbc2 != null">TBC2,</if>
             <if test="tbc3 != null">TBC3,</if>
@@ -70,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="flowId != null">#{flowId},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="occupied != null">#{occupied},</if>
             <if test="tbc1 != null">#{tbc1},</if>
             <if test="tbc2 != null">#{tbc2},</if>
             <if test="tbc3 != null">#{tbc3},</if>
@@ -87,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="flowId != null">flow_id = #{flowId},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="occupied != null">occupied = #{occupied},</if>
             <if test="tbc1 != null">TBC1 = #{tbc1},</if>
             <if test="tbc2 != null">TBC2 = #{tbc2},</if>
             <if test="tbc3 != null">TBC3 = #{tbc3},</if>

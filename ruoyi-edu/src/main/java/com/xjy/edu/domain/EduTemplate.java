@@ -36,6 +36,10 @@ public class EduTemplate extends BaseEntity
     @Excel(name = "关联流程id")
     private Long flowId;
 
+    /** 是否占用（0否1是） */
+    @Excel(name = "是否占用", readConverterExp = "0否1是")
+    private Boolean occupied;
+
     /** $column.columnComment */
     @Excel(name = "关联流程id")
     private String tbc1;
@@ -148,6 +152,14 @@ public class EduTemplate extends BaseEntity
         return tbc5;
     }
 
+    public Boolean getOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(Boolean occupied) {
+        this.occupied = occupied;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -158,6 +170,7 @@ public class EduTemplate extends BaseEntity
             .append("flowId", getFlowId())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
+            .append("occupied", getOccupied())
             .append("tbc1", getTbc1())
             .append("tbc2", getTbc2())
             .append("tbc3", getTbc3())
