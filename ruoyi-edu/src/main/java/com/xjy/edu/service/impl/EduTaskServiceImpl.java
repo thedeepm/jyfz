@@ -1,5 +1,6 @@
 package com.xjy.edu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -89,9 +90,10 @@ public class EduTaskServiceImpl implements IEduTaskService
             userName.append(eduTask.getStepLevel());
             SysUser user = new SysUser();
             user.setUserName(userName.toString());
-            //user.setCreateBy(SecurityUtils.getUsername());
-            user.setPassword(SecurityUtils.encryptPassword("P@ssword"));
+            //user.setPassword(SecurityUtils.encryptPassword("P@ssword"));
             user.setNickName("AutoGenerate");
+            Long[] roles = new Long[]{100L};
+            user.setRoleIds(roles);
             sysUserMapper.insertUser(user);
             eduPersonInfo.setUserId(user.getUserId());
             eduPersonInfo.setSeatId(eduSeat.getId());

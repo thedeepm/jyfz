@@ -213,6 +213,6 @@ public class EduGroupServiceImpl implements IEduGroupService
         if(partitionTotalseats.compareTo(countTotalSeats) < 0){
             return -1;
         }
-        return !CommonUtils.cheakIsRepeat(toatalList) ? 1 : 0;
+        return CommonUtils.cheakIsRepeat(toatalList) ? 1 : 0;
     }
 }
