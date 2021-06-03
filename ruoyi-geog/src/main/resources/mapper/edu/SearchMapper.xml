@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.SearchGeoMapper">
+    
+    <resultMap type="BaseSearchEntity" id="SearchResult">
+        <result property="id"    column="id"    />
+        <result property="chineseName"    column="chinese_name"    />
+        <result property="foreignName"    column="foreign_name"    />
+        <result property="properties"    column="properties"    />
+        <result property="type"    column="type"    />
+
+    </resultMap>
+
+    <select id="selectSearchAllList" parameterType="BaseSearchEntity" resultMap="SearchResult">
+        SELECT
+            city_id AS id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+            '|',
+            IfNULL( CONCAT( '别名', ': ', other_name ), '' ),
+            IfNULL( CONCAT( '行政区类别', ': ', category ), '' ),
+            IfNULL( CONCAT( '面积', ': ', area ), '' ),
+            IfNULL( CONCAT( '地理位置', ': ', position ), '' ),
+            IfNULL( CONCAT( '人口数量', ': ', population ), '' ),
+            IfNULL( CONCAT( 'add_msg', ': ', add_msg ), '' )
+            ) AS properties,
+            'city' AS type
+        FROM
+            city
+        <where>
+            <if test="keyword != null  and keyword != ''">
+                and chinese_name like concat('%', #{keyword}, '%')
+                or foreign_name like concat('%', #{keyword}, '%')
+                or position like concat('%', #{keyword}, '%')
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+            sea_id AS id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+            '|',
+            IfNULL( CONCAT( '面积', ': ', area ), '' ),
+            IfNULL( CONCAT( '地理位置', ': ', position ), '' ),
+            IfNULL( CONCAT( '平均水深', ': ', deep ), '' ),
+            IfNULL( CONCAT( '别名', ': ', add_msg ), '' )
+            ) AS properties,
+            'sea' AS type
+        FROM
+            sea
+        <where>
+            <if test="keyword != null  and keyword != ''">
+                and chinese_name like concat('%', #{keyword}, '%')
+                or foreign_name like concat('%', #{keyword}, '%')
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+            country_id AS id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+            '|',
+            IfNULL( CONCAT( '简称', ': ', abbreviation ), '' ),
+            IfNULL( CONCAT( '所属洲', ': ', belong_to ), '' ),
+            IfNULL( CONCAT( '人口数量', ': ', population ), '' ),
+            IfNULL( CONCAT( '人口密度', ': ', population_density ), '' ),
+            IfNULL( CONCAT( '面积', ': ', area ), '' ),
+            IfNULL( CONCAT( '首都', ': ', capital ), '' ),
+            IfNULL( CONCAT( '国家代码', ': ', CODE ), '' ),
+            IfNULL( CONCAT( '官方语言', ': ', LANGUAGE ), '' ),
+            IfNULL( CONCAT( '货币', ': ', add_msg ), '' ),
+            IfNULL( CONCAT( '时区', ': ', add_msg1 ), '' ),
+            IfNULL( CONCAT( '别名', ': ', add_msg2 ), '' )
+            ) AS properties,
+            'country' AS type
+        FROM
+            country
+        <where>
+            <if test="keyword != null  and keyword != ''">
+                and chinese_name like concat('%', #{keyword}, '%')
+                or foreign_name like concat('%', #{keyword}, '%')
+                OR abbreviation LIKE concat( '%', #{keyword}, '%' )
+                or capital = #{keyword}
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+            port_id AS id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+            '|',
+            IfNULL( CONCAT( '所属地区', ': ', region ), '' ),
+            IfNULL( CONCAT( '货物吞吐量', ': ', throughput ), '' ),
+            IfNULL( CONCAT( '主营业务', ': ', core_business ), '' ),
+            IfNULL( CONCAT( 'add_msg', ': ', add_msg ), '' )
+            ) AS properties,
+            'port' AS type
+        FROM
+            PORT
+        <where>
+            <if test="keyword != null  and keyword != ''">
+                AND chinese_name LIKE concat( '%', #{keyword}, '%' )
+                OR foreign_name LIKE concat( '%', #{keyword}, '%' )
+                OR region LIKE concat( '%', #{keyword}, '%' )
+            </if>
+        </where>
+        UNION ALL
+        SELECT
+            province_id AS id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+            '|',
+            IfNULL( CONCAT( '行政区类别', ': ', category ), '' ),
+            IfNULL( CONCAT( '下辖地区', ': ', ruled_area ), '' ),
+            IfNULL( CONCAT( '面积', ': ', area ), '' ),
+            IfNULL( CONCAT( '人口数量', ': ', population ), '' ),
+            IfNULL( CONCAT( '所属地区', ': ', belong_to ), '' ),
+            IfNULL( CONCAT( '地理位置', ': ', position ), '' ),
+            IfNULL( CONCAT( 'add_msg', ': ', add_msg ), '' )
+            ) AS properties,
+            'province' AS type
+        FROM
+            province
+        <where>
+            <if test="keyword != null  and keyword != ''">
+                AND chinese_name LIKE concat( '%', #{keyword}, '%' )
+                OR foreign_name LIKE concat( '%', #{keyword}, '%' )
+                OR position LIKE concat(
+                '%',
+                #{keyword},
+                '%')
+            </if>
+        </where>
+    </select>
+</mapper>

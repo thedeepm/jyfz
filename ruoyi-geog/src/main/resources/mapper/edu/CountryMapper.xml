@@ -26,8 +26,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          population, population_density, area, capital, code, language, add_msg, add_msg1, add_msg2, 'country' as type from country
     </sql>
 
+    <sql id="selectCountryVoNew">
+        SELECT
+            country_id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+                '|',
+                IfNULL( abbreviation, '' ),
+                IfNULL( belong_to, '' ),
+                IfNULL( population, '' ),
+                IfNULL( population_density, '' ),
+                IfNULL( area, '' ),
+                IfNULL( capital, '' ),
+                IfNULL( code, '' ),
+                IfNULL( language, '' ),
+                IfNULL( add_msg, '' ),
+                IfNULL( add_msg1, '' ),
+                IfNULL( add_msg2, '' )
+            ) AS properties,
+            'country' AS type
+        FROM
+            country
+    </sql>
+
     <select id="selectCountryList" parameterType="Country" resultMap="CountryResult">
-        <include refid="selectCountryVo"/>
+        <include refid="selectCountryVoNew"/>
         <where>  
             <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
             <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
@@ -53,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectCountryListByKeyword" parameterType="String" resultMap="CountryResult">
-        <include refid="selectCountryVo"/>
+        <include refid="selectCountryVoNew"/>
         <where>
             <if test="keyword != null  and keyword != ''">
              and chinese_name like concat('%', #{keyword}, '%')

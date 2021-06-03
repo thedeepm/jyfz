@@ -18,14 +18,6 @@ public class Country extends BaseSearchEntity
     /** $column.columnComment */
     private Long countryId;
 
-    /** 中文名称 */
-    @Excel(name = "中文名称")
-    private String chineseName;
-
-    /** 外文名称 */
-    @Excel(name = "外文名称")
-    private String foreignName;
-
     /** 简称 */
     @Excel(name = "简称")
     private String abbreviation;
@@ -78,24 +70,6 @@ public class Country extends BaseSearchEntity
     public Long getCountryId() 
     {
         return countryId;
-    }
-    public void setChineseName(String chineseName) 
-    {
-        this.chineseName = chineseName;
-    }
-
-    public String getChineseName() 
-    {
-        return chineseName;
-    }
-    public void setForeignName(String foreignName) 
-    {
-        this.foreignName = foreignName;
-    }
-
-    public String getForeignName() 
-    {
-        return foreignName;
     }
     public void setAbbreviation(String abbreviation) 
     {

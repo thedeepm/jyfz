@@ -18,8 +18,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select sea_id, chinese_name, foreign_name, area, position, deep, add_msg, 'sea' as type from sea
     </sql>
 
+    <sql id="selectSeaVoNew">
+        SELECT
+            sea_id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+                '|',
+                IfNULL( area, '' ),
+                IfNULL( position, '' ),
+                IfNULL( deep, '' ),
+                IfNULL( add_msg, '' )
+            ) AS properties,
+            'sea' AS type
+        FROM
+            sea
+    </sql>
+
     <select id="selectSeaList" parameterType="Sea" resultMap="SeaResult">
-        <include refid="selectSeaVo"/>
+        <include refid="selectSeaVoNew"/>
         <where>  
             <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
             <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
@@ -31,11 +48,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and chinese_name like concat('%', #{searchValue}, '%')
                 or foreign_name like concat('%', #{searchValue}, '%')
             </if>
-        </where>
+        </where>x``
     </select>
 
     <select id="selectSeaListByKeyword" parameterType="String" resultMap="SeaResult">
-        <include refid="selectSeaVo"/>
+        <include refid="selectSeaVoNew"/>
         <where>
             <if test="keyword != null  and keyword != ''">
                 and chinese_name like concat('%', #{keyword}, '%')
