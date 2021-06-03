@@ -35,7 +35,10 @@
               <h4>{{ item.desc }}</h4>
             </div>
           </div> -->
-            <div class="menu-icon-item animate__animated animate__flipInX">
+            <div
+              class="menu-icon-item animate__animated animate__flipInX"
+              @click="$router.push('/gis')"
+            >
               <div class="icon">
                 <img :src="require('../assets/clc.png')" />
               </div>

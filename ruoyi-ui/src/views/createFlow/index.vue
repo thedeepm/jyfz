@@ -207,6 +207,8 @@
           <el-input
             v-model="addForm.taskName"
             placeholder="输入任务名称"
+            maxlength="10"
+            show-word-limit
           ></el-input>
         </el-form-item>
         <el-row :gutter="24">
@@ -279,14 +281,14 @@
               <el-col :span="6">
                 <el-form-item
                   label-width="0"
-                  prop="personid"
+                  prop="personId"
                   :rules="{
                     required: true,
                     message: '选择作业人',
                     trigger: 'change',
                   }"
                 >
-                  <el-select v-model="addForm.personid" placeholder="作业人"
+                  <el-select v-model="addForm.personId" placeholder="作业人" filterable
                     ><el-option
                       v-for="(item, index) in personOptions"
                       :key="index"
@@ -362,6 +364,7 @@
           </el-col>
         </el-row>
         <el-form-item
+          v-if="addForm.startTime && addForm.endTime"
           label="预警提示"
           prop="warningTime"
           :rules="{
@@ -376,6 +379,7 @@
             placeholder="预警时间"
             value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="warningOptions"
+            :default-value="addForm.startTime"
           >
           </el-date-picker>
         </el-form-item>
@@ -441,7 +445,7 @@ export default {
         partitionId: "",
         groupId: "",
         seatId: "",
-        personid: "",
+        personId: "",
         time: null,
         warningTime: null,
         startTime: "",
@@ -516,7 +520,7 @@ export default {
     },
     addStep() {
       this.addShow = true;
-      getPersonInfoList({ seatId: -1 }).then((res) => {
+      getPersonInfoList().then((res) => {
         this.personOptions = res.rows;
       });
       this.$nextTick(() => {

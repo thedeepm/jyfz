@@ -13,3 +13,13 @@ export function taskCompleted(data) {
         data
     })
 }
+//获取学生账号作业
+export function getWork(params) {
+    return request({
+        url: '/edu/case/myList',
+        method: 'get',
+        params
+    })
+}
+
+

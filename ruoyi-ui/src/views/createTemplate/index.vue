@@ -14,6 +14,8 @@
           <el-input
             v-model="form.hallName"
             placeholder="请输入展厅名称"
+            maxlength="15"
+            show-word-limit
           ></el-input>
         </el-form-item>
         <el-form-item label="总席位数" prop="totalSeats">
@@ -46,6 +48,7 @@
               :step="1"
               step-strictly
               :min="0"
+              :max="64"
             ></el-input-number>
           </el-form-item>
           <div class="partition-list">
@@ -93,9 +96,8 @@
                     label="席位数量"
                     :prop="'partitionsList.' + index + '.totalSeats'"
                     :rules="{
-                      required: true,
-                      message: '席位数量不能为空',
-                      trigger: 'blur',
+                      validator: seatValid,
+                      trigger: 'change',
                     }"
                   >
                     <el-input-number
@@ -119,6 +121,7 @@
                     <el-color-picker
                       v-model="item.color"
                       :predefine="predefineColors"
+                      show-alpha
                     ></el-color-picker>
                   </el-form-item>
                 </el-col>
@@ -127,6 +130,8 @@
                 <el-input
                   v-model="item.functionAttribute"
                   placeholder="请输入职能属性"
+                  maxlength="100"
+                  show-word-limit
                 ></el-input>
               </el-form-item>
             </div>
@@ -168,6 +173,7 @@
                 :step="1"
                 step-strictly
                 :min="0"
+                :max="64"
               ></el-input-number>
             </el-form-item>
             <div class="partition-list">
@@ -214,9 +220,8 @@
                       label="席位数量"
                       :prop="'eduGroupList.' + index + '.totalSeats'"
                       :rules="{
-                        required: true,
-                        message: '席位数量不能为空',
-                        trigger: 'blur',
+                        validator: seatValid,
+                        trigger: 'change',
                       }"
                     >
                       <el-input-number
@@ -240,6 +245,7 @@
                       <el-color-picker
                         v-model="item.color"
                         :predefine="predefineColors"
+                        show-alpha
                         @change="groupsParse(item)"
                       ></el-color-picker>
                     </el-form-item>
@@ -249,6 +255,8 @@
                   <el-input
                     v-model="item.functionAttribute"
                     placeholder="请输入职能属性"
+                    maxlength="100"
+                    show-word-limit
                   ></el-input>
                 </el-form-item>
               </div>
@@ -307,14 +315,56 @@ export default {
         ],
       },
       rules: {
-        name: [
-          { required: true, message: "请选择活动区域", trigger: "change" },
+        hallName: [
+          { required: true, message: "请输入名称", trigger: "change" },
         ],
         totalSeats: [
-          { required: true, message: "请输入席位数量", trigger: "change" },
+          {
+            required: true,
+            message: "请输入席位数量",
+            trigger: "change",
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (value < 1) {
+                return callback(new Error("数量不能小于1"));
+              } else {
+                callback();
+              }
+            },
+          },
+        ],
+        groupCount: [
+          {
+            required: true,
+            message: "请选择分组数量",
+            trigger: "change",
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (value < 1) {
+                return callback(new Error("数量不能小于1"));
+              } else {
+                callback();
+              }
+            },
+          },
         ],
         partitionNumber: [
-          { required: true, message: "请选择分区数量", trigger: "change" },
+          {
+            required: true,
+            message: "请选择分区数量",
+            trigger: "change",
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (value < 1) {
+                return callback(new Error("数量不能小于1"));
+              } else {
+                callback();
+              }
+            },
+          },
         ],
       },
       groupSelecter: {},
@@ -334,7 +384,8 @@ export default {
         "hsva(120, 40, 94, 0.5)",
         "hsl(181, 100%, 37%)",
         "hsla(209, 100%, 56%, 0.73)",
-        "#c7158577",
+        "#c58577",
+        "#FF0022",
       ],
     };
   },
@@ -524,7 +575,7 @@ export default {
             let seat = item.split("-");
             if (seat.length == 2) {
               if (
-                seat[0] > seat[1] ||
+                Number(seat[0]) > Number(seat[1]) ||
                 isNaN(Number(seat[0])) ||
                 isNaN(Number(seat[1]))
               ) {
@@ -575,7 +626,7 @@ export default {
             let seat = item.split("-");
             if (seat.length == 2) {
               if (
-                seat[0] > seat[1] ||
+                Number(seat[0]) > Number(seat[1]) ||
                 isNaN(Number(seat[0])) ||
                 isNaN(Number(seat[1]))
               ) {
@@ -622,6 +673,29 @@ export default {
           this.groupsParse(group);
           callback();
         }
+      }
+    },
+    seatValid(rule, value, callback) {
+      let total = this.form.totalSeats;
+      let partitions = 0;
+      let valid = true;
+      this.form.partitionsList?.forEach((item) => {
+        partitions += item.totalSeats;
+        let group = 0;
+        item.eduGroupList?.forEach((i) => {
+          group += i.totalSeats;
+        });
+        if (group > item.totalSeats) {
+          valid = false;
+        }
+      });
+      if (partitions > total) {
+        valid = false;
+      }
+      if (valid) {
+        callback();
+      } else {
+        callback(new Error("席位数量错误,已超出总席位设置数"));
       }
     },
   },

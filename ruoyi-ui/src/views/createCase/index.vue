@@ -13,6 +13,8 @@
         <el-input
           v-model="form.caseName"
           placeholder="请输入案例名称"
+          maxlength="15"
+          show-word-limit
         ></el-input>
       </el-form-item>
       <el-form-item label="案例类型" prop="type">
@@ -42,7 +44,12 @@
         >
       </el-form-item>
       <el-form-item label="案例说明" prop="description">
-        <el-input type="textarea" v-model.number="form.description"></el-input>
+        <el-input
+          type="textarea"
+          v-model.number="form.description"
+          maxlength="100"
+          show-word-limit
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('form')">确定</el-button>
@@ -85,7 +92,7 @@ export default {
         this.form = res.data;
       });
     }
-    getTemplateList().then((res) => {
+    getTemplateList({ occupied: true }).then((res) => {
       this.templateOptions = res.rows;
     });
   },
