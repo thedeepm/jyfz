@@ -31,6 +31,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="population != null  and population != ''"> and population = #{population}</if>
             <if test="position != null  and position != ''"> and position = #{position}</if>
             <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+            <if test="searchValue != null  and searchValue != ''">
+                and chinese_name like concat('%', #{searchValue}, '%')
+                or foreign_name like concat('%', #{searchValue}, '%')
+                or other_name like concat('%', #{searchValue}, '%')
+                or position like concat('%', #{searchValue}, '%')
+            </if>
         </where>
     </select>
 

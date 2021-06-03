@@ -42,13 +42,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
             <if test="addMsg1 != null  and addMsg1 != ''"> and add_msg1 = #{addMsg1}</if>
             <if test="addMsg2 != null  and addMsg2 != ''"> and add_msg2 = #{addMsg2}</if>
+            <if test="addMsg2 != null  and addMsg2 != ''"> and add_msg2 = #{addMsg2}</if>
+            <if test="searchValue != null  and searchValue != ''">
+                and chinese_name like concat('%', #{searchValue}, '%')
+                or foreign_name like concat('%', #{searchValue}, '%')
+                or abbreviation like concat('%', #{searchValue}, '%')
+                and capital = #{searchValue}
+            </if>
         </where>
     </select>
 
     <select id="selectCountryListByKeyword" parameterType="String" resultMap="CountryResult">
         <include refid="selectCountryVo"/>
         <where>
-            <if test="chineseName != null  and chineseName != ''">
+            <if test="keyword != null  and keyword != ''">
              and chinese_name like concat('%', #{keyword}, '%')
              or foreign_name like concat('%', #{keyword}, '%')
              or abbreviation like concat('%', #{keyword}, '%')

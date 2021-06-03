@@ -27,13 +27,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="position != null  and position != ''"> and position = #{position}</if>
             <if test="deep != null  and deep != ''"> and deep = #{deep}</if>
             <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+            <if test="searchValue != null  and searchValue != ''">
+                and chinese_name like concat('%', #{searchValue}, '%')
+                or foreign_name like concat('%', #{searchValue}, '%')
+            </if>
         </where>
     </select>
 
     <select id="selectSeaListByKeyword" parameterType="String" resultMap="SeaResult">
         <include refid="selectSeaVo"/>
         <where>
-            <if test="chineseName != null  and chineseName != ''">
+            <if test="keyword != null  and keyword != ''">
                 and chinese_name like concat('%', #{keyword}, '%')
                 or foreign_name like concat('%', #{keyword}, '%')
              </if>

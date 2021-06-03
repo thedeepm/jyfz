@@ -71,7 +71,7 @@ public class EduCaseController extends BaseController
      * 查询我的案例列表
      */
     @ApiOperation("查询我的案例列表")
-    @PreAuthorize("@ss.hasPermi('edu:case:myList')")
+    @PreAuthorize("@ss.hasPermi('edu:case:a')")
     @GetMapping("/myList")
     public TableDataInfo myList(@ApiParam(value = "查询我的案例列表", required = true) Long userId)
     {
