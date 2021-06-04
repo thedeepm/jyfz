@@ -40,21 +40,6 @@ public class SearchGeogController extends BaseController
     public TableDataInfo list(BaseSearchEntity baseEntity)
     {
         startPage();
-//        String keyword = baseEntity.getKeyword();
-//        List<Object> totalList = new ArrayList<>();
-//        List<City> cityList = cityService.selectCityListByKeyword(keyword);
-//        List<Country> countryList = countryService.selectCountryListByKeyword(keyword);
-//        List<Port> portList = portService.selectPortListByKeyword(keyword);
-//        List<Province> provinceList = provinceService.selectProvinceListByKeyword(keyword);
-//        List<Sea> seaList = seaService.selectSeaListByKeyword(keyword);
-//        totalList.addAll(cityList);
-//        totalList.addAll(countryList);
-//        totalList.addAll(portList);
-//        totalList.addAll(provinceList);
-//        totalList.addAll(seaList);
-//        AjaxResult ajaxResult = AjaxResult.success("查询成功");
-//        ajaxResult.put("total", new PageInfo(totalList).getTotal());
-//        ajaxResult.put("rows", totalList);
         List<BaseSearchEntity> results = searchGeoService.selectSearchAllList(baseEntity);
         return getDataTable(results);
     }

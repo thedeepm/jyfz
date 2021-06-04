@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-            '|',
+            '--',
             IfNULL( CONCAT( '别名', ': ', other_name ), '' ),
             IfNULL( CONCAT( '行政区类别', ': ', category ), '' ),
             IfNULL( CONCAT( '面积', ': ', area ), '' ),
@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-            '|',
+            '--',
             IfNULL( CONCAT( '面积', ': ', area ), '' ),
             IfNULL( CONCAT( '地理位置', ': ', position ), '' ),
             IfNULL( CONCAT( '平均水深', ': ', deep ), '' ),
@@ -64,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-            '|',
+            '--',
             IfNULL( CONCAT( '简称', ': ', abbreviation ), '' ),
             IfNULL( CONCAT( '所属洲', ': ', belong_to ), '' ),
             IfNULL( CONCAT( '人口数量', ': ', population ), '' ),
@@ -94,7 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-            '|',
+            '--',
             IfNULL( CONCAT( '所属地区', ': ', region ), '' ),
             IfNULL( CONCAT( '货物吞吐量', ': ', throughput ), '' ),
             IfNULL( CONCAT( '主营业务', ': ', core_business ), '' ),
@@ -116,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-            '|',
+            '--',
             IfNULL( CONCAT( '行政区类别', ': ', category ), '' ),
             IfNULL( CONCAT( '下辖地区', ': ', ruled_area ), '' ),
             IfNULL( CONCAT( '面积', ': ', area ), '' ),

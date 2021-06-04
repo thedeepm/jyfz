@@ -147,6 +147,7 @@ public class EduTaskController extends BaseController
         EduGroup group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
         EduPartition partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
         seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+        //TODO personinfo
         ajax.put(AjaxResult.CODE_TAG, HttpStatus.SUCCESS);
         ajax.put(AjaxResult.MSG_TAG,"新增成功");
         ajax.put("group",group);
