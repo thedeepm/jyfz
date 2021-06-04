@@ -115,7 +115,7 @@ public class FlowWSServer {
                             for (int i = 0; i < eduCaseTaskList.size(); i++){
                                 eduTask = eduTaskService.selectEduTaskById(eduCaseTaskList.get(i).getTaskId());
                                 eduTask.setCompleted(eduCaseTaskList.get(i).getCompleted());
-                                eduTask.setId(eduCaseTaskList.get(i).getId());
+                                eduTask.setCaseTaskId(eduCaseTaskList.get(i).getId());
                                 eduTaskList.add(eduTask);
                             }
                         }else{
