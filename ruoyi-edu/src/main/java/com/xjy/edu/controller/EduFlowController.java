@@ -2,11 +2,15 @@ package com.xjy.edu.controller;
 
 import java.util.List;
 
+import com.ruoyi.system.domain.SysFileInfo;
+import com.xjy.edu.domain.EduCaseTask;
 import com.xjy.edu.domain.vo.EduFlowRequestVo;
+import com.xjy.edu.service.IEduCaseTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,6 +41,9 @@ public class EduFlowController extends BaseController
 {
     @Autowired
     private IEduFlowService eduFlowService;
+    @Autowired
+    private IEduCaseTaskService eduCaseTaskService;
+
 
     /**
      * 查询流程列表
@@ -49,6 +56,18 @@ public class EduFlowController extends BaseController
         startPage();
         List<EduFlow> list = eduFlowService.selectEduFlowList(eduFlow);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询流程信息
+     */
+    @ApiOperation("查询流程文件信息")
+    @PreAuthorize("@ss.hasPermi('edu:flow:info')")
+    @GetMapping("/info")
+    public AjaxResult getFlowInfo(EduCaseTask caseTask)
+    {
+        SysFileInfo sysFileInfo =  eduCaseTaskService.selectFlowFileInfo(caseTask);
+        return AjaxResult.success(sysFileInfo);
     }
 
     /**
@@ -98,7 +117,7 @@ public class EduFlowController extends BaseController
     @PreAuthorize("@ss.hasPermi('edu:flow:edit')")
     @Log(title = "流程", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EduFlow eduFlow)
+    public AjaxResult edit(@Validated @RequestBody EduFlow eduFlow)
     {
         return toAjax(eduFlowService.updateEduFlow(eduFlow));
     }

@@ -86,7 +86,9 @@ public class CommonController
             SysFileInfo sysFileInfo = new SysFileInfo();
             sysFileInfo.setFilePath(filePath);
             sysFileInfo.setVisitUrl(url);
-            sysFileInfo.setFileName(fileName);
+            //sysFileInfo.setFileName(fileName);
+            sysFileInfo.setFileName(file.getOriginalFilename());
+            //sysFileInfo.setFileType(file.getContentType());
             fileInfoService.insertSysFileInfo(sysFileInfo);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);

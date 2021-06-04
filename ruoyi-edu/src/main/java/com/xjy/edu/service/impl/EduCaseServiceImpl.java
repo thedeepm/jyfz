@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduCaseMapper;
 import com.xjy.edu.domain.EduCase;
 import com.xjy.edu.service.IEduCaseService;
+import sun.font.TrueTypeFont;
 
 /**
  * 案例Service业务层处理
@@ -72,6 +73,8 @@ public class EduCaseServiceImpl implements IEduCaseService
         eduCase.setCreateTime(DateUtils.getNowDate());
         EduTemplate eduTemplate = eduTemplateMapper.selectEduTemplateById(eduCase.getTemplateId());
         EduCaseTask eduCaseTask = new EduCaseTask();
+        eduTemplate.setOccupied(Boolean.TRUE);
+        eduTemplateMapper.updateEduTemplate(eduTemplate);
         int rows = eduCaseMapper.insertEduCase(eduCase);
         if(rows != 0){
             insertRelatedCaseTask(eduCase, eduTemplate, eduCaseTask);

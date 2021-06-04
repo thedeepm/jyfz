@@ -1,6 +1,8 @@
 package com.xjy.edu.service;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.SysFileInfo;
 import com.xjy.edu.domain.EduCaseTask;
 
 /**
@@ -18,6 +20,14 @@ public interface IEduCaseTaskService
      * @return 案例任务关联
      */
         EduCaseTask selectEduCaseTaskById(Long id);
+
+    /**
+     * 查询案例任务关联
+     *
+     * @param eduCaseTask 案例任务关联ID
+     * @return 案例任务关联
+     */
+    SysFileInfo selectFlowFileInfo(EduCaseTask eduCaseTask);
 
     /**
      * 查询案例任务关联列表

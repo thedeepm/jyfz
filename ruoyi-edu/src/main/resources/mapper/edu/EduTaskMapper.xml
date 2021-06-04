@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="warningTime"    column="warning_time"    />
         <result property="createTime"    column="create_time"    />
         <result property="flowId"    column="flow_id"    />
+        <result property="personId"    column="person_id"    />
         <result property="stepLevel"    column="step_level"    />
         <result property="completed"    column="completed"    />
         <result property="tbc1"    column="TBC1"    />
@@ -25,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectEduTaskVo">
-        select id, task_name, partition_id, group_id, seat_id, start_time, end_time, warning_time, create_time, flow_id, step_level, completed, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_task
+        select id, task_name, partition_id, group_id, seat_id, start_time, end_time, warning_time, create_time, flow_id, step_level, completed, person_id, TBC1, TBC2, TBC3, TBC4, TBC5 from edu_task
     </sql>
 
     <select id="selectEduTaskList" parameterType="EduTask" resultMap="EduTaskResult">
@@ -39,6 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null "> and end_time = #{endTime}</if>
             <if test="warningTime != null "> and warning_time = #{warningTime}</if>
             <if test="flowId != null "> and flow_id = #{flowId}</if>
+            <if test="personId != null "> and flow_id = #{person_id}</if>
             <if test="stepLevel != null "> and step_level = #{stepLevel}</if>
             <if test="completed != null "> and completed = #{completed}</if>
             <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
@@ -71,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warningTime != null">warning_time,</if>
             <if test="createTime != null">create_time,</if>
             <if test="flowId != null">flow_id,</if>
+            <if test="personId != null">person_id,</if>
             <if test="stepLevel != null">step_level,</if>
             <if test="completed != null">completed,</if>
             <if test="tbc1 != null">TBC1,</if>
@@ -89,6 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warningTime != null">#{warningTime},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="flowId != null">#{flowId},</if>
+            <if test="personId != null">#{personId},</if>
             <if test="stepLevel != null">#{stepLevel},</if>
             <if test="completed != null">#{completed},</if>
             <if test="tbc1 != null">#{tbc1},</if>
@@ -111,6 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="warningTime != null">warning_time = #{warningTime},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="flowId != null">flow_id = #{flowId},</if>
+            <if test="personId != null">person_id = #{personId},</if>
             <if test="stepLevel != null">step_level = #{stepLevel},</if>
             <if test="completed != null">completed = #{completed},</if>
             <if test="tbc1 != null">TBC1 = #{tbc1},</if>

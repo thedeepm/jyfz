@@ -3,14 +3,14 @@ package com.xjy.edu.websocket;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.service.ISysUserService;
 import com.xjy.edu.domain.EduCaseTask;
+import com.xjy.edu.domain.EduPersonInfo;
 import com.xjy.edu.domain.EduSeat;
 import com.xjy.edu.domain.EduTask;
-import com.xjy.edu.service.IEduCaseTaskService;
-import com.xjy.edu.service.IEduSeatService;
-import com.xjy.edu.service.IEduTaskService;
-import com.xjy.edu.service.IEduTemplateService;
+import com.xjy.edu.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +39,16 @@ public class FlowWSServer {
     private IEduTaskService eduTaskService;
 
     @Autowired
-    private IEduTemplateService iEduTemplateService;
+    private IEduPersonInfoService personInfoService;
 
     @Autowired
     private IEduSeatService iEduSeatService;
 
     @Autowired
     private IEduCaseTaskService eduCaseTaskService;
+
+    @Autowired
+    private ISysUserService sysUserService;
 
     private static final Logger log = LoggerFactory.getLogger(FlowWSServer.class);
 
@@ -73,21 +76,32 @@ public class FlowWSServer {
             public void run()
             {
                 log.info("FlowWSServer 任务开始");
-                ObjectMapper mapper = new ObjectMapper();
-                EduSeat eduSeat = new EduSeat();
-                Map<String,Object> map = new ConcurrentHashMap<String,Object>();
-                EduTask eduTask = new EduTask();
-                //当属性的值为空（null或者""）时，不进行序列化，可以减少数据传输
-                mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-                //设置日期格式
-                mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-                Long seconds = 0L;
-                Long totalSeconds = 0L;
                 Instant nowInstant;
                 Instant startInstant;
                 Instant endInstant;
+                EduTask eduTask;
+                EduSeat eduSeat;
+                List<EduTask> eduTaskList;
+                Map<String,Object> map;
+                Map<String,Object> tempmap;
+                SysUser sysUser;
+                EduPersonInfo eduPersonInfo;
+                List<Map<String, Object>> userInfoList;
                 while (sessionMap.get(session.getId()) != null) {
-                    List<EduTask> eduTaskList = new ArrayList<>();
+                    ObjectMapper mapper = new ObjectMapper();
+                    userInfoList = new ArrayList<>();
+                    //当属性的值为空（null或者""）时，不进行序列化，可以减少数据传输
+                    mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+                    //设置日期格式
+                    mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                    mapper.setTimeZone(TimeZone.getDefault());
+                    Long seconds = 0L;
+                    Long totalSeconds = 0L;
+                    eduTaskList = new ArrayList<>();
+                    eduSeat = new EduSeat();
+                    map = new ConcurrentHashMap<String,Object>();
+                    eduTask = new EduTask();
+                    eduPersonInfo = new EduPersonInfo();
                     try {
                         if(caseId == null){
                             send(session,  mapper.writeValueAsString("no caseId"));
@@ -99,7 +113,6 @@ public class FlowWSServer {
 
                         if(eduCaseTaskList != null && eduCaseTaskList.size() > 0){
                             for (int i = 0; i < eduCaseTaskList.size(); i++){
-                                eduTask = new EduTask();
                                 eduTask = eduTaskService.selectEduTaskById(eduCaseTaskList.get(i).getTaskId());
                                 eduTask.setCompleted(eduCaseTaskList.get(i).getCompleted());
                                 eduTask.setId(eduCaseTaskList.get(i).getId());
@@ -123,10 +136,26 @@ public class FlowWSServer {
                                 break;
                             }
                         }
+                        if( eduTaskList.size() > 0){
+                            for (int i = 0; i< eduTaskList.size(); i++){
+                                //eduTask = new EduTask();
+                                tempmap = new ConcurrentHashMap<String,Object>();
+                                eduPersonInfo = personInfoService.selectEduPersonInfoById(eduTask.getPersonId());
+                                sysUser = sysUserService.selectUserById(eduPersonInfo.getUserId());
+                                tempmap.put("userName", sysUser.getUserName());
+                                tempmap.put("eduPersonInfo", eduPersonInfo);
+                                userInfoList.add(tempmap);
+                            }
+                        }
+                        eduPersonInfo = personInfoService.selectEduPersonInfoById(eduTask.getPersonId());
+                        sysUser = sysUserService.selectUserById(eduPersonInfo.getUserId());
+                        map.put("userName", sysUser.getUserName());
+                        map.put("eduPersonInfo", eduPersonInfo);
                         map.put("eduSeat", eduSeat);
                         map.put("eduTaskList", eduTaskList);
                         map.put("currentEduTask", eduTask);
                         map.put("totalSeconds", totalSeconds);
+                        map.put("userInfoList", userInfoList);
                         send(session,  mapper.writeValueAsString(map));
                         //休眠五秒
                         Thread.sleep(5000);
@@ -178,6 +207,10 @@ public class FlowWSServer {
         Instant nowInstant;
         Instant startInstant;
         Instant endInstant;
+        SysUser sysUser;
+        EduPersonInfo eduPersonInfo;
+        Map<String,Object> tempmap;
+        List<Map<String, Object>> userInfoList = new ArrayList<>();
         try {
             if(caseId == null){
                 send(session,  mapper.writeValueAsString("no caseId"));
@@ -208,6 +241,21 @@ public class FlowWSServer {
                     break;
                 }
             }
+            if( eduTaskList.size() > 0){
+                for (int i = 0; i< eduTaskList.size(); i++){
+                    //eduTask = new EduTask();
+                    tempmap = new ConcurrentHashMap<String,Object>();
+                    eduPersonInfo = personInfoService.selectEduPersonInfoById(eduTask.getPersonId());
+                    sysUser = sysUserService.selectUserById(eduPersonInfo.getUserId());
+                    tempmap.put("userName", sysUser.getUserName());
+                    tempmap.put("eduPersonInfo", eduPersonInfo);
+                    userInfoList.add(tempmap);
+                }
+            }
+            eduPersonInfo = personInfoService.selectEduPersonInfoById(eduTask.getPersonId());
+            sysUser = sysUserService.selectUserById(eduPersonInfo.getUserId());
+            map.put("userName", sysUser.getUserName());
+            map.put("eduPersonInfo", eduPersonInfo);
             map.put("eduSeat", eduSeat);
             map.put("eduTaskList", eduTaskList);
             map.put("currentEduTask", eduTask);
