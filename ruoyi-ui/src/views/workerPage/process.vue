@@ -25,25 +25,51 @@
       </el-scrollbar>
     </header>
     <main>
-      <div class="time">
-        <el-progress
-          :percentage="percentage"
-          :color="customColors"
-          :stroke-width="20"
-          :format="timeRemaining"
-        ></el-progress>
-      </div>
-      <Zone :cells="cells" :activeSeat="seat" v-if="cellShow" />
-      <a :href="file.visitUrl" style="margin-top: 15px"
-        ><el-link icon="el-icon-download">{{file.fileName}}</el-link></a
-      >
+      <template v-if="time != undefined">
+        <el-tag v-if="username" style="margin-bottom: 10px"
+          >当前工作人：{{ username }}</el-tag
+        >
+        <div class="time">
+          <el-progress
+            :percentage="percentage"
+            :color="customColors"
+            :stroke-width="20"
+            :format="timeRemaining"
+          ></el-progress>
+        </div>
+        <Zone :cells="cells" :activeSeat="seat" v-if="cellShow" />
+        <a :href="file.visitUrl" style="margin-top: 15px"
+          ><el-link icon="el-icon-download">{{ file.fileName }}</el-link></a
+        >
+      </template>
     </main>
     <div class="operation">
-      <el-button type="primary" @click="next" v-if="!finish">下一步</el-button>
+      <!-- <el-button
+        type="primary"
+        @click="next"
+        v-if="!finish && time != undefined"
+        >下一步</el-button
+      > -->
+      <FileUpload
+        v-if="
+          !finish && time != undefined && $store.state.user.userName == username
+        "
+        v-model="url"
+        :id.sync="fileId"
+      />
       <el-alert
-        v-else
+        v-if="finish"
         title="已完成"
         type="success"
+        center
+        show-icon
+        :closable="false"
+      >
+      </el-alert>
+      <el-alert
+        v-if="!finish && time == undefined"
+        title="任务暂未开始"
+        type="warning"
         center
         show-icon
         :closable="false"
@@ -55,11 +81,14 @@
 
 <script>
 import Zone from "@/components/Zone";
-import { getTemplate } from "@/api/jxfz/template";
+import { getTemplate, updateTask } from "@/api/jxfz/template";
 import { taskCompleted, getWork, getFile } from "@/api/jxfz/process";
+import FileUpload from "./FileUpload";
+import { formatDate } from "@/utils";
 export default {
   components: {
     Zone,
+    FileUpload,
   },
   data() {
     return {
@@ -85,7 +114,10 @@ export default {
       ],
       time: 0,
       totalTime: 0,
-      file:{}
+      file: {},
+      username: null,
+      url: "",
+      fileId: "",
     };
   },
   computed: {
@@ -150,6 +182,7 @@ export default {
         if (event.data) {
           let monitonJson = JSON.parse(event.data);
           // this.taskList = monitonJson.eduTaskList;
+          this.username = monitonJson.userName;
           this.time = monitonJson.seconds;
           this.totalTime = monitonJson.totalSeconds;
           if (
@@ -163,7 +196,8 @@ export default {
           this.length = monitonJson.eduTaskList.length;
           for (let i = 0; i < monitonJson.eduTaskList.length; i++) {
             if (monitonJson.eduTaskList[i].completed == 0) {
-              this.taskId = monitonJson.eduTaskList[i].id;
+              this.taskId = monitonJson.eduTaskList[i].caseTaskId;
+              this.nextTaskId = monitonJson.eduTaskList[i + 1]?.id;
               this.step = i;
               break;
             } else if (i == monitonJson.eduTaskList.length - 1) {
@@ -203,7 +237,7 @@ export default {
       };
     },
     next() {
-      this.$confirm("进入下一步, 是否继续?", "提示", {
+      this.$confirm("提交并完成作业, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -213,6 +247,10 @@ export default {
           id: this.taskId,
         }).then((res) => {
           this.websocket.send(this.id);
+          updateTask({
+            id: this.nextTaskId,
+            startTime: formatDate(new Date()),
+          });
         });
       });
     },

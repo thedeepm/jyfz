@@ -24,7 +24,7 @@
       <template v-else>
         <el-badge
           is-dot
-          v-if="index == activeSeat.groupIndex && activeSeat.groupIndex != ''"
+          v-if="index == activeSeat.groupIndex && activeSeat.groupIndex != null"
           :class="activeSeat.warning ? 'warning' : ''"
         >
           <site

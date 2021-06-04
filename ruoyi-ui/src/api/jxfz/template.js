@@ -82,7 +82,14 @@ export function createTask(data) {
     })
 }
 
-
+// 更新步骤
+export function updateTask(data) {
+    return request({
+        url: '/edu/task',
+        method: 'put',
+        data
+    })
+}
 // 查询流程信息
 export function getFlow(id) {
     return request({
