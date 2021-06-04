@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xjy.edu.mapper.ProvinceMapper">
+    
+    <resultMap type="Province" id="ProvinceResult">
+        <result property="provinceId"    column="province_id"    />
+        <result property="chineseName"    column="chinese_name"    />
+        <result property="foreignName"    column="foreign_name"    />
+        <result property="category"    column="category"    />
+        <result property="ruledArea"    column="ruled_area"    />
+        <result property="area"    column="area"    />
+        <result property="population"    column="population"    />
+        <result property="belongTo"    column="belong_to"    />
+        <result property="position"    column="position"    />
+        <result property="addMsg"    column="add_msg"    />
+    </resultMap>
+
+    <sql id="selectProvinceVo">
+        select province_id, chinese_name, foreign_name, category, ruled_area, area, population, belong_to, position, add_msg, 'province' as type from province
+    </sql>
+
+    <select id="selectProvinceList" parameterType="Province" resultMap="ProvinceResult">
+        <include refid="selectProvinceVo"/>
+        <where>  
+            <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
+            <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="ruledArea != null  and ruledArea != ''"> and ruled_area = #{ruledArea}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="population != null  and population != ''"> and population = #{population}</if>
+            <if test="belongTo != null  and belongTo != ''"> and belong_to = #{belongTo}</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+        </where>
+    </select>
+
+    <select id="selectProvinceListByKeyword" parameterType="String" resultMap="ProvinceResult">
+        <include refid="selectProvinceVo"/>
+        <where>
+            <if test="chineseName != null  and chineseName != ''">
+                and chinese_name like concat('%', #{keyword}, '%')
+                or foreign_name like concat('%', #{keyword}, '%')
+                or position like concat('%', #{keyword}, '%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectProvinceById" parameterType="Long" resultMap="ProvinceResult">
+        <include refid="selectProvinceVo"/>
+        where province_id = #{provinceId}
+    </select>
+        
+    <insert id="insertProvince" parameterType="Province" useGeneratedKeys="true" keyProperty="provinceId">
+        insert into province
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name,</if>
+            <if test="foreignName != null">foreign_name,</if>
+            <if test="category != null">category,</if>
+            <if test="ruledArea != null">ruled_area,</if>
+            <if test="area != null">area,</if>
+            <if test="population != null">population,</if>
+            <if test="belongTo != null">belong_to,</if>
+            <if test="position != null">position,</if>
+            <if test="addMsg != null">add_msg,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">#{chineseName},</if>
+            <if test="foreignName != null">#{foreignName},</if>
+            <if test="category != null">#{category},</if>
+            <if test="ruledArea != null">#{ruledArea},</if>
+            <if test="area != null">#{area},</if>
+            <if test="population != null">#{population},</if>
+            <if test="belongTo != null">#{belongTo},</if>
+            <if test="position != null">#{position},</if>
+            <if test="addMsg != null">#{addMsg},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProvince" parameterType="Province">
+        update province
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chineseName != null and chineseName != ''">chinese_name = #{chineseName},</if>
+            <if test="foreignName != null">foreign_name = #{foreignName},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="ruledArea != null">ruled_area = #{ruledArea},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="population != null">population = #{population},</if>
+            <if test="belongTo != null">belong_to = #{belongTo},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="addMsg != null">add_msg = #{addMsg},</if>
+        </trim>
+        where province_id = #{provinceId}
+    </update>
+
+    <delete id="deleteProvinceById" parameterType="Long">
+        delete from province where province_id = #{provinceId}
+    </delete>
+
+    <delete id="deleteProvinceByIds" parameterType="String">
+        delete from province where province_id in 
+        <foreach item="provinceId" collection="array" open="(" separator="," close=")">
+            #{provinceId}
+        </foreach>
+    </delete>
+</mapper>

@@ -223,6 +223,13 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- geog -->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-geog</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -234,6 +241,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-edu</module>
+        <module>ruoyi-geog</module>
     </modules>
     <packaging>pom</packaging>
 

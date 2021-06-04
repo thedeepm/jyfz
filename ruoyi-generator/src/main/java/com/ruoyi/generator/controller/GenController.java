@@ -46,7 +46,7 @@ public class GenController extends BaseController
     /**
      * 查询代码生成列表
      */
-    //@PreAuthorize("@ss.hasPermi('tool:gen:list')")
+    @PreAuthorize("@ss.hasPermi('tool:gen:list')")
     @GetMapping("/list")
     public TableDataInfo genList(GenTable genTable)
     {
@@ -75,7 +75,7 @@ public class GenController extends BaseController
     /**
      * 查询数据库列表
      */
-    //@PreAuthorize("@ss.hasPermi('tool:gen:list')")
+    @PreAuthorize("@ss.hasPermi('tool:gen:list')")
     @GetMapping("/db/list")
     public TableDataInfo dataList(GenTable genTable)
     {
@@ -87,7 +87,7 @@ public class GenController extends BaseController
     /**
      * 查询数据表字段列表
      */
-    //@PreAuthorize("@ss.hasPermi('tool:gen:list')")
+    @PreAuthorize("@ss.hasPermi('tool:gen:list')")
     @GetMapping(value = "/column/{talbleId}")
     public TableDataInfo columnList(Long tableId)
     {
@@ -101,7 +101,7 @@ public class GenController extends BaseController
     /**
      * 导入表结构（保存）
      */
-    //@PreAuthorize("@ss.hasPermi('tool:gen:import')")
+    @PreAuthorize("@ss.hasPermi('tool:gen:import')")
     @Log(title = "代码生成", businessType = BusinessType.IMPORT)
     @PostMapping("/importTable")
     public AjaxResult importTableSave(String tables)
@@ -152,7 +152,7 @@ public class GenController extends BaseController
     /**
      * 生成代码（下载方式）
      */
-    //@PreAuthorize("@ss.hasPermi('tool:gen:code')")
+    @PreAuthorize("@ss.hasPermi('tool:gen:code')")
     @Log(title = "代码生成", businessType = BusinessType.GENCODE)
     @GetMapping("/download/{tableName}")
     public void download(HttpServletResponse response, @PathVariable("tableName") String tableName) throws IOException
@@ -188,7 +188,7 @@ public class GenController extends BaseController
     /**
      * 批量生成代码
      */
-    //@PreAuthorize("@ss.hasPermi('tool:gen:code')")
+    @PreAuthorize("@ss.hasPermi('tool:gen:code')")
     @Log(title = "代码生成", businessType = BusinessType.GENCODE)
     @GetMapping("/batchGenCode")
     public void batchGenCode(HttpServletResponse response, String tables) throws IOException

@@ -76,19 +76,24 @@ public class EduFlowServiceImpl implements IEduFlowService
      */
     @Override
     @Transactional
-    public int insertEduFlow(EduFlowRequestVo eduFlowRequestVo)
+    public EduFlow insertEduFlow(EduFlowRequestVo eduFlowRequestVo)
     {
         EduFlow eduFlow = eduFlowRequestVo.getEduflow();
         List<EduTask> eduTaskList = eduFlowRequestVo.getEduTaskList();
         EduTask eduTask;
+        if(eduFlow.getStepNumber() == null){
+            eduFlow.setStepNumber(0L);
+        };
         int rows = eduFlowMapper.insertEduFlow(eduFlow);
         if(rows != 0){
             eduFlow = this.getLastEduFlow();
-            for (int i = 0; i < eduTaskList.size(); i++){
-                eduTask = eduTaskList.get(i);
-                eduTask.setFlowId(eduFlow.getId());
-                //创建任务
-                eduTaskMapper.insertEduTask(eduTask);
+            if(eduTaskList != null){
+                for (int i = 0; i < eduTaskList.size(); i++){
+                    eduTask = eduTaskList.get(i);
+                    eduTask.setFlowId(eduFlow.getId());
+                    //创建任务
+                    eduTaskMapper.insertEduTask(eduTask);
+                }
             }
             //创建任务后需将模板绑定流程
             EduTemplate eduTemplate = new EduTemplate();
@@ -97,7 +102,7 @@ public class EduFlowServiceImpl implements IEduFlowService
             eduTemplate.setFlowId(eduFlow.getId());
         }
 
-        return rows;
+        return eduFlow;
     }
 
     /**

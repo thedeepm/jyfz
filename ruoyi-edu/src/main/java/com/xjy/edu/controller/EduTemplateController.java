@@ -1,18 +1,15 @@
 package com.xjy.edu.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.constant.HttpStatus;
 import com.xjy.edu.domain.EduPartition;
 import com.xjy.edu.domain.EduSeat;
+import com.xjy.edu.domain.EduTask;
 import com.xjy.edu.domain.vo.EduTemplateRequestVo;
-import com.xjy.edu.service.IEduGroupService;
-import com.xjy.edu.service.IEduPartitionService;
-import com.xjy.edu.service.IEduSeatService;
+import com.xjy.edu.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +27,6 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.xjy.edu.domain.EduTemplate;
-import com.xjy.edu.service.IEduTemplateService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -50,6 +46,9 @@ public class EduTemplateController extends BaseController
 
     @Autowired
     private IEduPartitionService eduPartitionService;
+
+    @Autowired
+    private IEduTaskService eduTaskService;
 
     @Autowired
     private IEduSeatService eduSeatService;
@@ -109,11 +108,6 @@ public class EduTemplateController extends BaseController
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
             map.put("templateId", eduTemplate.getId());
         }
-//        TableDataInfo rspData = new TableDataInfo();
-//        rspData.setCode(HttpStatus.SUCCESS);
-//        rspData.setMsg("新增成功");
-//        rspData.setRows(eduPartitionList);
-//        rspData.setTotal(new PageInfo(eduPartitionList).getTotal());
         map.put("code", HttpStatus.SUCCESS);
         map.put("eduPartitionList",eduPartitionList);
         map.put("total", new PageInfo(eduPartitionList).getTotal());
@@ -128,9 +122,51 @@ public class EduTemplateController extends BaseController
     @PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EduTemplate eduTemplate)
+    public AjaxResult edit(@RequestBody EduTemplateRequestVo eduTemplateVo)
     {
-        return toAjax(eduTemplateService.updateEduTemplate(eduTemplate));
+        AjaxResult ajax = AjaxResult.success();
+//        Map<String,Object> map = new HashMap<String,Object>();
+        EduTemplate eduTemplate;
+        List<EduPartition> eduPartitionList = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        //eduTemplate = eduTemplateVo.getTemplate();
+        EduPartition eduPartition = new EduPartition();
+        List<EduTask> eduTaskTempList = new ArrayList<>();
+        EduTask eduTask = new EduTask();
+        eduPartition.setTemplateId(eduTemplateVo.getId());
+        if(eduTemplateVo.getPartitionsList() != null && eduTemplateVo.getPartitionsList().size()>0){
+            eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+            for (int i = 0;i < eduPartitionList.size();i++){
+                ids.add(eduPartitionList.get(i).getId());
+            }
+            //delete partition that relate to the template
+            if(ids.size() > 0){
+                eduPartitionService.deleteEduPartitionByIds(ids.toArray(new Long[ids.size()]));
+            }
+        }
+        if(eduTemplateService.updateEduTemplate(eduTemplateVo) != 0){
+            eduPartition = new EduPartition();
+            eduTemplate = eduTemplateService.selectEduTemplateById(eduTemplateVo.getId());
+            eduPartition.setTemplateId(eduTemplate.getId());
+            eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
+            for (int i = 0; i < ids.size(); i++){
+                //更新task中的id
+                eduTask.setPartitionId(ids.get(i));
+                eduTaskTempList = eduTaskService.selectEduTaskList(eduTask);
+                for (int j = 0; j < eduTaskTempList.size(); j++){
+                    eduTask = eduTaskTempList.get(j);
+                    eduTask.setPartitionId(eduPartitionList.get(i).getId());
+                    eduTaskService.updateEduTask(eduTask);
+                }
+            }
+            ajax.put("templateId",eduTemplate.getId());
+            ajax.put("template",eduTemplate);
+        }
+        ajax.put(AjaxResult.CODE_TAG,HttpStatus.SUCCESS);
+        ajax.put(AjaxResult.MSG_TAG,"修改成功");
+        ajax.put("eduPartitionList",eduPartitionList);
+        ajax.put("total",new PageInfo(eduPartitionList).getTotal());
+        return ajax;
     }
 
     /**

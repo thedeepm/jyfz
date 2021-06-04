@@ -53,6 +53,12 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-edu</artifactId>
         </dependency>
+
+        <!-- geog模块-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-geog</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

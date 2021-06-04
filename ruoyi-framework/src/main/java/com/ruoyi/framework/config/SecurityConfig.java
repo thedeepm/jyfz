@@ -113,17 +113,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/webjars/**").anonymous()
                 .antMatchers("/*/api-docs").anonymous()
                 .antMatchers("/druid/**").anonymous()
-                //.antMatchers("/**").anonymous()
+                //.antMatchers("/edu/**").anonymous()
+                //.antMatchers("/geog/**").anonymous()
+                .antMatchers("/websocket/**").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();
         httpSecurity.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
         // 添加JWT filter
-//        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-//        // 添加CORS filter
-//        httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
-//        httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);
+        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        // 添加CORS filter
+        httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
+        httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);
     }
 
     

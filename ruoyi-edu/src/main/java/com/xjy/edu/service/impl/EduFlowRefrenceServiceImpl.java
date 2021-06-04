@@ -16,7 +16,7 @@ import com.xjy.edu.service.IEduFlowRefrenceService;
 @Service
 public class EduFlowRefrenceServiceImpl implements IEduFlowRefrenceService 
 {
-    @Autowired(required = false)
+    @Autowired
     private EduFlowRefrenceMapper eduFlowRefrenceMapper;
 
     /**

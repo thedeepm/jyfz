@@ -17,7 +17,7 @@ import com.xjy.edu.service.IEduSeatService;
 @Service
 public class EduSeatServiceImpl implements IEduSeatService 
 {
-    @Autowired(required = false)
+    @Autowired
     private EduSeatMapper eduSeatMapper;
 
     /**
@@ -41,6 +41,7 @@ public class EduSeatServiceImpl implements IEduSeatService
     @Override
     public List<EduSeat> selectEduSeatList(EduSeat eduSeat)
     {
+        //eduSeat.setOccupied(Boolean.TRUE);
         return eduSeatMapper.selectEduSeatList(eduSeat);
     }
     

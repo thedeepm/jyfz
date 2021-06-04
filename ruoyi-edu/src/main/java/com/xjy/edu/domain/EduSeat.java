@@ -42,6 +42,10 @@ public class EduSeat extends BaseEntity
     @Excel(name = "关联模板id")
     private Long templateId;
 
+    /** 是否占用（0否1是） */
+    @Excel(name = "是否占用", readConverterExp = "0=否1是")
+    private Boolean occupied;
+
     /** $column.columnComment */
     @Excel(name = "职位")
     private String tbc1;
@@ -165,6 +169,14 @@ public class EduSeat extends BaseEntity
         return tbc5;
     }
 
+    public Boolean getOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(Boolean occupied) {
+        this.occupied = occupied;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -176,6 +188,7 @@ public class EduSeat extends BaseEntity
             .append("createTime", getCreateTime())
             .append("position", getPosition())
             .append("templateId", getTemplateId())
+            .append("occupied", getOccupied())
             .append("tbc1", getTbc1())
             .append("tbc2", getTbc2())
             .append("tbc3", getTbc3())
