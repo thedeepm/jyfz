@@ -33,12 +33,12 @@
         <div class="info">
           <div class="left">{{ item.hallName }}</div>
           <div class="right">
-            <el-button
+            <!-- <el-button
               type="text"
               icon="el-icon-edit-outline"
               @click="edit(item.id)"
               >编辑</el-button
-            >
+            > -->
             <el-button
               type="text"
               icon="el-icon-delete"
@@ -216,7 +216,7 @@ export default {
         text-align: left;
       }
       .right {
-        width: 110px;
+        max-width: 110px;
       }
     }
   }

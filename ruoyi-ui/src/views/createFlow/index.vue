@@ -11,7 +11,7 @@
       class="form"
     >
       <el-form-item label="任务文件" prop="fileId">
-        <FileUpload v-model="form.fileId" />
+        <FileUpload v-model="form.url" :id.sync="form.fileId" />
       </el-form-item>
       <!-- <el-form-item label="步骤数量" prop="stepNumber">
         <el-input-number
@@ -32,12 +32,22 @@
           <div class="step-name">
             <span>步骤{{ index + 1 }}</span>
             <span style="margin-left: 60px">用户账号：{{ item.userName }}</span>
+            <span style="margin-left: 20px"
+              ><i class="el-icon-user">{{
+                item.eduPersonInfo.personName
+              }}</i></span
+            >
+            <span style="margin-left: 20px"
+              ><i class="el-icon-suitcase">{{
+                item.eduPersonInfo.position
+              }}</i></span
+            >
           </div>
           <el-form-item
             label="任务名称"
             :prop="'stepsList.' + index + '.taskName'"
             :rules="{
-              required: true,
+              required: false,
               message: '任务名称不能为空',
               trigger: 'blur',
             }"
@@ -56,7 +66,7 @@
                     label-width="0"
                     :prop="'stepsList.' + index + '.partitionId'"
                     :rules="{
-                      required: true,
+                      required: false,
                       message: '请选择分区',
                       trigger: 'change',
                     }"
@@ -85,7 +95,7 @@
                     label-width="0"
                     :prop="'stepsList.' + index + '.groupId'"
                     :rules="{
-                      required: true,
+                      required: false,
                       message: '请选择分组',
                       trigger: 'change',
                     }"
@@ -112,7 +122,7 @@
                     label-width="0"
                     :prop="'stepsList.' + index + '.seatId'"
                     :rules="{
-                      required: true,
+                      required: false,
                       message: '请选择席位编号',
                       trigger: 'change',
                     }"
@@ -139,7 +149,7 @@
                 label="时间/时长"
                 :prop="'stepsList.' + index + '.time'"
                 :rules="{
-                  required: true,
+                  required: false,
                   message: '时间不能为空',
                   trigger: 'blur',
                 }"
@@ -161,7 +171,7 @@
             label="预警提示"
             :prop="'stepsList.' + index + '.warningTime'"
             :rules="{
-              required: true,
+              required: false,
               message: '预警时间不能为空',
               trigger: 'blur',
             }"
@@ -207,6 +217,8 @@
           <el-input
             v-model="addForm.taskName"
             placeholder="输入任务名称"
+            maxlength="10"
+            show-word-limit
           ></el-input>
         </el-form-item>
         <el-row :gutter="24">
@@ -279,14 +291,17 @@
               <el-col :span="6">
                 <el-form-item
                   label-width="0"
-                  prop="personid"
+                  prop="personId"
                   :rules="{
                     required: true,
                     message: '选择作业人',
                     trigger: 'change',
                   }"
                 >
-                  <el-select v-model="addForm.personid" placeholder="作业人"
+                  <el-select
+                    v-model="addForm.personId"
+                    placeholder="作业人"
+                    filterable
                     ><el-option
                       v-for="(item, index) in personOptions"
                       :key="index"
@@ -362,6 +377,7 @@
           </el-col>
         </el-row>
         <el-form-item
+          v-if="addForm.startTime && addForm.endTime"
           label="预警提示"
           prop="warningTime"
           :rules="{
@@ -376,6 +392,7 @@
             placeholder="预警时间"
             value-format="yyyy-MM-dd HH:mm:ss"
             :picker-options="warningOptions"
+            :default-value="addForm.startTime"
           >
           </el-date-picker>
         </el-form-item>
@@ -401,7 +418,7 @@ import {
   getTask,
   getPersonInfoList,
 } from "@/api/jxfz/template";
-import FileUpload from "@/components/FileUpload";
+import FileUpload from "./FileUpload";
 export default {
   props: {
     step: [String, Number],
@@ -415,6 +432,7 @@ export default {
     return {
       form: {
         fileId: "",
+        url:"",
         stepNumber: 1,
         stepsList: [
           // {
@@ -430,8 +448,8 @@ export default {
         ],
       },
       rules: {
-        name: [
-          { required: true, message: "请选择活动区域", trigger: "change" },
+        fileId: [
+          { required: true, message: "请上传文件", trigger: "change" },
         ],
       },
       addShow: false,
@@ -441,7 +459,7 @@ export default {
         partitionId: "",
         groupId: "",
         seatId: "",
-        personid: "",
+        personId: "",
         time: null,
         warningTime: null,
         startTime: "",
@@ -516,7 +534,7 @@ export default {
     },
     addStep() {
       this.addShow = true;
-      getPersonInfoList({ seatId: -1 }).then((res) => {
+      getPersonInfoList().then((res) => {
         this.personOptions = res.rows;
       });
       this.$nextTick(() => {

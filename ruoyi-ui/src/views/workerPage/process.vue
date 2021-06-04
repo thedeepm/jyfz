@@ -37,24 +37,39 @@
             :format="timeRemaining"
           ></el-progress>
         </div>
+        <Zone :cells="cells" :activeSeat="seat" v-if="cellShow" />
+        <a :href="file.visitUrl" style="margin-top: 15px"
+          ><el-link icon="el-icon-download">{{ file.fileName }}</el-link></a
+        >
       </template>
-      <Zone :cells="cells" :activeSeat="seat" v-if="cellShow" />
     </main>
     <div class="operation">
+      <!-- <el-button
+        type="primary"
+        @click="next"
+        v-if="!finish && time != undefined"
+        >下一步</el-button
+      > -->
+      <FileUpload
+        v-if="
+          !finish && time != undefined && $store.state.user.userName == username
+        "
+        v-model="url"
+        :id.sync="fileId"
+      />
       <el-alert
-        v-if="!finish && time == undefined"
-        title="任务暂未开始"
-        type="warning"
+        v-if="finish"
+        title="已完成"
+        type="success"
         center
         show-icon
         :closable="false"
       >
       </el-alert>
-      <el-button type="primary" @click="next" v-if="!finish">下一步</el-button>
       <el-alert
-        v-if="finish"
-        title="已完成"
-        type="success"
+        v-if="!finish && time == undefined"
+        title="任务暂未开始"
+        type="warning"
         center
         show-icon
         :closable="false"
@@ -66,23 +81,26 @@
 
 <script>
 import Zone from "@/components/Zone";
-import { getTemplate } from "@/api/jxfz/template";
-import { taskCompleted } from "@/api/jxfz/process";
+import { getTemplate, updateTask } from "@/api/jxfz/template";
+import { taskCompleted, getWork, getFile } from "@/api/jxfz/process";
+import FileUpload from "./FileUpload";
 import { formatDate } from "@/utils";
 export default {
   components: {
     Zone,
+    FileUpload,
   },
   data() {
     return {
       step: 0,
       id: null,
+      userId: this.$store.state.user.id,
       show: false,
       cellShow: false,
       websocket: null,
       taskList: [],
       length: 0,
-      cells: [],
+      cells: null,
       seat: {
         warning: false,
         groupIndex: null,
@@ -96,7 +114,10 @@ export default {
       ],
       time: 0,
       totalTime: 0,
+      file: {},
       username: null,
+      url: "",
+      fileId: "",
     };
   },
   computed: {
@@ -109,15 +130,22 @@ export default {
     },
   },
   created() {
-    this.id = this.$route.query.id;
-    this.templateId = this.$route.query.templateId;
-    getTemplate(this.templateId).then((res) => {
-      this.cells = JSON.parse(res.data.tbc1);
-      setTimeout(() => {
-        this.cellShow = true;
-      }, 1000);
+    getWork({ userId: this.userId }).then((res) => {
+      if (res.rows[0]) {
+        this.id = res.rows[0].id;
+        this.templateId = res.rows[0].templateId;
+        getTemplate(this.templateId).then((res) => {
+          this.cells = JSON.parse(res.data.tbc1);
+          setTimeout(() => {
+            this.cellShow = true;
+          }, 500);
+        });
+        getFile({ caseId: res.rows[0].id }).then((res) => {
+          this.file = res.data;
+        });
+        this.initSocket();
+      }
     });
-    this.initSocket();
   },
 
   beforeDestroy() {
@@ -155,7 +183,6 @@ export default {
           let monitonJson = JSON.parse(event.data);
           // this.taskList = monitonJson.eduTaskList;
           this.username = monitonJson.userName;
-
           this.time = monitonJson.seconds;
           this.totalTime = monitonJson.totalSeconds;
           if (
@@ -210,7 +237,7 @@ export default {
       };
     },
     next() {
-      this.$confirm("进入下一步, 是否继续?", "提示", {
+      this.$confirm("提交并完成作业, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

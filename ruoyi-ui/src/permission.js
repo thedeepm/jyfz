@@ -8,7 +8,7 @@ import { getToken } from '@/utils/auth'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login', '/auth-redirect', '/bind', '/register','/home']
+const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/home', '/gis', '/gis/list', '/search/list', '/search/details', '/caseList', '/templateList']
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
@@ -23,18 +23,25 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.roles.length === 0) {
         // 判断当前用户是否已拉取完user_info信息
-        store.dispatch('GetInfo').then(() => {
+        store.dispatch('GetInfo').then((res) => {
+
+          if (res.roles.indexOf("student") != -1) {
+            store.state.user.userName = res.user.userName
+            next({ path: '/worker/process' })//学生账号直接调到作业页面
+            return;
+          }
           store.dispatch('GenerateRoutes').then(accessRoutes => {
             // 根据roles权限生成可访问的路由表
             router.addRoutes(accessRoutes) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+
           })
         }).catch(err => {
-            store.dispatch('LogOut').then(() => {
-              Message.error(err)
-              next({ path: '/' })
-            })
+          store.dispatch('LogOut').then(() => {
+            Message.error(err)
+            next({ path: '/' })
           })
+        })
       } else {
         next()
       }
