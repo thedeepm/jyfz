@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysFileInfoMapper">
+    
+    <resultMap type="SysFileInfo" id="SysFileInfoResult">
+        <result property="fileId"    column="file_id"    />
+        <result property="platType"    column="plat_type"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="suffix"    column="suffix"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="visitUrl"    column="visit_url"    />
+        <result property="size"    column="size"    />
+        <result property="resultSize"    column="result_size"    />
+        <result property="description"    column="description"    />
+        <result property="checkTimes"    column="check_times"    />
+        <result property="downloadTimes"    column="download_times"    />
+        <result property="tag"    column="tag"    />
+        <result property="isDownloadable"    column="is_downloadable"    />
+        <result property="isUploadable"    column="is_uploadable"    />
+        <result property="isVisible"    column="is_visible"    />
+        <result property="isDeletable"    column="is_deletable"    />
+        <result property="isUpdatable"    column="is_updatable"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectSysFileInfoVo">
+        select file_id, plat_type, file_type, file_name, suffix, file_path, visit_url, size, result_size, description, check_times, download_times, tag, is_downloadable, is_uploadable, is_visible, is_deletable, is_updatable, create_by, create_time, update_by, update_time, remark, del_flag from sys_file_info
+    </sql>
+
+    <select id="selectSysFileInfoList" parameterType="SysFileInfo" resultMap="SysFileInfoResult">
+        <include refid="selectSysFileInfoVo"/>
+        <where>  
+            <if test="platType != null  and platType != ''"> and plat_type = #{platType}</if>
+            <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="suffix != null  and suffix != ''"> and suffix = #{suffix}</if>
+            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
+            <if test="visitUrl != null  and visitUrl != ''"> and visit_url = #{visitUrl}</if>
+            <if test="size != null "> and size = #{size}</if>
+            <if test="resultSize != null  and resultSize != ''"> and result_size = #{resultSize}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="checkTimes != null "> and check_times = #{checkTimes}</if>
+            <if test="downloadTimes != null "> and download_times = #{downloadTimes}</if>
+            <if test="tag != null  and tag != ''"> and tag = #{tag}</if>
+            <if test="isDownloadable != null "> and is_downloadable = #{isDownloadable}</if>
+            <if test="isUploadable != null "> and is_uploadable = #{isUploadable}</if>
+            <if test="isVisible != null "> and is_visible = #{isVisible}</if>
+            <if test="isDeletable != null "> and is_deletable = #{isDeletable}</if>
+            <if test="isUpdatable != null "> and is_updatable = #{isUpdatable}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysFileInfoById" parameterType="Long" resultMap="SysFileInfoResult">
+        <include refid="selectSysFileInfoVo"/>
+        where file_id = #{fileId}
+    </select>
+        
+    <insert id="insertSysFileInfo" parameterType="SysFileInfo" useGeneratedKeys="true" keyProperty="fileId">
+        insert into sys_file_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platType != null">plat_type,</if>
+            <if test="fileType != null">file_type,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="suffix != null and suffix != ''">suffix,</if>
+            <if test="filePath != null and filePath != ''">file_path,</if>
+            <if test="visitUrl != null and visitUrl != ''">visit_url,</if>
+            <if test="size != null">size,</if>
+            <if test="resultSize != null">result_size,</if>
+            <if test="description != null">description,</if>
+            <if test="checkTimes != null">check_times,</if>
+            <if test="downloadTimes != null">download_times,</if>
+            <if test="tag != null">tag,</if>
+            <if test="isDownloadable != null">is_downloadable,</if>
+            <if test="isUploadable != null">is_uploadable,</if>
+            <if test="isVisible != null">is_visible,</if>
+            <if test="isDeletable != null">is_deletable,</if>
+            <if test="isUpdatable != null">is_updatable,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platType != null">#{platType},</if>
+            <if test="fileType != null">#{fileType},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="suffix != null and suffix != ''">#{suffix},</if>
+            <if test="filePath != null and filePath != ''">#{filePath},</if>
+            <if test="visitUrl != null and visitUrl != ''">#{visitUrl},</if>
+            <if test="size != null">#{size},</if>
+            <if test="resultSize != null">#{resultSize},</if>
+            <if test="description != null">#{description},</if>
+            <if test="checkTimes != null">#{checkTimes},</if>
+            <if test="downloadTimes != null">#{downloadTimes},</if>
+            <if test="tag != null">#{tag},</if>
+            <if test="isDownloadable != null">#{isDownloadable},</if>
+            <if test="isUploadable != null">#{isUploadable},</if>
+            <if test="isVisible != null">#{isVisible},</if>
+            <if test="isDeletable != null">#{isDeletable},</if>
+            <if test="isUpdatable != null">#{isUpdatable},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysFileInfo" parameterType="SysFileInfo">
+        update sys_file_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platType != null">plat_type = #{platType},</if>
+            <if test="fileType != null">file_type = #{fileType},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="suffix != null and suffix != ''">suffix = #{suffix},</if>
+            <if test="filePath != null and filePath != ''">file_path = #{filePath},</if>
+            <if test="visitUrl != null and visitUrl != ''">visit_url = #{visitUrl},</if>
+            <if test="size != null">size = #{size},</if>
+            <if test="resultSize != null">result_size = #{resultSize},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="checkTimes != null">check_times = #{checkTimes},</if>
+            <if test="downloadTimes != null">download_times = #{downloadTimes},</if>
+            <if test="tag != null">tag = #{tag},</if>
+            <if test="isDownloadable != null">is_downloadable = #{isDownloadable},</if>
+            <if test="isUploadable != null">is_uploadable = #{isUploadable},</if>
+            <if test="isVisible != null">is_visible = #{isVisible},</if>
+            <if test="isDeletable != null">is_deletable = #{isDeletable},</if>
+            <if test="isUpdatable != null">is_updatable = #{isUpdatable},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where file_id = #{fileId}
+    </update>
+
+    <delete id="deleteSysFileInfoById" parameterType="Long">
+        delete from sys_file_info where file_id = #{fileId}
+    </delete>
+
+    <delete id="deleteSysFileInfoByIds" parameterType="String">
+        delete from sys_file_info where file_id in 
+        <foreach item="fileId" collection="array" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </delete>
+</mapper>
