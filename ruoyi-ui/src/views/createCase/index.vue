@@ -92,7 +92,7 @@ export default {
         this.form = res.data;
       });
     }
-    getTemplateList({ occupied: true }).then((res) => {
+    getTemplateList({ occupied: false }).then((res) => {
       this.templateOptions = res.rows;
     });
   },

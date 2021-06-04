@@ -34,6 +34,9 @@
         ></el-progress>
       </div>
       <Zone :cells="cells" :activeSeat="seat" v-if="cellShow" />
+      <a :href="file.visitUrl" style="margin-top: 15px"
+        ><el-link icon="el-icon-download">{{file.fileName}}</el-link></a
+      >
     </main>
     <div class="operation">
       <el-button type="primary" @click="next" v-if="!finish">下一步</el-button>
@@ -53,7 +56,7 @@
 <script>
 import Zone from "@/components/Zone";
 import { getTemplate } from "@/api/jxfz/template";
-import { taskCompleted, getWork } from "@/api/jxfz/process";
+import { taskCompleted, getWork, getFile } from "@/api/jxfz/process";
 export default {
   components: {
     Zone,
@@ -82,6 +85,7 @@ export default {
       ],
       time: 0,
       totalTime: 0,
+      file:{}
     };
   },
   computed: {
@@ -95,15 +99,20 @@ export default {
   },
   created() {
     getWork({ userId: this.userId }).then((res) => {
-    //   this.id = this.$route.query.id;
-    //   this.templateId = this.$route.query.templateId;
-    //   getTemplate(this.templateId).then((res) => {
-    //     this.cells = JSON.parse(res.data.tbc1);
-    //     setTimeout(() => {
-    //       this.cellShow = true;
-    //     }, 500);
-    //   });
-      // this.initSocket();
+      if (res.rows[0]) {
+        this.id = res.rows[0].id;
+        this.templateId = res.rows[0].templateId;
+        getTemplate(this.templateId).then((res) => {
+          this.cells = JSON.parse(res.data.tbc1);
+          setTimeout(() => {
+            this.cellShow = true;
+          }, 500);
+        });
+        getFile({ caseId: res.rows[0].id }).then((res) => {
+          this.file = res.data;
+        });
+        this.initSocket();
+      }
     });
   },
 

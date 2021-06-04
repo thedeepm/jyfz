@@ -22,4 +22,13 @@ export function getWork(params) {
     })
 }
 
+ 
+//获取学生账号作业文件  caseId
+export function getFile(params) {
+    return request({
+        url: '/edu/flow/info',
+        method: 'get',
+        params
+    })
+}
 

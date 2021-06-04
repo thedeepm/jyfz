@@ -550,17 +550,20 @@ export default {
       console.log(index);
     },
     saveTemplate() {
-      updateFlow({
-        id: this.$refs.flow.data.flowId,
-        // fileId: this.$refs.flow.form.fileId,
-        fileId: 12,
-      }).then((res) => {
-        createTemplate(
-          { id: this.form.id, flowId: this.$refs.flow.data.flowId },
-          this.form.id
-        );
-        this.$message.success("新增模板成功");
-        this.$router.push("/templateList");
+      this.$refs.flow.$refs.form.validate((valid) => {
+        if (valid) {
+          updateFlow({
+            id: this.$refs.flow.data.flowId,
+            fileId: this.$refs.flow.form.fileId,
+          }).then((res) => {
+            createTemplate(
+              { id: this.form.id, flowId: this.$refs.flow.data.flowId },
+              this.form.id
+            );
+            this.$message.success("新增模板成功");
+            this.$router.push("/templateList");
+          });
+        }
       });
     },
     partitionsValid(rule, value, callback, partition) {

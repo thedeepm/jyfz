@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form  animate__animated animate__flipInX">
       <h3 class="title">教学辅助系统</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
@@ -48,7 +48,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2021 ruoyi.vip All Rights Reserved.</span>
+      <span>&copy; Copyright 2007~2020, 国防科技大学</span>
     </div>
   </div>
 </template>
@@ -145,20 +145,23 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
+  background-image: url("../assets/home_bg.png");
   background-size: cover;
 }
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
-  color: #707070;
+  // color: #707070;
+  color: #ffffff;
 }
 
 .login-form {
   border-radius: 6px;
-  background: #ffffff;
+  background: rgba($color: #030a39, $alpha: .6);
   width: 400px;
   padding: 25px 25px 5px 25px;
+  border:1px solid #ffffff;
+  color:#ffffff;
   .el-input {
     height: 38px;
     input {
@@ -175,6 +178,9 @@ export default {
   font-size: 13px;
   text-align: center;
   color: #bfbfbf;
+}
+.el-checkbox{
+  color:#ffffff;
 }
 .login-code {
   width: 33%;
