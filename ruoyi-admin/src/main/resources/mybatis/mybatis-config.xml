@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<setting name="defaultExecutorType"      value="REUSE" /> <!-- 配置默认的执行器 -->
 		<setting name="logImpl"                  value="SLF4J" /> <!-- 指定 MyBatis 所用日志的具体实现 -->
 		<!-- <setting name="mapUnderscoreToCamelCase" value="true"/>  驼峰式命名 -->
-		<setting name="logImpl" value="STDOUT_LOGGING" />
+<!--		<setting name="logImpl" value="STDOUT_LOGGING" />-->
 	</settings>
 	
 </configuration>
