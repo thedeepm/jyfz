@@ -2,6 +2,10 @@ package com.ruoyi.web.controller.common;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.domain.SysFileInfo;
+import com.ruoyi.system.service.ISysFileInfoService;
+import com.ruoyi.system.service.ISysOperLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,9 @@ public class CommonController
 
     @Autowired
     private ServerConfig serverConfig;
+
+    @Autowired
+    private ISysFileInfoService fileInfoService;
 
     /**
      * 通用下载请求
@@ -76,9 +83,17 @@ public class CommonController
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
+            SysFileInfo sysFileInfo = new SysFileInfo();
+            sysFileInfo.setFilePath(filePath);
+            sysFileInfo.setVisitUrl(url);
+            //sysFileInfo.setFileName(fileName);
+            sysFileInfo.setFileName(file.getOriginalFilename());
+            //sysFileInfo.setFileType(file.getContentType());
+            fileInfoService.insertSysFileInfo(sysFileInfo);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("fileName", fileName);
             ajax.put("url", url);
+            ajax.put("fileId", sysFileInfo.getFileId());
             return ajax;
         }
         catch (Exception e)

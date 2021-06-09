@@ -46,7 +46,7 @@ public class SearchController extends BaseController
      * 搜索
      */
     @ApiOperation("查询列表")
-    @PreAuthorize("@ss.hasPermi('edu:case:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:list')")
     @GetMapping("/list")
     public AjaxResult list(@ApiParam(value = "查询列表", required = true) SearchRequestVo searchRequestVo)
     {

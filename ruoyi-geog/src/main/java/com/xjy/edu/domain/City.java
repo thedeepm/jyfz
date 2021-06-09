@@ -18,14 +18,6 @@ public class City extends BaseSearchEntity
     /** $column.columnComment */
     private Long cityId;
 
-    /** 中文名称 */
-    @Excel(name = "中文名称")
-    private String chineseName;
-
-    /** 外文名称 */
-    @Excel(name = "外文名称")
-    private String foreignName;
-
     /** 别名 */
     @Excel(name = "别名")
     private String otherName;
@@ -58,24 +50,6 @@ public class City extends BaseSearchEntity
     public Long getCityId() 
     {
         return cityId;
-    }
-    public void setChineseName(String chineseName) 
-    {
-        this.chineseName = chineseName;
-    }
-
-    public String getChineseName() 
-    {
-        return chineseName;
-    }
-    public void setForeignName(String foreignName) 
-    {
-        this.foreignName = foreignName;
-    }
-
-    public String getForeignName() 
-    {
-        return foreignName;
     }
     public void setOtherName(String otherName) 
     {

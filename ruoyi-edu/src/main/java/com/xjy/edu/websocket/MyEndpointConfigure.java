@@ -7,9 +7,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import javax.websocket.server.ServerEndpointConfig;
 
-/**
- * 解决注入其他类的问题，详情参考这篇帖子：webSocket无法注入其他类：https://blog.csdn.net/tornadojava/article/details/78781474
- */
+
 public class MyEndpointConfigure extends ServerEndpointConfig.Configurator implements ApplicationContextAware {
 
     private static volatile BeanFactory context;

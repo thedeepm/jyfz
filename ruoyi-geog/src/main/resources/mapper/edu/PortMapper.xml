@@ -18,6 +18,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select port_id, chinese_name, foreign_name, region, throughput, core_business, add_msg, 'port' as type from port
     </sql>
 
+    <sql id="selectPortVoNew">
+        SELECT
+            port_id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+                '|',
+                IfNULL( region, '' ),
+                IfNULL( throughput, '' ),
+                IfNULL( core_business, '' ),
+                IfNULL( add_msg, '' )
+            ) AS properties,
+            'port' AS type
+        FROM
+            port
+    </sql>
+
     <select id="selectPortList" parameterType="Port" resultMap="PortResult">
         <include refid="selectPortVo"/>
         <where>  
@@ -27,13 +44,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="throughput != null  and throughput != ''"> and throughput = #{throughput}</if>
             <if test="coreBusiness != null  and coreBusiness != ''"> and core_business = #{coreBusiness}</if>
             <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+            <if test="searchValue != null  and searchValue != ''">
+                and chinese_name like concat('%', #{searchValue}, '%')
+                or foreign_name like concat('%', #{searchValue}, '%')
+                or region like concat('%', #{searchValue}, '%')
+            </if>
         </where>
     </select>
 
     <select id="selectPortListByKeyword" parameterType="String" resultMap="PortResult">
         <include refid="selectPortVo"/>
         <where>
-            <if test="chineseName != null  and chineseName != ''">
+            <if test="keyword != null  and keyword != ''">
              and chinese_name like concat('%', #{keyword}, '%')
              or foreign_name like concat('%', #{keyword}, '%')
              or region like concat('%', #{keyword}, '%')

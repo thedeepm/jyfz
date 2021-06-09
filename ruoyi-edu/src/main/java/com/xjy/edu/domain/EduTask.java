@@ -20,6 +20,9 @@ public class EduTask extends BaseEntity
     /** 任务id */
     private Long id;
 
+    /** 关联案例任务id */
+    private Long caseTaskId;
+
     /** 任务名 */
     @Excel(name = "任务名")
     private String taskName;
@@ -238,6 +241,14 @@ public class EduTask extends BaseEntity
         this.personId = personId;
     }
 
+    public Long getCaseTaskId() {
+        return caseTaskId;
+    }
+
+    public void setCaseTaskId(Long caseTaskId) {
+        this.caseTaskId = caseTaskId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -251,6 +262,7 @@ public class EduTask extends BaseEntity
             .append("warningTime", getWarningTime())
             .append("createTime", getCreateTime())
             .append("flowId", getFlowId())
+            .append("caseTaskId", getCaseTaskId())
             .append("stepLevel", getStepLevel())
             .append("completed", getCompleted())
             .append("tbc1", getTbc1())

@@ -36,7 +36,7 @@ public class CountryController extends BaseController
     /**
      * 查询我国周边国家信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:country:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:country:list')")
     @GetMapping("/list")
     public TableDataInfo list(Country country)
     {
@@ -48,7 +48,7 @@ public class CountryController extends BaseController
     /**
      * 导出我国周边国家信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:country:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:country:export')")
     @Log(title = "我国周边国家信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(Country country)
@@ -61,7 +61,7 @@ public class CountryController extends BaseController
     /**
      * 获取我国周边国家信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:country:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:country:query')")
     @GetMapping(value = "/{countryId}")
     public AjaxResult getInfo(@PathVariable("countryId") Long countryId)
     {
@@ -71,7 +71,7 @@ public class CountryController extends BaseController
     /**
      * 新增我国周边国家信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:country:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:country:add')")
     @Log(title = "我国周边国家信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Country country)
@@ -82,7 +82,7 @@ public class CountryController extends BaseController
     /**
      * 修改我国周边国家信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:country:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:country:edit')")
     @Log(title = "我国周边国家信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Country country)
@@ -93,7 +93,7 @@ public class CountryController extends BaseController
     /**
      * 删除我国周边国家信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:country:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:country:remove')")
     @Log(title = "我国周边国家信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{countryIds}")
     public AjaxResult remove(@PathVariable Long[] countryIds)

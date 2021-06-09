@@ -30,39 +30,18 @@ import java.util.List;
 public class SearchGeogController extends BaseController
 {
     @Autowired
-    private ICityService cityService;
-    @Autowired
-    private ICountryService countryService;
-    @Autowired
-    private IPortService portService;
-    @Autowired
-    private IProvinceService provinceService;
-    @Autowired
-    private ISeaService seaService;
+    private ISearchGeoService searchGeoService;
 
     /**
      * 速查地理信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:city:list')")
+ //   @PreAuthorize("@ss.hasPermi('edu:searchAll:list')")
     @GetMapping("/list")
-    public AjaxResult list(@RequestParam(defaultValue = "") String keyword)
+    public TableDataInfo list(BaseSearchEntity baseEntity)
     {
         startPage();
-        List<Object> totalList = new ArrayList<>();
-        List<City> cityList = cityService.selectCityListByKeyword(keyword);
-        List<Country> countryList = countryService.selectCountryListByKeyword(keyword);
-        List<Port> portList = portService.selectPortListByKeyword(keyword);
-        List<Province> provinceList = provinceService.selectProvinceListByKeyword(keyword);
-        List<Sea> seaList = seaService.selectSeaListByKeyword(keyword);
-        totalList.addAll(cityList);
-        totalList.addAll(countryList);
-        totalList.addAll(portList);
-        totalList.addAll(provinceList);
-        totalList.addAll(seaList);
-        AjaxResult ajaxResult = AjaxResult.success("查询成功");
-        ajaxResult.put("total", new PageInfo(totalList).getTotal());
-        ajaxResult.put("rows", totalList);
-        return ajaxResult;
+        List<BaseSearchEntity> results = searchGeoService.selectSearchAllList(baseEntity);
+        return getDataTable(results);
     }
 
 }

@@ -36,7 +36,7 @@ public class PortController extends BaseController
     /**
      * 查询国内外主要港口信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:port:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:port:list')")
     @GetMapping("/list")
     public TableDataInfo list(Port port)
     {
@@ -48,7 +48,7 @@ public class PortController extends BaseController
     /**
      * 导出国内外主要港口信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:port:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:port:export')")
     @Log(title = "国内外主要港口信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(Port port)
@@ -61,7 +61,7 @@ public class PortController extends BaseController
     /**
      * 获取国内外主要港口信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:port:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:port:query')")
     @GetMapping(value = "/{portId}")
     public AjaxResult getInfo(@PathVariable("portId") Long portId)
     {
@@ -71,7 +71,7 @@ public class PortController extends BaseController
     /**
      * 新增国内外主要港口信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:port:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:port:add')")
     @Log(title = "国内外主要港口信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Port port)
@@ -82,7 +82,7 @@ public class PortController extends BaseController
     /**
      * 修改国内外主要港口信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:port:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:port:edit')")
     @Log(title = "国内外主要港口信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Port port)
@@ -93,7 +93,7 @@ public class PortController extends BaseController
     /**
      * 删除国内外主要港口信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:port:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:port:remove')")
     @Log(title = "国内外主要港口信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{portIds}")
     public AjaxResult remove(@PathVariable Long[] portIds)

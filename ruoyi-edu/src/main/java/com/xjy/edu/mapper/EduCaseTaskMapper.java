@@ -1,6 +1,8 @@
 package com.xjy.edu.mapper;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.SysFileInfo;
 import com.xjy.edu.domain.EduCaseTask;
 
 /**
@@ -18,6 +20,8 @@ public interface EduCaseTaskMapper
      * @return 案例任务关联
      */
         EduCaseTask selectEduCaseTaskById(Long id);
+
+     SysFileInfo selectFlowFileInfo(EduCaseTask eduCaseTask);
 
     /**
      * 查询案例任务关联列表

@@ -36,7 +36,7 @@ public class ProvinceController extends BaseController
     /**
      * 查询国内主要省份信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:province:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:province:list')")
     @GetMapping("/list")
     public TableDataInfo list(Province province)
     {
@@ -48,7 +48,7 @@ public class ProvinceController extends BaseController
     /**
      * 导出国内主要省份信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:province:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:province:export')")
     @Log(title = "国内主要省份信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(Province province)
@@ -61,7 +61,7 @@ public class ProvinceController extends BaseController
     /**
      * 获取国内主要省份信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:province:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:province:query')")
     @GetMapping(value = "/{provinceId}")
     public AjaxResult getInfo(@PathVariable("provinceId") Long provinceId)
     {
@@ -71,7 +71,7 @@ public class ProvinceController extends BaseController
     /**
      * 新增国内主要省份信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:province:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:province:add')")
     @Log(title = "国内主要省份信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Province province)
@@ -82,7 +82,7 @@ public class ProvinceController extends BaseController
     /**
      * 修改国内主要省份信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:province:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:province:edit')")
     @Log(title = "国内主要省份信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Province province)
@@ -93,7 +93,7 @@ public class ProvinceController extends BaseController
     /**
      * 删除国内主要省份信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:province:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:province:remove')")
     @Log(title = "国内主要省份信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{provinceIds}")
     public AjaxResult remove(@PathVariable Long[] provinceIds)

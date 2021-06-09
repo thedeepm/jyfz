@@ -12,6 +12,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
     </resultMap>
 
+    <resultMap type="SysFileInfo" id="SysFileInfoResult">
+        <result property="fileId"    column="file_id"    />
+        <result property="platType"    column="plat_type"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="suffix"    column="suffix"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="visitUrl"    column="visit_url"    />
+        <result property="size"    column="size"    />
+        <result property="resultSize"    column="result_size"    />
+        <result property="description"    column="description"    />
+        <result property="checkTimes"    column="check_times"    />
+        <result property="downloadTimes"    column="download_times"    />
+        <result property="tag"    column="tag"    />
+        <result property="isDownloadable"    column="is_downloadable"    />
+        <result property="isUploadable"    column="is_uploadable"    />
+        <result property="isVisible"    column="is_visible"    />
+        <result property="isDeletable"    column="is_deletable"    />
+        <result property="isUpdatable"    column="is_updatable"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
     <sql id="selectEduCaseTaskVo">
         select id, case_id, task_id, completed, create_time from edu_case_task
     </sql>
@@ -34,14 +61,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertEduCaseTask" parameterType="EduCaseTask">
         insert into edu_case_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
+<!--            <if test="id != null">id,</if>-->
             <if test="caseId != null">case_id,</if>
             <if test="taskId != null">task_id,</if>
             <if test="completed != null">completed,</if>
             <if test="createTime != null">create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
+<!--            <if test="id != null">#{id},</if>-->
             <if test="caseId != null">#{caseId},</if>
             <if test="taskId != null">#{taskId},</if>
             <if test="completed != null">#{completed},</if>
@@ -69,4 +96,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectFlowFileInfo" parameterType="EduCaseTask" resultMap="SysFileInfoResult">
+        SELECT
+            *
+        FROM
+            sys_file_info
+        WHERE
+            file_id IN (
+        SELECT
+            file_id
+        FROM
+            edu_flow
+        WHERE
+            id IN ( SELECT flow_id FROM edu_task WHERE id IN ( SELECT task_id FROM edu_case_task
+        <where>
+            <if test="caseId != null "> and case_id = #{caseId}</if>
+        </where>
+            ) ));
+    </select>
 </mapper>

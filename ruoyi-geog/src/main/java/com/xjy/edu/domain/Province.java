@@ -18,14 +18,6 @@ public class Province extends BaseSearchEntity
     /** 省份id */
     private Long provinceId;
 
-    /** 中文名称 */
-    @Excel(name = "中文名称")
-    private String chineseName;
-
-    /** 外文名称 */
-    @Excel(name = "外文名称")
-    private String foreignName;
-
     /** 行政区类别 */
     @Excel(name = "行政区类别")
     private String category;
@@ -62,24 +54,6 @@ public class Province extends BaseSearchEntity
     public Long getProvinceId() 
     {
         return provinceId;
-    }
-    public void setChineseName(String chineseName) 
-    {
-        this.chineseName = chineseName;
-    }
-
-    public String getChineseName() 
-    {
-        return chineseName;
-    }
-    public void setForeignName(String foreignName) 
-    {
-        this.foreignName = foreignName;
-    }
-
-    public String getForeignName() 
-    {
-        return foreignName;
     }
     public void setCategory(String category) 
     {

@@ -18,14 +18,6 @@ public class Sea extends BaseSearchEntity
     /** 主键id */
     private Long seaId;
 
-    /** 中文名称 */
-    @Excel(name = "中文名称")
-    private String chineseName;
-
-    /** 外文名称 */
-    @Excel(name = "外文名称")
-    private String foreignName;
-
     /** 面积 */
     @Excel(name = "面积")
     private String area;
@@ -50,24 +42,6 @@ public class Sea extends BaseSearchEntity
     public Long getSeaId() 
     {
         return seaId;
-    }
-    public void setChineseName(String chineseName) 
-    {
-        this.chineseName = chineseName;
-    }
-
-    public String getChineseName() 
-    {
-        return chineseName;
-    }
-    public void setForeignName(String foreignName) 
-    {
-        this.foreignName = foreignName;
-    }
-
-    public String getForeignName() 
-    {
-        return foreignName;
     }
     public void setArea(String area) 
     {

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import javax.validation.constraints.Size;
+
 /**
  * 模板对象 edu_template
  * 
@@ -33,6 +35,10 @@ public class EduTemplate extends BaseEntity
     /** 关联流程id */
     @Excel(name = "关联流程id")
     private Long flowId;
+
+    /** 是否占用（0否1是） */
+    @Excel(name = "是否占用", readConverterExp = "0否1是")
+    private Boolean occupied;
 
     /** $column.columnComment */
     @Excel(name = "关联流程id")
@@ -68,6 +74,7 @@ public class EduTemplate extends BaseEntity
         this.hallName = hallName;
     }
 
+    @Size(min = 0, max = 100, message = "分区大厅名长度不能超过100个字符")
     public String getHallName() 
     {
         return hallName;
@@ -145,6 +152,14 @@ public class EduTemplate extends BaseEntity
         return tbc5;
     }
 
+    public Boolean getOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(Boolean occupied) {
+        this.occupied = occupied;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -155,6 +170,7 @@ public class EduTemplate extends BaseEntity
             .append("flowId", getFlowId())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
+            .append("occupied", getOccupied())
             .append("tbc1", getTbc1())
             .append("tbc2", getTbc2())
             .append("tbc3", getTbc3())

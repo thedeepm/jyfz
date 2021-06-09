@@ -20,8 +20,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select city_id, chinese_name, foreign_name, other_name, category, area, population, position, add_msg, 'city' as type from city
     </sql>
 
+    <sql id="selectCityVoNew">
+        SELECT
+            city_id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+                '|',
+                IfNULL( other_name, '' ),
+                IfNULL( category, '' ),
+                IfNULL( area, '' ),
+                IfNULL( population, '' ),
+                IfNULL( position, '' ),
+                IfNULL( add_msg, '' )
+            ) AS properties,
+            'city' AS type
+        FROM
+            city
+    </sql>
+
     <select id="selectCityList" parameterType="City" resultMap="CityResult">
-        <include refid="selectCityVo"/>
+        <include refid="selectCityVoNew"/>
         <where>  
             <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
             <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
@@ -31,11 +50,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="population != null  and population != ''"> and population = #{population}</if>
             <if test="position != null  and position != ''"> and position = #{position}</if>
             <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+            <if test="searchValue != null  and searchValue != ''">
+                and chinese_name like concat('%', #{searchValue}, '%')
+                or foreign_name like concat('%', #{searchValue}, '%')
+                or other_name like concat('%', #{searchValue}, '%')
+                or position like concat('%', #{searchValue}, '%')
+            </if>
         </where>
     </select>
 
     <select id="selectCityListByKeyword" parameterType="String" resultMap="CityResult">
-        <include refid="selectCityVo"/>
+        <include refid="selectCityVoNew"/>
         <where>
             <if test="keyWord != null  and keyWord != ''">
              and chinese_name like concat('%', #{keyword}, '%')

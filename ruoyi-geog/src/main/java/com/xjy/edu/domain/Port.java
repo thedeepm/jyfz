@@ -18,14 +18,6 @@ public class Port extends BaseSearchEntity
     /** 主键ID */
     private Long portId;
 
-    /** 中文名称 */
-    @Excel(name = "中文名称")
-    private String chineseName;
-
-    /** 外文名称 */
-    @Excel(name = "外文名称")
-    private String foreignName;
-
     /** 所属地区 */
     @Excel(name = "所属地区")
     private String region;
@@ -50,24 +42,6 @@ public class Port extends BaseSearchEntity
     public Long getPortId() 
     {
         return portId;
-    }
-    public void setChineseName(String chineseName) 
-    {
-        this.chineseName = chineseName;
-    }
-
-    public String getChineseName() 
-    {
-        return chineseName;
-    }
-    public void setForeignName(String foreignName) 
-    {
-        this.foreignName = foreignName;
-    }
-
-    public String getForeignName() 
-    {
-        return foreignName;
     }
     public void setRegion(String region) 
     {

@@ -21,8 +21,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select province_id, chinese_name, foreign_name, category, ruled_area, area, population, belong_to, position, add_msg, 'province' as type from province
     </sql>
 
+    <sql id="selectProvinceVoNew">
+        SELECT
+            province_id,
+            chinese_name,
+            foreign_name,
+            CONCAT_WS(
+                '|',
+                IfNULL( category, '' ),
+                IfNULL( ruled_area, '' ),
+                IfNULL( area, '' ),
+                IfNULL( population, '' ),
+                IfNULL( belong_to, '' ),
+                IfNULL( position, '' ),
+                IfNULL( add_msg, '' )
+            ) AS properties,
+            'province' AS type
+        FROM
+            province
+    </sql>
+
     <select id="selectProvinceList" parameterType="Province" resultMap="ProvinceResult">
-        <include refid="selectProvinceVo"/>
+        <include refid="selectProvinceVoNew"/>
         <where>  
             <if test="chineseName != null  and chineseName != ''"> and chinese_name like concat('%', #{chineseName}, '%')</if>
             <if test="foreignName != null  and foreignName != ''"> and foreign_name like concat('%', #{foreignName}, '%')</if>
@@ -33,13 +53,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="belongTo != null  and belongTo != ''"> and belong_to = #{belongTo}</if>
             <if test="position != null  and position != ''"> and position = #{position}</if>
             <if test="addMsg != null  and addMsg != ''"> and add_msg = #{addMsg}</if>
+            <if test="searchValue != null  and searchValue != ''">
+                and chinese_name like concat('%', #{searchValue}, '%')
+                or foreign_name like concat('%', #{searchValue}, '%')
+                or position like concat('%', #{searchValue}, '%')
+            </if>
         </where>
     </select>
 
     <select id="selectProvinceListByKeyword" parameterType="String" resultMap="ProvinceResult">
-        <include refid="selectProvinceVo"/>
+        <include refid="selectProvinceVoNew"/>
         <where>
-            <if test="chineseName != null  and chineseName != ''">
+            <if test="keyword != null  and keyword != ''">
                 and chinese_name like concat('%', #{keyword}, '%')
                 or foreign_name like concat('%', #{keyword}, '%')
                 or position like concat('%', #{keyword}, '%')

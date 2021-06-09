@@ -63,7 +63,7 @@ public class EduTaskController extends BaseController
      * 查询任务列表
      */
     @ApiOperation("获取任务列表")
-    @PreAuthorize("@ss.hasPermi('edu:task:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:task:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTask eduTask)
     {
@@ -77,19 +77,22 @@ public class EduTaskController extends BaseController
         EduSeat seat;
         String userName;
         Long userId;
+        EduPersonInfo eduPersonInfo;
         for (int i = 0;i < list.size();i++){
             eduTask = list.get(i);
             group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
             partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
             seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
-            EduPersonInfo eduPersonInfo = new EduPersonInfo();
+            eduPersonInfo = new EduPersonInfo();
             map = new HashMap<>(5);
             eduPersonInfo.setSeatId(seat.getId());
             eduPersonInfoList = eduPersonInfoService.selectEduPersonInfoList(eduPersonInfo);
             if(eduPersonInfoList != null && eduPersonInfoList.size() > 0){
-                userId = eduPersonInfoList.get(0).getUserId();
+                eduPersonInfo = eduPersonInfoList.get(0);
+                userId = eduPersonInfo.getUserId();
                 userName = userService.selectUserById(userId).getUserName();
                 map.put("userName", userName);
+                map.put("eduPersonInfo", eduPersonInfo);
             }
             map.put("group", group);
             map.put("partition", partition);
@@ -104,7 +107,7 @@ public class EduTaskController extends BaseController
      * 导出任务列表
      */
     @ApiOperation("导出任务列表")
-    @PreAuthorize("@ss.hasPermi('edu:task:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:task:export')")
     @Log(title = "任务", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduTask eduTask)
@@ -118,7 +121,7 @@ public class EduTaskController extends BaseController
      * 获取任务详细信息
      */
     @ApiOperation("获取任务详细信息")
-    @PreAuthorize("@ss.hasPermi('edu:task:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:task:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -129,7 +132,7 @@ public class EduTaskController extends BaseController
      * 新增任务
      */
     @ApiOperation("新增任务")
-    @PreAuthorize("@ss.hasPermi('edu:task:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:task:add')")
     @Log(title = "任务", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduTask eduTask)
@@ -144,6 +147,7 @@ public class EduTaskController extends BaseController
         EduGroup group = eduGroupService.selectEduGroupById(eduTask.getGroupId());
         EduPartition partition = eduPartitionService.selectEduPartitionById(eduTask.getPartitionId());
         seat = eduSeatService.selectEduSeatById(eduTask.getSeatId());
+        //TODO personinfo
         ajax.put(AjaxResult.CODE_TAG, HttpStatus.SUCCESS);
         ajax.put(AjaxResult.MSG_TAG,"新增成功");
         ajax.put("group",group);
@@ -157,7 +161,7 @@ public class EduTaskController extends BaseController
      * 修改任务
      */
     @ApiOperation("修改任务")
-    @PreAuthorize("@ss.hasPermi('edu:task:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:task:edit')")
     @Log(title = "任务", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduTask eduTask)
@@ -169,7 +173,7 @@ public class EduTaskController extends BaseController
      * 删除任务
      */
     @ApiOperation("删除任务")
-    @PreAuthorize("@ss.hasPermi('edu:task:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:task:remove')")
     @Log(title = "任务", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

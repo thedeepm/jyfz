@@ -35,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="seatId != null "> and seat_id = #{seatId}</if>
             <if test="fileId != null "> and file_id = #{fileId}</if>
             <if test="tag != null "> and tag = #{tag}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
             <if test="personName != null "> and person_name = #{personName}</if>
             <if test="tbc1 != null  and tbc1 != ''"> and TBC1 = #{tbc1}</if>
             <if test="tbc2 != null  and tbc2 != ''"> and TBC2 = #{tbc2}</if>

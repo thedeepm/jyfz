@@ -36,7 +36,7 @@ public class CityController extends BaseController
     /**
      * 查询国内主要城市信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:city:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:city:list')")
     @GetMapping("/list")
     public TableDataInfo list(City city)
     {
@@ -48,7 +48,7 @@ public class CityController extends BaseController
     /**
      * 导出国内主要城市信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:city:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:city:export')")
     @Log(title = "国内主要城市信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(City city)
@@ -61,7 +61,7 @@ public class CityController extends BaseController
     /**
      * 获取国内主要城市信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:city:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:city:query')")
     @GetMapping(value = "/{cityId}")
     public AjaxResult getInfo(@PathVariable("cityId") Long cityId)
     {
@@ -71,7 +71,7 @@ public class CityController extends BaseController
     /**
      * 新增国内主要城市信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:city:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:city:add')")
     @Log(title = "国内主要城市信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody City city)
@@ -82,7 +82,7 @@ public class CityController extends BaseController
     /**
      * 修改国内主要城市信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:city:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:city:edit')")
     @Log(title = "国内主要城市信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody City city)
@@ -93,7 +93,7 @@ public class CityController extends BaseController
     /**
      * 删除国内主要城市信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:city:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:city:remove')")
     @Log(title = "国内主要城市信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{cityIds}")
     public AjaxResult remove(@PathVariable Long[] cityIds)
