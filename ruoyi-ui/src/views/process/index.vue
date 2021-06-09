@@ -25,20 +25,34 @@
       </el-scrollbar>
     </header>
     <main>
-      <div class="time">
-        <el-progress
-          :percentage="percentage"
-          :color="customColors"
-          :stroke-width="20"
-          :format="timeRemaining"
-        ></el-progress>
-      </div>
+      <template v-if="time != undefined">
+        <el-tag v-if="username" style="margin-bottom: 10px"
+          >当前工作人：{{ username }}</el-tag
+        >
+        <div class="time">
+          <el-progress
+            :percentage="percentage"
+            :color="customColors"
+            :stroke-width="20"
+            :format="timeRemaining"
+          ></el-progress>
+        </div>
+      </template>
       <Zone :cells="cells" :activeSeat="seat" v-if="cellShow" />
     </main>
     <div class="operation">
+      <el-alert
+        v-if="!finish && time == undefined"
+        title="任务暂未开始"
+        type="warning"
+        center
+        show-icon
+        :closable="false"
+      >
+      </el-alert>
       <el-button type="primary" @click="next" v-if="!finish">下一步</el-button>
       <el-alert
-        v-else
+        v-if="finish"
         title="已完成"
         type="success"
         center
@@ -54,6 +68,7 @@
 import Zone from "@/components/Zone";
 import { getTemplate } from "@/api/jxfz/template";
 import { taskCompleted } from "@/api/jxfz/process";
+import { formatDate } from "@/utils";
 export default {
   components: {
     Zone,
@@ -67,7 +82,7 @@ export default {
       websocket: null,
       taskList: [],
       length: 0,
-      cells: null,
+      cells: [],
       seat: {
         warning: false,
         groupIndex: null,
@@ -81,6 +96,7 @@ export default {
       ],
       time: 0,
       totalTime: 0,
+      username: null,
     };
   },
   computed: {
@@ -99,7 +115,7 @@ export default {
       this.cells = JSON.parse(res.data.tbc1);
       setTimeout(() => {
         this.cellShow = true;
-      }, 500);
+      }, 1000);
     });
     this.initSocket();
   },
@@ -138,6 +154,8 @@ export default {
         if (event.data) {
           let monitonJson = JSON.parse(event.data);
           // this.taskList = monitonJson.eduTaskList;
+          this.username = monitonJson.userName;
+
           this.time = monitonJson.seconds;
           this.totalTime = monitonJson.totalSeconds;
           if (
@@ -151,7 +169,8 @@ export default {
           this.length = monitonJson.eduTaskList.length;
           for (let i = 0; i < monitonJson.eduTaskList.length; i++) {
             if (monitonJson.eduTaskList[i].completed == 0) {
-              this.taskId = monitonJson.eduTaskList[i].id;
+              this.taskId = monitonJson.eduTaskList[i].caseTaskId;
+              this.nextTaskId = monitonJson.eduTaskList[i + 1]?.id;
               this.step = i;
               break;
             } else if (i == monitonJson.eduTaskList.length - 1) {
@@ -201,6 +220,10 @@ export default {
           id: this.taskId,
         }).then((res) => {
           this.websocket.send(this.id);
+          updateTask({
+            id: this.nextTaskId,
+            startTime: formatDate(new Date()),
+          });
         });
       });
     },

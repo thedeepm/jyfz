@@ -36,7 +36,7 @@ public class EduPersonInfoController extends BaseController
     /**
      * 查询人员信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:personInfo:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:personInfo:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduPersonInfo eduPersonInfo)
     {
@@ -48,7 +48,7 @@ public class EduPersonInfoController extends BaseController
     /**
      * 导出人员信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:personInfo:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:personInfo:export')")
     @Log(title = "人员信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduPersonInfo eduPersonInfo)
@@ -61,7 +61,7 @@ public class EduPersonInfoController extends BaseController
     /**
      * 获取人员信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:personInfo:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:personInfo:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +71,7 @@ public class EduPersonInfoController extends BaseController
     /**
      * 新增人员信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:personInfo:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:personInfo:add')")
     @Log(title = "人员信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduPersonInfo eduPersonInfo)
@@ -83,7 +83,7 @@ public class EduPersonInfoController extends BaseController
     /**
      * 修改人员信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:personInfo:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:personInfo:edit')")
     @Log(title = "人员信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduPersonInfo eduPersonInfo)
@@ -94,7 +94,7 @@ public class EduPersonInfoController extends BaseController
     /**
      * 删除人员信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:personInfo:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:personInfo:remove')")
     @Log(title = "人员信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

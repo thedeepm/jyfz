@@ -17,20 +17,27 @@
           <search />
           <i class="el-icon-bell icon"></i>
           <!-- <i class="el-icon-plus icon"></i> -->
-          <el-dropdown trigger="click">
+
+          <el-dropdown trigger="click" v-if="$store.state.user.token">
             <span class="el-dropdown-link">
               <el-avatar icon="el-icon-user-solid" :size="28"></el-avatar>
               <i class="el-icon-caret-bottom el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <!-- <el-dropdown-item icon="el-icon-circle-close"
-                >退出系统</el-dropdown-item
-              > -->
               <el-dropdown-item @click.native="$router.push('/index')"
                 >后台管理</el-dropdown-item
               >
+              <el-dropdown-item
+                icon="el-icon-circle-close"
+                divided
+                @click.native="logout"
+                >退出系统</el-dropdown-item
+              >
             </el-dropdown-menu>
           </el-dropdown>
+          <el-button type="text" v-else @click="$router.push('/login')"
+            >登录</el-button
+          >
         </div>
       </div>
     </div>
@@ -66,6 +73,17 @@ export default {
       //   this.activeRoutes(activePath);
       // }
       return path;
+    },
+    async logout() {
+      this.$confirm("确定注销并退出系统吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$store.dispatch("LogOut").then(() => {
+          location.href = "/index";
+        });
+      });
     },
   },
 };

@@ -36,7 +36,7 @@ public class SeaController extends BaseController
     /**
      * 查询主要海洋基础信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:sea:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:sea:list')")
     @GetMapping("/list")
     public TableDataInfo list(Sea sea)
     {
@@ -48,7 +48,7 @@ public class SeaController extends BaseController
     /**
      * 导出主要海洋基础信息列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:sea:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:sea:export')")
     @Log(title = "主要海洋基础信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(Sea sea)
@@ -61,7 +61,7 @@ public class SeaController extends BaseController
     /**
      * 获取主要海洋基础信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:sea:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:sea:query')")
     @GetMapping(value = "/{seaId}")
     public AjaxResult getInfo(@PathVariable("seaId") Long seaId)
     {
@@ -71,7 +71,7 @@ public class SeaController extends BaseController
     /**
      * 新增主要海洋基础信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:sea:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:sea:add')")
     @Log(title = "主要海洋基础信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Sea sea)
@@ -82,7 +82,7 @@ public class SeaController extends BaseController
     /**
      * 修改主要海洋基础信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:sea:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:sea:edit')")
     @Log(title = "主要海洋基础信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Sea sea)
@@ -93,7 +93,7 @@ public class SeaController extends BaseController
     /**
      * 删除主要海洋基础信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:sea:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:sea:remove')")
     @Log(title = "主要海洋基础信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{seaIds}")
     public AjaxResult remove(@PathVariable Long[] seaIds)

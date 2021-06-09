@@ -57,7 +57,7 @@ public class EduTemplateController extends BaseController
      * 查询模板列表
      */
     @ApiOperation("获取模板列表")
-    @PreAuthorize("@ss.hasPermi('edu:template:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTemplate eduTemplate)
     {
@@ -70,7 +70,7 @@ public class EduTemplateController extends BaseController
      * 导出模板列表
      */
     @ApiOperation("导出模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:export')")
     @Log(title = "模板", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduTemplate eduTemplate)
@@ -84,7 +84,7 @@ public class EduTemplateController extends BaseController
      * 获取模板详细信息
      */
     @ApiOperation("获取模板详细信息")
-    @PreAuthorize("@ss.hasPermi('edu:template:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -95,7 +95,7 @@ public class EduTemplateController extends BaseController
      * 新增模板
      */
     @ApiOperation("新增模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:add')")
     @Log(title = "模板", businessType = BusinessType.INSERT)
     @PostMapping
     public Map<String,Object> add(@Validated @RequestBody EduTemplateRequestVo eduTemplateVo)
@@ -120,7 +120,7 @@ public class EduTemplateController extends BaseController
      * 修改模板
      */
     @ApiOperation("修改模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody EduTemplateRequestVo eduTemplateVo)
@@ -174,7 +174,7 @@ public class EduTemplateController extends BaseController
      * 删除模板
      */
     @ApiOperation("删除模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:remove')")
     @Log(title = "模板", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

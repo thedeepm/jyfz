@@ -58,7 +58,7 @@ public class EduCaseController extends BaseController
      * 查询案例列表
      */
     @ApiOperation("获取案例列表")
-    @PreAuthorize("@ss.hasPermi('edu:case:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:list')")
     @GetMapping("/list")
     public TableDataInfo list(@ApiParam(value = "查询案例列表", required = true) EduCase eduCase)
     {
@@ -71,7 +71,7 @@ public class EduCaseController extends BaseController
      * 查询我的案例列表
      */
     @ApiOperation("查询我的案例列表")
-    @PreAuthorize("@ss.hasPermi('edu:case:myList')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:myList')")
     @GetMapping("/myList")
     public TableDataInfo myList(@ApiParam(value = "查询我的案例列表", required = true) Long userId)
     {
@@ -107,7 +107,7 @@ public class EduCaseController extends BaseController
     /**
      * 导出案例列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:case:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:export')")
     @Log(title = "案例", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(@ApiParam(value = "查询案例列表", required = true) EduCase eduCase)
@@ -121,7 +121,7 @@ public class EduCaseController extends BaseController
      * 获取案例详细信息
      */
     @ApiOperation("获取案例详细信息")
-    @PreAuthorize("@ss.hasPermi('edu:case:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@ApiParam(value = "案例id", required = true) @PathVariable("id") Long id)
     {
@@ -132,7 +132,7 @@ public class EduCaseController extends BaseController
      * 新增案例
      */
     @ApiOperation("新增案例")
-    @PreAuthorize("@ss.hasPermi('edu:case:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:add')")
     @Log(title = "案例", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduCase eduCase)
@@ -144,7 +144,7 @@ public class EduCaseController extends BaseController
      * 修改案例
      */
     @ApiOperation("修改案例")
-    @PreAuthorize("@ss.hasPermi('edu:case:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:edit')")
     @Log(title = "案例", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduCase eduCase)
@@ -156,7 +156,7 @@ public class EduCaseController extends BaseController
      * 删除案例
      */
     @ApiOperation("删除案例")
-    @PreAuthorize("@ss.hasPermi('edu:case:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:case:remove')")
     @Log(title = "案例", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

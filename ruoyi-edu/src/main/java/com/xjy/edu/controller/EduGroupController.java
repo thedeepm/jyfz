@@ -44,7 +44,7 @@ public class EduGroupController extends BaseController
      * 查询分组列表
      */
     @ApiOperation("查询分组列表")
-    @PreAuthorize("@ss.hasPermi('edu:group:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:group:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduGroup eduGroup)
     {
@@ -57,7 +57,7 @@ public class EduGroupController extends BaseController
      * 导出分组列表
      */
     @ApiOperation("导出分组列表")
-    @PreAuthorize("@ss.hasPermi('edu:group:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:group:export')")
     @Log(title = "分组", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduGroup eduGroup)
@@ -71,7 +71,7 @@ public class EduGroupController extends BaseController
      * 获取分组详细信息
      */
     @ApiOperation("获取分组详细信息")
-    @PreAuthorize("@ss.hasPermi('edu:group:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:group:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -82,7 +82,7 @@ public class EduGroupController extends BaseController
      * 新增分组
      */
     @ApiOperation("新增分组")
-    @PreAuthorize("@ss.hasPermi('edu:group:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:group:add')")
     @Log(title = "分组", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
@@ -111,7 +111,7 @@ public class EduGroupController extends BaseController
      * 修改分组
      */
     @ApiOperation("修改分组")
-    @PreAuthorize("@ss.hasPermi('edu:group:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:group:edit')")
     @Log(title = "分组", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody List<EduGroupRequestVo> eduGroupRequestVoList)
@@ -140,7 +140,7 @@ public class EduGroupController extends BaseController
      * 删除分组
      */
     @ApiOperation("删除分组")
-    @PreAuthorize("@ss.hasPermi('edu:group:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:group:remove')")
     @Log(title = "分组", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

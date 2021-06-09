@@ -41,7 +41,7 @@ public class EduPartitionController extends BaseController
      * 查询分区列表
      */
     @ApiOperation("查询分区列表")
-    @PreAuthorize("@ss.hasPermi('edu:partition:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduPartition eduPartition)
     {
@@ -54,7 +54,7 @@ public class EduPartitionController extends BaseController
      * 导出分区列表
      */
     @ApiOperation("导出分区列表")
-    @PreAuthorize("@ss.hasPermi('edu:partition:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:export')")
     @Log(title = "分区", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduPartition eduPartition)
@@ -68,7 +68,7 @@ public class EduPartitionController extends BaseController
      * 获取分区详细信息
      */
     @ApiOperation("获取分区详细信息")
-    @PreAuthorize("@ss.hasPermi('edu:partition:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -79,7 +79,7 @@ public class EduPartitionController extends BaseController
      * 新增分区
      */
     @ApiOperation("新增分区")
-    @PreAuthorize("@ss.hasPermi('edu:partition:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:add')")
     @Log(title = "分区", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduPartition eduPartition)
@@ -91,7 +91,7 @@ public class EduPartitionController extends BaseController
      * 修改分区
      */
     @ApiOperation("修改分区")
-    @PreAuthorize("@ss.hasPermi('edu:partition:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:edit')")
     @Log(title = "分区", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduPartition eduPartition)
@@ -103,7 +103,7 @@ public class EduPartitionController extends BaseController
      * 删除分区
      */
     @ApiOperation("删除分区")
-    @PreAuthorize("@ss.hasPermi('edu:partition:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:partition:remove')")
     @Log(title = "分区", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

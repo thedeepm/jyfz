@@ -8,6 +8,7 @@ import Layout from '@/layout'
 import ParentView from '@/components/ParentView';
 import Home from '../views/Home.vue'
 import LayoutFront from "../layoutFront"
+import LayoutWorker from "../layoutWorker"
 import searchLayout from "../layoutFront/searchIndex"
 /**
  * Note: 路由配置项
@@ -58,7 +59,7 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
-    redirect: 'index',
+    redirect: 'home',
     children: [
       {
         path: 'index',
@@ -144,6 +145,36 @@ export const constantRoutes = [
         meta: { title: '开始流程' }
       },
     ]
+  },
+  {
+    path: '/worker',
+    component: LayoutWorker,
+    redirect: 'worker/process',
+    hidden: true,
+    children: [
+      // {
+      //   path: '/worker/list',
+      //   component: (resolve) => require(['@/views/workerPage'], resolve),
+      //   name: 'workerList',
+      //   meta: { title: '案例任务列表' },
+      // },
+      {
+        path: '/worker/process',
+        component: (resolve) => require(['@/views/workerPage/process'], resolve),
+        name: 'workerProcess',
+        meta: { title: '开始案例' },
+      },
+    ]
+  },
+  {
+    path: '/gis',
+    name: 'GIS',
+    component: (resolve) => require(['@/views/gis'], resolve)
+  },
+  {
+    path: '/gis/list',
+    name: 'GISList',
+    component: (resolve) => require(['@/views/gis/list'], resolve)
   },
   {
     path: '/user',

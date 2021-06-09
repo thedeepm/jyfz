@@ -35,7 +35,7 @@ public class SearchGeogController extends BaseController
     /**
      * 速查地理信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:searchAll:list')")
+ //   @PreAuthorize("@ss.hasPermi('edu:searchAll:list')")
     @GetMapping("/list")
     public TableDataInfo list(BaseSearchEntity baseEntity)
     {
