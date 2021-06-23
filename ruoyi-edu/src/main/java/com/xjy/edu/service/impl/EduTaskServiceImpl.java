@@ -8,6 +8,8 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.impl.SysUserServiceImpl;
 import com.xjy.edu.domain.EduPersonInfo;
 import com.xjy.edu.domain.EduSeat;
 import com.xjy.edu.mapper.EduPersonInfoMapper;
@@ -35,7 +37,7 @@ public class EduTaskServiceImpl implements IEduTaskService
     private EduSeatMapper eduSeatMapper;
 
     @Autowired
-    private SysUserMapper sysUserMapper;
+    private ISysUserService sysUserService;
 
     @Autowired
     private EduPersonInfoMapper eduPersonInfoMapper;
@@ -90,15 +92,17 @@ public class EduTaskServiceImpl implements IEduTaskService
             userName.append(eduTask.getStepLevel());
             SysUser user = new SysUser();
             user.setUserName(userName.toString());
-            //user.setPassword(SecurityUtils.encryptPassword("P@ssword"));
+            user.setPassword(SecurityUtils.encryptPassword("123456"));
             user.setNickName("AutoGenerate");
             Long[] roles = new Long[]{100L};
             user.setRoleIds(roles);
-            sysUserMapper.insertUser(user);
+            sysUserService.insertUser(user);
             eduPersonInfo.setUserId(user.getUserId());
             eduPersonInfo.setSeatId(eduSeat.getId());
             eduPersonInfoMapper.updateEduPersonInfo(eduPersonInfo);
+            eduPersonInfo = eduPersonInfoMapper.selectEduPersonInfoById(eduPersonInfo.getId());
             ajaxResult.put("userName", user.getUserName());
+            ajaxResult.put("eduPersonInfo", eduPersonInfo);
         }
         return eduTask;
     }

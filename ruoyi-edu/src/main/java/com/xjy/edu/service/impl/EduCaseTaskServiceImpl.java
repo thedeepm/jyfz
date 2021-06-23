@@ -1,6 +1,8 @@
 package com.xjy.edu.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.SysFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduCaseTaskMapper;
@@ -30,6 +32,17 @@ public class EduCaseTaskServiceImpl implements IEduCaseTaskService
     {
         return eduCaseTaskMapper.selectEduCaseTaskById(id);
     }
+
+    /**
+     * 查询案例文件关联
+     *
+     * @param eduCaseTask 查询案例文件关联
+     * @return 文件信息
+     */
+    @Override
+    public SysFileInfo selectFlowFileInfo(EduCaseTask eduCaseTask){
+        return eduCaseTaskMapper.selectFlowFileInfo(eduCaseTask);
+    };
 
     /**
      * 查询案例任务关联列表

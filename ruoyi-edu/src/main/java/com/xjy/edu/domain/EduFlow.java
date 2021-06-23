@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * 流程对象 edu_flow
  * 
@@ -26,6 +29,7 @@ public class EduFlow extends BaseEntity
     @Excel(name = "步骤数量")
     private Long stepNumber;
 
+    @NotNull(message = "fileId不能为空！")
     /** 关联文件id */
     @Excel(name = "关联文件id")
     private Long fileId;

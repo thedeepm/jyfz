@@ -1,5 +1,6 @@
 package com.xjy.edu.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.xjy.edu.domain.EduCaseTask;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.xjy.edu.mapper.EduCaseMapper;
 import com.xjy.edu.domain.EduCase;
 import com.xjy.edu.service.IEduCaseService;
+import sun.font.TrueTypeFont;
 
 /**
  * 案例Service业务层处理
@@ -70,20 +72,27 @@ public class EduCaseServiceImpl implements IEduCaseService
     {
         eduCase.setCreateTime(DateUtils.getNowDate());
         EduTemplate eduTemplate = eduTemplateMapper.selectEduTemplateById(eduCase.getTemplateId());
-        EduTask eduTask = new EduTask();
         EduCaseTask eduCaseTask = new EduCaseTask();
+        eduTemplate.setOccupied(Boolean.TRUE);
+        eduTemplateMapper.updateEduTemplate(eduTemplate);
         int rows = eduCaseMapper.insertEduCase(eduCase);
         if(rows != 0){
-            eduTask.setFlowId(eduTemplate.getFlowId());
-            List<EduTask> eduTaskList = eduTaskMapper.selectEduTaskList(eduTask);
-            for (int i = 0; i < eduTaskList.size();i++){
-                eduCaseTask.setCaseId(eduCase.getId());
-                eduCaseTask.setTaskId(eduTaskList.get(i).getId());
-                eduCaseTask.setCreateTime(DateUtils.getNowDate());
-                eduCaseTaskMapper.insertEduCaseTask(eduCaseTask);
-            }
+            insertRelatedCaseTask(eduCase, eduTemplate, eduCaseTask);
         }
         return rows;
+    }
+
+    private void insertRelatedCaseTask(EduCase eduCase, EduTemplate eduTemplate, EduCaseTask eduCaseTask) {
+        EduTask eduTask = new EduTask();
+        eduTask.setFlowId(eduTemplate.getFlowId());
+        List<EduTask> eduTaskList = eduTaskMapper.selectEduTaskList(eduTask);
+        for (EduTask task : eduTaskList) {
+            eduCaseTask.setCaseId(eduCase.getId());
+            eduCaseTask.setTaskId(task.getId());
+            eduCaseTask.setCreateTime(DateUtils.getNowDate());
+            eduCaseTask.setCompleted(0L);
+            eduCaseTaskMapper.insertEduCaseTask(eduCaseTask);
+        }
     }
 
     /**
@@ -96,6 +105,21 @@ public class EduCaseServiceImpl implements IEduCaseService
     public int updateEduCase(EduCase eduCase)
     {
         eduCase.setUpdateTime(DateUtils.getNowDate());
+        EduTemplate eduTemplate = eduTemplateMapper.selectEduTemplateById(eduCase.getTemplateId());
+        Long caseId = eduCase.getId();
+        EduCaseTask eduCaseTask = new EduCaseTask();
+        eduCaseTask.setCaseId(caseId);
+        List<EduCaseTask> eduCaseTaskList = eduCaseTaskMapper.selectEduCaseTaskList(eduCaseTask);
+        List<Long> caseTaskIds = new ArrayList<>();
+        //删除之前绑定的关联id
+        if(eduCaseTaskList != null && eduCaseTaskList.size() > 0){
+            for (EduCaseTask caseTask : eduCaseTaskList) {
+                eduCaseTask = caseTask;
+                caseTaskIds.add(eduCaseTask.getId());
+            }
+            eduCaseTaskMapper.deleteEduCaseTaskByIds(caseTaskIds.toArray(new Long[caseTaskIds.size()]));
+        }
+        insertRelatedCaseTask(eduCase, eduTemplate, eduCaseTask);
         return eduCaseMapper.updateEduCase(eduCase);
     }
 

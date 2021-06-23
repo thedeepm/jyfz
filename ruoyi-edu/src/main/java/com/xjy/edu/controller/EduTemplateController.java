@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,7 +57,7 @@ public class EduTemplateController extends BaseController
      * 查询模板列表
      */
     @ApiOperation("获取模板列表")
-    @PreAuthorize("@ss.hasPermi('edu:template:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduTemplate eduTemplate)
     {
@@ -69,7 +70,7 @@ public class EduTemplateController extends BaseController
      * 导出模板列表
      */
     @ApiOperation("导出模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:export')")
     @Log(title = "模板", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduTemplate eduTemplate)
@@ -83,7 +84,7 @@ public class EduTemplateController extends BaseController
      * 获取模板详细信息
      */
     @ApiOperation("获取模板详细信息")
-    @PreAuthorize("@ss.hasPermi('edu:template:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -94,10 +95,10 @@ public class EduTemplateController extends BaseController
      * 新增模板
      */
     @ApiOperation("新增模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:add')")
     @Log(title = "模板", businessType = BusinessType.INSERT)
     @PostMapping
-    public Map<String,Object> add(@RequestBody EduTemplateRequestVo eduTemplateVo)
+    public Map<String,Object> add(@Validated @RequestBody EduTemplateRequestVo eduTemplateVo)
     {
         Map<String,Object> map = new HashMap<String,Object>();
         List<EduPartition> eduPartitionList = new ArrayList<>();
@@ -119,10 +120,10 @@ public class EduTemplateController extends BaseController
      * 修改模板
      */
     @ApiOperation("修改模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:edit')")
     @Log(title = "模板", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody EduTemplateRequestVo eduTemplateVo)
+    public AjaxResult edit(@Validated @RequestBody EduTemplateRequestVo eduTemplateVo)
     {
         AjaxResult ajax = AjaxResult.success();
 //        Map<String,Object> map = new HashMap<String,Object>();
@@ -134,12 +135,12 @@ public class EduTemplateController extends BaseController
         List<EduTask> eduTaskTempList = new ArrayList<>();
         EduTask eduTask = new EduTask();
         eduPartition.setTemplateId(eduTemplateVo.getId());
+        //delete partition that relate to the template
         if(eduTemplateVo.getPartitionsList() != null && eduTemplateVo.getPartitionsList().size()>0){
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
             for (int i = 0;i < eduPartitionList.size();i++){
                 ids.add(eduPartitionList.get(i).getId());
             }
-            //delete partition that relate to the template
             if(ids.size() > 0){
                 eduPartitionService.deleteEduPartitionByIds(ids.toArray(new Long[ids.size()]));
             }
@@ -150,7 +151,7 @@ public class EduTemplateController extends BaseController
             eduPartition.setTemplateId(eduTemplate.getId());
             eduPartitionList = eduPartitionService.selectEduPartitionList(eduPartition);
             for (int i = 0; i < ids.size(); i++){
-                //更新task中的id
+                //更新task中的分区id
                 eduTask.setPartitionId(ids.get(i));
                 eduTaskTempList = eduTaskService.selectEduTaskList(eduTask);
                 for (int j = 0; j < eduTaskTempList.size(); j++){
@@ -173,7 +174,7 @@ public class EduTemplateController extends BaseController
      * 删除模板
      */
     @ApiOperation("删除模板")
-    @PreAuthorize("@ss.hasPermi('edu:template:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:template:remove')")
     @Log(title = "模板", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

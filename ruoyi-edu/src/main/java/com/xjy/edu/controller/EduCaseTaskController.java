@@ -36,7 +36,7 @@ public class EduCaseTaskController extends BaseController
     /**
      * 查询案例任务关联列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:caseTask:list')")
+    //@PreAuthorize("@ss.hasPermi('edu:caseTask:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduCaseTask eduCaseTask)
     {
@@ -48,7 +48,7 @@ public class EduCaseTaskController extends BaseController
     /**
      * 导出案例任务关联列表
      */
-    @PreAuthorize("@ss.hasPermi('edu:caseTask:export')")
+    //@PreAuthorize("@ss.hasPermi('edu:caseTask:export')")
     @Log(title = "案例任务关联", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduCaseTask eduCaseTask)
@@ -61,7 +61,7 @@ public class EduCaseTaskController extends BaseController
     /**
      * 获取案例任务关联详细信息
      */
-    @PreAuthorize("@ss.hasPermi('edu:caseTask:query')")
+    //@PreAuthorize("@ss.hasPermi('edu:caseTask:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +71,7 @@ public class EduCaseTaskController extends BaseController
     /**
      * 新增案例任务关联
      */
-    @PreAuthorize("@ss.hasPermi('edu:caseTask:add')")
+    //@PreAuthorize("@ss.hasPermi('edu:caseTask:add')")
     @Log(title = "案例任务关联", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody EduCaseTask eduCaseTask)
@@ -82,7 +82,7 @@ public class EduCaseTaskController extends BaseController
     /**
      * 修改案例任务关联
      */
-    @PreAuthorize("@ss.hasPermi('edu:caseTask:edit')")
+    //@PreAuthorize("@ss.hasPermi('edu:caseTask:edit')")
     @Log(title = "案例任务关联", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody EduCaseTask eduCaseTask)
@@ -93,7 +93,7 @@ public class EduCaseTaskController extends BaseController
     /**
      * 删除案例任务关联
      */
-    @PreAuthorize("@ss.hasPermi('edu:caseTask:remove')")
+    //@PreAuthorize("@ss.hasPermi('edu:caseTask:remove')")
     @Log(title = "案例任务关联", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
