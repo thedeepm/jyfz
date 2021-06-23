@@ -24,11 +24,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-                '|',
-                IfNULL( region, '' ),
-                IfNULL( throughput, '' ),
-                IfNULL( core_business, '' ),
-                IfNULL( add_msg, '' )
+                '--',
+                IfNULL( CONCAT( '所属地区', ': ', region ), '' ),
+                IfNULL( CONCAT( '货物吞吐量', ': ', throughput ), '' ),
+                IfNULL( CONCAT( '主营业务', ': ', core_business ), '' ),
+                IfNULL( CONCAT( 'add_msg', ': ', add_msg ), '' )
             ) AS properties,
             'port' AS type
         FROM
@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectPortListByKeyword" parameterType="String" resultMap="PortResult">
-        <include refid="selectPortVo"/>
+        <include refid="selectPortVoNew"/>
         <where>
             <if test="keyword != null  and keyword != ''">
              and chinese_name like concat('%', #{keyword}, '%')

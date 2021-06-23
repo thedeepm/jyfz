@@ -41,7 +41,7 @@ public class PortController extends BaseController
     public TableDataInfo list(Port port)
     {
         startPage();
-        List<Port> list = portService.selectPortList(port);
+        List<Port> list = portService.selectPortListByKeyword(port.getKeyword());
         return getDataTable(list);
     }
 

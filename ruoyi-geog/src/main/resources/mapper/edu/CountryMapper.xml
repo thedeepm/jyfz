@@ -32,18 +32,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-                '|',
-                IfNULL( abbreviation, '' ),
-                IfNULL( belong_to, '' ),
-                IfNULL( population, '' ),
-                IfNULL( population_density, '' ),
-                IfNULL( area, '' ),
-                IfNULL( capital, '' ),
-                IfNULL( code, '' ),
-                IfNULL( language, '' ),
-                IfNULL( add_msg, '' ),
-                IfNULL( add_msg1, '' ),
-                IfNULL( add_msg2, '' )
+                '--',
+                IfNULL( CONCAT( '简称', ': ', abbreviation ), '' ),
+                IfNULL( CONCAT( '所属洲', ': ', belong_to ), '' ),
+                IfNULL( CONCAT( '人口数量', ': ', population ), '' ),
+                IfNULL( CONCAT( '人口密度', ': ', population_density ), '' ),
+                IfNULL( CONCAT( '面积', ': ', area ), '' ),
+                IfNULL( CONCAT( '首都', ': ', capital ), '' ),
+                IfNULL( CONCAT( '国家代码', ': ', CODE ), '' ),
+                IfNULL( CONCAT( '官方语言', ': ', LANGUAGE ), '' ),
+                IfNULL( CONCAT( '货币', ': ', add_msg ), '' ),
+                IfNULL( CONCAT( '时区', ': ', add_msg1 ), '' ),
+                IfNULL( CONCAT( '别名', ': ', add_msg2 ), '' )
             ) AS properties,
             'country' AS type
         FROM
@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and chinese_name like concat('%', #{searchValue}, '%')
                 or foreign_name like concat('%', #{searchValue}, '%')
                 or abbreviation like concat('%', #{searchValue}, '%')
-                and capital = #{searchValue}
+                or capital = #{searchValue}
             </if>
         </where>
     </select>
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              and chinese_name like concat('%', #{keyword}, '%')
              or foreign_name like concat('%', #{keyword}, '%')
              or abbreviation like concat('%', #{keyword}, '%')
-             and capital = #{keyword}
+             or capital = #{keyword}
              </if>
         </where>
     </select>

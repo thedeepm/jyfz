@@ -41,7 +41,7 @@ public class CountryController extends BaseController
     public TableDataInfo list(Country country)
     {
         startPage();
-        List<Country> list = countryService.selectCountryList(country);
+        List<Country> list = countryService.selectCountryListByKeyword(country.getKeyword());
         return getDataTable(list);
     }
 

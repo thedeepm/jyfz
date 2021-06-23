@@ -27,14 +27,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-                '|',
-                IfNULL( category, '' ),
-                IfNULL( ruled_area, '' ),
-                IfNULL( area, '' ),
-                IfNULL( population, '' ),
-                IfNULL( belong_to, '' ),
-                IfNULL( position, '' ),
-                IfNULL( add_msg, '' )
+                '--',
+                IfNULL( CONCAT( '行政区类别', ': ', category ), '' ),
+                IfNULL( CONCAT( '下辖地区', ': ', ruled_area ), '' ),
+                IfNULL( CONCAT( '面积', ': ', area ), '' ),
+                IfNULL( CONCAT( '人口数量', ': ', population ), '' ),
+                IfNULL( CONCAT( '所属地区', ': ', belong_to ), '' ),
+                IfNULL( CONCAT( '地理位置', ': ', position ), '' ),
+                IfNULL( CONCAT( 'add_msg', ': ', add_msg ), '' )
             ) AS properties,
             'province' AS type
         FROM

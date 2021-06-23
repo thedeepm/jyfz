@@ -41,7 +41,7 @@ public class SeaController extends BaseController
     public TableDataInfo list(Sea sea)
     {
         startPage();
-        List<Sea> list = seaService.selectSeaList(sea);
+        List<Sea> list = seaService.selectSeaListByKeyword(sea.getKeyword());
         return getDataTable(list);
     }
 
