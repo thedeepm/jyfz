@@ -159,7 +159,7 @@ export default {
         // let hostname = window.location.hostname;
         // port = window.location.port;
         this.websocket = new WebSocket(
-          "ws://192.168.31.20:" + 8080 + "/websocket/flow/" + this.id
+          "ws://39.97.244.145:" + 8888 + "/websocket/flow/" + this.id
         );
       } else {
         console.error("不支持WebSocket");
