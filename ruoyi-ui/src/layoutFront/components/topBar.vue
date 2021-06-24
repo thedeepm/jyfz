@@ -9,7 +9,7 @@
       <div class="operation">
         <div class="left-menu">
           <el-menu router :default-active="activeMenu" mode="horizontal">
-            <el-menu-item index="/caseList">案例</el-menu-item>
+            <el-menu-item index="/caseList">演示流程</el-menu-item>
             <el-menu-item index="/templateList">模板管理</el-menu-item>
           </el-menu>
         </div>

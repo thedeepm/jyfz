@@ -2,7 +2,7 @@
 
 import request from '@/utils/request'
 
-// 创建案例{
+// 创建演示流程{
 //     "completed": 1,
 //     "id": 54
 // }

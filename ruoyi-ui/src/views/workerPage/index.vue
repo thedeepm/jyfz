@@ -4,7 +4,7 @@
       <div class="left"></div>
       <div class="right">
         <el-input
-          placeholder="案例名称、类型"
+          placeholder="演示流程名称、类型"
           size="small"
           v-model="queryParams.searchValue"
           @keyup.enter.native="getList"
@@ -13,9 +13,9 @@
       </div>
     </div>
     <el-table :data="tableData" v-loading="loading">
-      <el-table-column prop="caseName" label="案例名称" align="center">
+      <el-table-column prop="caseName" label="演示流程名称" align="center">
       </el-table-column>
-      <el-table-column prop="type" label="案例类型" align="center">
+      <el-table-column prop="type" label="演示流程类型" align="center">
       </el-table-column>
       <el-table-column prop="subarea" label="分区组信息" align="center">
       </el-table-column>
@@ -92,7 +92,7 @@ export default {
       this.$router.push({ path: "/updateCase", query: { id } });
     },
     remove(id) {
-      this.$confirm("此操作将永久删除该案例, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该演示流程, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",

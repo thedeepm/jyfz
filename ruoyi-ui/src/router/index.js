@@ -106,19 +106,19 @@ export const constantRoutes = [
         path: '/caseList',
         component: (resolve) => require(['@/views/caseList'], resolve),
         name: 'caseList',
-        meta: { title: '教学案例管理' },
+        meta: { title: '教学演示流程管理' },
       },
       {
         path: '/createCase',
         component: (resolve) => require(['@/views/createCase'], resolve),
         name: 'createCase',
-        meta: { title: '新增案例' }
+        meta: { title: '新增演示流程' }
       },
       {
         path: '/updateCase',
         component: (resolve) => require(['@/views/createCase'], resolve),
         name: 'updateCase',
-        meta: { title: '修改案例' },
+        meta: { title: '修改演示流程' },
       },
       {
         path: '/templateList',
@@ -156,13 +156,13 @@ export const constantRoutes = [
       //   path: '/worker/list',
       //   component: (resolve) => require(['@/views/workerPage'], resolve),
       //   name: 'workerList',
-      //   meta: { title: '案例任务列表' },
+      //   meta: { title: '演示流程任务列表' },
       // },
       {
         path: '/worker/process',
         component: (resolve) => require(['@/views/workerPage/process'], resolve),
         name: 'workerProcess',
-        meta: { title: '开始案例' },
+        meta: { title: '开始演示流程' },
       },
     ]
   },

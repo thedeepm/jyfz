@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-// 创建案例 {
+// 创建演示流程 {
 //   "caseName": "TestCase",
-//   "description": "测试新增案例",
+//   "description": "测试新增演示流程",
 //   "templateId": 62,
 //   "type": "string"
 // }
@@ -21,21 +21,21 @@ export function updateCase(data) {
     })
 }
 
-// 删除案例
+// 删除演示流程
 export function removeCase(id) {
     return request({
         url: '/edu/case/' + id,
         method: 'delete',
     })
 }
-// 查询案例
+// 查询演示流程
 export function getCase(id) {
     return request({
         url: '/edu/case/' + id,
         method: 'get',
     })
 }
-// 案例列表
+// 演示流程列表
 export function getCaseList(params) {
     return request({
         url: '/edu/case/list',

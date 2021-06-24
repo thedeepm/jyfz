@@ -58,6 +58,7 @@ module.exports = {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
 
+
     // set svg-sprite-loader
     config.module
       .rule('svg')
@@ -85,6 +86,7 @@ module.exports = {
               // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
+            .devtool("source-map")
             .end()
           config
             .optimization.splitChunks({
