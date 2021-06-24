@@ -136,9 +136,6 @@ export default {
         //动态获取域名或ip
         // let hostname = window.location.hostname;
         // port = window.location.port;
-
-        console.log(this.url);
-        debugger;
         this.websocket = new WebSocket(this.url + this.id);
       } else {
         console.error("不支持WebSocket");
