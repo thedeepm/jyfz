@@ -5,10 +5,15 @@
       v-model="value"
       style="width: 250px"
       placeholder="输入关键词搜索席位/流程图"
-      suffix-icon="el-icon-search"
       size="small"
       @keyup.enter.native="search"
-    />
+    >
+      <el-button
+        slot="append"
+        icon="el-icon-search"
+        @click="search"
+      ></el-button>
+    </el-input>
     <div class="search-btn">
       <i v-if="!show" class="el-icon-search icon" @click="show = true"></i>
       <i v-if="show" class="el-icon-close icon" @click="show = false"></i>
@@ -41,10 +46,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .search-contianer {
   display: flex;
   align-items: center;
+  ::v-deep .el-input-group__append,
+  .el-input-group__prepend {
+    border-radius: 0;
+  }
 }
 .search-btn {
   margin-left: 20px;

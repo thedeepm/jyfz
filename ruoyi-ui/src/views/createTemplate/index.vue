@@ -155,6 +155,14 @@
             mode="edit"
           />
         </div>
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tab-pane
+            :label="item.partitionName"
+            :name="item.tbc1"
+            v-for="item in form.partitionsList"
+            :key="item.tbc1"
+          ></el-tab-pane>
+        </el-tabs>
         <el-form
           :model="groupSelecter"
           status-icon
@@ -387,7 +395,16 @@ export default {
         "#c58577",
         "#FF0022",
       ],
+      activeName: null,
     };
+  },
+  watch: {
+    groupSelecter: {
+      handler(val) {
+        this.activeName = val.tbc1;
+      },
+      immediate: true,
+    },
   },
   created() {
     if (this.$route.query.id) {
@@ -542,6 +559,9 @@ export default {
           functionAttribute: "",
         });
       }
+    },
+    handleClick(tab) {
+      this.getGroupId(tab.name);
     },
     getGroupId(id) {
       console.log(id);
