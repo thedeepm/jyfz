@@ -17,6 +17,7 @@
         }`"
         placement="top"
         ><site
+          :key="index"
           :style="siteStyle"
           :width="(width * 25) / 400 + 'px'"
           :color="value.siteColor"
@@ -31,6 +32,7 @@
             :style="siteStyle"
             :width="(width * 25) / 400 + 'px'"
             :color="value.siteColor"
+            :key="index"
           />
         </el-badge>
         <site
@@ -38,6 +40,7 @@
           :style="siteStyle"
           :width="(width * 25) / 400 + 'px'"
           :color="value.siteColor"
+          :key="index"
         />
       </template>
       <div class="hide" v-if="value.hide" :style="hideStyle" />
@@ -106,7 +109,7 @@ export default {
       let right = "0px";
       let left = "0px";
       let bottom = "0px";
-      this.cells[index].hide = false;
+      if (this.mode == "edit") this.cells[index].hide = false;
 
       if (index < this.cells.length - 1 && (index + 1) % 8 != 0) {
         if (this.cells[index].group !== this.cells[index + 1].group) {
@@ -117,7 +120,7 @@ export default {
         if (this.cells[index].group !== this.cells[index + 8].group) {
           bottom = (this.width * 5) / 400 + "px";
           if (this.cells[index - 1]?.group == this.cells[index + 7].group) {
-            this.cells[index].hide = true;
+            if (this.mode == "edit") this.cells[index].hide = true;
           }
         }
       }
