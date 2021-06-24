@@ -97,6 +97,7 @@ export default {
       time: 0,
       totalTime: 0,
       username: null,
+      url: process.env.VUE_APP_SOCKET_API,
     };
   },
   computed: {
@@ -112,7 +113,7 @@ export default {
     this.id = this.$route.query.id;
     this.templateId = this.$route.query.templateId;
     getTemplate(this.templateId).then((res) => {
-      console.log(res,'1');
+      console.log(res, "1");
       if (res.code == 200) {
         this.cells = JSON.parse(res.data.tbc1);
         setTimeout(() => {
@@ -135,9 +136,10 @@ export default {
         //动态获取域名或ip
         // let hostname = window.location.hostname;
         // port = window.location.port;
-        this.websocket = new WebSocket(
-          "ws://39.97.244.145:" + 8888 + "/websocket/flow/" + this.id
-        );
+
+        console.log(this.url);
+        debugger;
+        this.websocket = new WebSocket(this.url + this.id);
       } else {
         console.error("不支持WebSocket");
       }

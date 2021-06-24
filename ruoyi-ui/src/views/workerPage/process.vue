@@ -158,8 +158,9 @@ export default {
         //动态获取域名或ip
         // let hostname = window.location.hostname;
         // port = window.location.port;
+
         this.websocket = new WebSocket(
-          "ws://39.97.244.145:" + 8888 + "/websocket/flow/" + this.id
+          process.env.APP_SOCKET + "/websocket/flow/" + this.id
         );
       } else {
         console.error("不支持WebSocket");
