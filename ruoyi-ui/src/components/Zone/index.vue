@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import cells from "./cells.json";
+// import cells from "./cells.json";
 import site from "./site.vue";
 export default {
   name: "cells",
@@ -61,6 +61,10 @@ export default {
     cells: {
       type: Array,
       default() {
+        let cells = [];
+        for (i = 0; i < 64; i++) {
+          cells.push({ group: "" });
+        }
         return cells;
       },
     },

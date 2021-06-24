@@ -51,3 +51,11 @@ export function exportInfo(query) {
     params: query
   })
 }
+
+// 下载用户导入模板
+export function importTemplate() {
+  return request({
+    url: '/edu/personInfo/importTemplate',
+    method: 'get'
+  })
+}
