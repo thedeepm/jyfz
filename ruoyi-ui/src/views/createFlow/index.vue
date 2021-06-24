@@ -123,13 +123,13 @@
                     :prop="'stepsList.' + index + '.seatId'"
                     :rules="{
                       required: false,
-                      message: '请选择席位编号',
+                      message: '请选择区位编号',
                       trigger: 'change',
                     }"
                   >
                     <!-- <el-select
                       v-model="item.seatId"
-                      placeholder="选择席位编号"
+                      placeholder="选择区位编号"
                       disabled
                       ><el-option
                         v-for="(item, index) in item.seatOptions"
@@ -276,11 +276,11 @@
                   prop="seatId"
                   :rules="{
                     required: true,
-                    message: '选择席位编号',
+                    message: '选择区位编号',
                     trigger: 'change',
                   }"
                 >
-                  <el-select v-model="addForm.seatId" placeholder="席位编号"
+                  <el-select v-model="addForm.seatId" placeholder="区位编号"
                     ><el-option
                       v-for="(item, index) in addForm.seatOptions"
                       :key="index"
