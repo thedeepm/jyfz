@@ -19,19 +19,19 @@ public class EduPersonInfo extends BaseEntity
     private Long id;
 
     /** 简介 */
-    @Excel(name = "简介")
+    @Excel(name = "席位描述")
     private String briefIntroduction;
 
     /** 职位信息 */
-    @Excel(name = "职位信息")
+    @Excel(name = "职责")
     private String position;
 
     /** 关联席位id */
-    @Excel(name = "关联席位id")
+    //@Excel(name = "关联席位id")
     private Long seatId;
 
     /** 关联文件id */
-    @Excel(name = "关联文件id")
+    //@Excel(name = "关联文件id")
     private Long fileId;
 
     /** 人物标签 */
@@ -39,32 +39,36 @@ public class EduPersonInfo extends BaseEntity
     private String tag;
 
     /** 人物姓名 */
-    @Excel(name = "人物姓名")
+    @Excel(name = "席位名称")
     private String personName;
 
     /** 关联用户id */
-    @Excel(name = "关联用户id")
+    //@Excel(name = "关联用户id")
     private Long userId;
 
     /** $column.columnComment */
-    @Excel(name = "关联文件id")
+    @Excel(name = "隶属")
     private String tbc1;
 
     /** $column.columnComment */
-    @Excel(name = "关联文件id")
+    //@Excel(name = "关联文件id")
     private String tbc2;
 
     /** $column.columnComment */
-    @Excel(name = "关联文件id")
+    //@Excel(name = "关联文件id")
     private String tbc3;
 
     /** $column.columnComment */
-    @Excel(name = "关联文件id")
+    //@Excel(name = "关联文件id")
     private String tbc4;
 
     /** $column.columnComment */
-    @Excel(name = "关联文件id")
+    //@Excel(name = "关联文件id")
     private String tbc5;
+    /** $column.columnComment */
+
+    @Excel(name = "作业内容")
+    private String remark;
 
     public void setId(Long id) 
     {
@@ -179,6 +183,16 @@ public class EduPersonInfo extends BaseEntity
     public String getTbc5() 
     {
         return tbc5;
+    }
+
+    @Override
+    public String getRemark() {
+        return remark;
+    }
+
+    @Override
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     @Override
