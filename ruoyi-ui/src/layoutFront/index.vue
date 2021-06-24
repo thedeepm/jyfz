@@ -72,7 +72,7 @@ export default {
       display: flex;
       justify-content: space-between;
       .title {
-        width: 400px;
+        width: 450px;
         padding-left: 20px;
         text-align: left;
         margin: 0;

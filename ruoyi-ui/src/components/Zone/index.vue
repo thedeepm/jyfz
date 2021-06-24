@@ -61,6 +61,10 @@ export default {
     cells: {
       type: Array,
       default() {
+        let cells = [];
+        for (let i = 0; i < 64; i++) {
+          cells.push({ group: "" });
+        }
         return cells;
       },
     },

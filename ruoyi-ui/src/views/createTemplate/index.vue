@@ -73,7 +73,7 @@
                 <!-- <el-button type="text">修改名称</el-button> -->
               </div>
               <el-row :gutter="24">
-                <el-col :span="10">
+                <el-col :lg="10" :sm="24">
                   <el-form-item
                     label="分区座位"
                     :prop="'partitionsList.' + index + '.partitionInterval'"
@@ -91,7 +91,7 @@
                     ></el-input>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :lg="8" :sm="12">
                   <el-form-item
                     label="席位数量"
                     :prop="'partitionsList.' + index + '.totalSeats'"
@@ -108,7 +108,7 @@
                     ></el-input-number>
                   </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :lg="6" :sm="12">
                   <el-form-item
                     label="颜色选择"
                     :prop="'partitionsList.' + index + '.color'"
@@ -155,6 +155,14 @@
             mode="edit"
           />
         </div>
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tab-pane
+            :label="item.partitionName"
+            :name="item.tbc1"
+            v-for="item in form.partitionsList"
+            :key="item.tbc1"
+          ></el-tab-pane>
+        </el-tabs>
         <el-form
           :model="groupSelecter"
           status-icon
@@ -198,7 +206,7 @@
                   <!-- <el-button type="text">修改名称</el-button> -->
                 </div>
                 <el-row :gutter="24">
-                  <el-col :span="10">
+                  <el-col :lg="10" :sm="24">
                     <el-form-item
                       label="分组座位"
                       :prop="'eduGroupList.' + index + '.groupInterval'"
@@ -215,7 +223,7 @@
                       ></el-input>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="8">
+                  <el-col :lg="8" :sm="12">
                     <el-form-item
                       label="席位数量"
                       :prop="'eduGroupList.' + index + '.totalSeats'"
@@ -232,7 +240,7 @@
                       ></el-input-number>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="6">
+                  <el-col :lg="6" :sm="12">
                     <el-form-item
                       label="颜色选择"
                       :prop="'eduGroupList.' + index + '.color'"
@@ -387,7 +395,16 @@ export default {
         "#c58577",
         "#FF0022",
       ],
+      activeName: null,
     };
+  },
+  watch: {
+    groupSelecter: {
+      handler(val) {
+        this.activeName = val.tbc1;
+      },
+      immediate: true,
+    },
   },
   created() {
     if (this.$route.query.id) {
@@ -515,7 +532,7 @@ export default {
           partitionName: "分区" + i,
           partitionInterval: "",
           totalSeats: "",
-          color: "",
+          color: this.predefineColors[i-1] ?? "",
           functionAttribute: "",
         });
       }
@@ -538,10 +555,13 @@ export default {
           groupName: "分组" + i,
           groupInterval: "",
           totalSeats: "",
-          color: "",
+          color: this.predefineColors[i-1] ?? "",
           functionAttribute: "",
         });
       }
+    },
+    handleClick(tab) {
+      this.getGroupId(tab.name);
     },
     getGroupId(id) {
       console.log(id);

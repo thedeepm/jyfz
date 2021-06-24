@@ -86,7 +86,6 @@ module.exports = {
               // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
-            .devtool("source-map")
             .end()
           config
             .optimization.splitChunks({
