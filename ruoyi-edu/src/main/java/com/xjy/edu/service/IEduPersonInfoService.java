@@ -1,6 +1,8 @@
 package com.xjy.edu.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.xjy.edu.domain.EduPersonInfo;
 
 /**
@@ -58,4 +60,13 @@ public interface IEduPersonInfoService
      * @return 结果
      */
     int deleteEduPersonInfoById(Long id);
+
+    /**
+     * 导入人员信息数据
+     *
+     * @param personInfoList 人员信息数据列表
+     * @param isUpdateSupport 是否更新支持，如果已存在，则进行更新数据
+     * @return 结果
+     */
+    String importPersonInfo(List<EduPersonInfo> personInfoList, Boolean isUpdateSupport);
 }
