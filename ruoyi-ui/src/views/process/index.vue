@@ -112,10 +112,15 @@ export default {
     this.id = this.$route.query.id;
     this.templateId = this.$route.query.templateId;
     getTemplate(this.templateId).then((res) => {
-      this.cells = JSON.parse(res.data.tbc1);
-      setTimeout(() => {
-        this.cellShow = true;
-      }, 1000);
+      console.log(res,'1');
+      if (res.code == 200) {
+        this.cells = JSON.parse(res.data.tbc1);
+        setTimeout(() => {
+          this.cellShow = true;
+        }, 1000);
+      } else {
+        console.log("error");
+      }
     });
     this.initSocket();
   },
@@ -131,7 +136,7 @@ export default {
         // let hostname = window.location.hostname;
         // port = window.location.port;
         this.websocket = new WebSocket(
-          "ws://localhost:" + 8888 + "/websocket/flow/" + this.id
+          "ws://39.97.244.145:" + 8888 + "/websocket/flow/" + this.id
         );
       } else {
         console.error("不支持WebSocket");
