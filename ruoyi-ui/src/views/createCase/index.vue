@@ -5,20 +5,20 @@
       status-icon
       :rules="rules"
       ref="form"
-      label-width="80px"
+      label-width="120px"
       label-position="left"
       class="form"
     >
-      <el-form-item label="案例名称" prop="caseName">
+      <el-form-item label="演示流程名称" prop="caseName">
         <el-input
           v-model="form.caseName"
-          placeholder="请输入案例名称"
+          placeholder="请输入演示流程名称"
           maxlength="15"
           show-word-limit
         ></el-input>
       </el-form-item>
-      <el-form-item label="案例类型" prop="type">
-        <el-select placeholder="请选择案例类型" v-model="form.type">
+      <el-form-item label="演示流程类型" prop="type">
+        <el-select placeholder="请选择演示流程类型" v-model="form.type">
           <el-option value="类型A" />
         </el-select>
       </el-form-item>
@@ -43,7 +43,7 @@
           >模板管理</el-button
         >
       </el-form-item>
-      <el-form-item label="案例说明" prop="description">
+      <el-form-item label="演示流程说明" prop="description">
         <el-input
           type="textarea"
           v-model.number="form.description"
@@ -78,7 +78,7 @@ export default {
           { required: true, message: "请选择活动区域", trigger: "change" },
         ],
         type: [
-          { required: true, message: "请选择案例类型", trigger: "change" },
+          { required: true, message: "请选择演示流程类型", trigger: "change" },
         ],
         templateId: [
           { required: true, message: "请选择展厅模板", trigger: "change" },
@@ -103,7 +103,7 @@ export default {
           if (this.form.id) {
             updateCase(this.form).then((res) => {
               this.$message({
-                message: "修改案例成功",
+                message: "修改演示流程成功",
                 type: "success",
               });
               this.$router.push("/caseList");
@@ -111,7 +111,7 @@ export default {
           } else {
             createCase(this.form).then((res) => {
               this.$message({
-                message: "新增案例成功",
+                message: "新增演示流程成功",
                 type: "success",
               });
               this.$router.push("/caseList");

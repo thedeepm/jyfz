@@ -2,16 +2,13 @@
   <div class="main-contianer">
     <div class="operation">
       <div class="left">
-        <el-button
-          type="primary"
-          size="small"
-          @click="$router.push('/createCase')"
-          >新建案例</el-button
+        <el-button type="primary" size="small" @click="add"
+          >新建演示流程</el-button
         >
       </div>
       <div class="right">
         <el-input
-          placeholder="案例名称、类型"
+          placeholder="演示流程名称、类型"
           size="small"
           v-model="queryParams.searchValue"
           @keyup.enter.native="getList"
@@ -20,13 +17,17 @@
       </div>
     </div>
     <el-table :data="tableData" v-loading="loading">
-      <el-table-column prop="caseName" label="案例名称" align="center">
+      <el-table-column prop="caseName" label="演示流程名称" align="center">
       </el-table-column>
-      <el-table-column prop="type" label="案例类型" align="center">
+      <el-table-column prop="type" label="演示流程类型" align="center">
       </el-table-column>
       <el-table-column prop="subarea" label="分区组信息" align="center">
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column
+        label="操作"
+        align="center"
+        v-if="$store.state.user.token"
+      >
         <template slot-scope="scope">
           <el-button
             type="text"
@@ -34,7 +35,7 @@
             @click="
               $router.push({
                 path: '/process',
-                query: { id: scope.row.id,templateId:scope.row.templateId },
+                query: { id: scope.row.id, templateId: scope.row.templateId },
               })
             "
             >开始</el-button
@@ -99,7 +100,7 @@ export default {
       this.$router.push({ path: "/updateCase", query: { id } });
     },
     remove(id) {
-      this.$confirm("此操作将永久删除该案例, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该演示流程, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
@@ -119,6 +120,19 @@ export default {
             message: "已取消删除",
           });
         });
+    },
+    add() {
+      if (this.$store.state.user.token) {
+        this.$router.push("/createCase");
+      } else {
+        this.$confirm("新建演示流程需进行登录操作", "提示", {
+          confirmButtonText: "前往登录",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(() => {
+          this.$router.push("/login");
+        });
+      }
     },
   },
 };

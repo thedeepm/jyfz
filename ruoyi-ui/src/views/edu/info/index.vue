@@ -25,69 +25,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="关联席位id" prop="seatId">
-        <el-input
-          v-model="queryParams.seatId"
-          placeholder="请输入关联席位id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="fileId">
-        <el-input
-          v-model="queryParams.fileId"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc1">
-        <el-input
-          v-model="queryParams.tbc1"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc2">
-        <el-input
-          v-model="queryParams.tbc2"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc3">
-        <el-input
-          v-model="queryParams.tbc3"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc4">
-        <el-input
-          v-model="queryParams.tbc4"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc5">
-        <el-input
-          v-model="queryParams.tbc5"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -149,6 +87,18 @@
           >导出</el-button
         >
       </el-col>
+       <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click=""
+          v-hasPermi="['edu:info:export']"
+          >导入</el-button
+        >
+      </el-col>
+      <!-- /edu/personInfo/importData -->
       <right-toolbar
         :showSearch.sync="showSearch"
         @queryTable="getList"
@@ -161,17 +111,17 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="人员id" align="center" prop="id" />
-      <el-table-column label="简介" align="center" prop="briefIntroduction" />
-      <el-table-column label="职位信息" align="center" prop="position" />
-      <el-table-column label="关联席位id" align="center" prop="seatId" />
-      <el-table-column label="其他信息" align="center" prop="remark" />
-      <el-table-column label="关联文件id" align="center" prop="fileId" />
-      <el-table-column label="更新时间" align="center" prop="tbc1" />
-      <el-table-column label="更新时间" align="center" prop="tbc2" />
-      <el-table-column label="更新时间" align="center" prop="tbc3" />
-      <el-table-column label="更新时间" align="center" prop="tbc4" />
-      <el-table-column label="更新时间" align="center" prop="tbc5" />
+      <el-table-column label="岗位名称" align="center" prop="personName" />
+      <el-table-column
+        label="岗位描述"
+        align="center"
+        prop="briefIntroduction"
+      />
+      <el-table-column label="职责" align="center" prop="position" />
+
+      <el-table-column label="隶属" align="center" prop="tbc1" />
+      <el-table-column label="作业内容" align="center" prop="remark" />
+
       <el-table-column
         label="操作"
         align="center"
@@ -209,39 +159,31 @@
     <!-- 添加或修改人员信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="简介" prop="briefIntroduction">
-          <el-input v-model="form.briefIntroduction" placeholder="请输入简介" />
+        <el-form-item label="岗位名称" prop="personName">
+          <el-input
+            v-model="form.personName"
+            placeholder="请输入岗位名称"
+          />
         </el-form-item>
-        <el-form-item label="职位信息" prop="position">
-          <el-input v-model="form.position" placeholder="请输入职位信息" />
+        <el-form-item label="岗位描述" prop="briefIntroduction">
+          <el-input
+            v-model="form.briefIntroduction"
+            placeholder="请输入岗位描述"
+          />
         </el-form-item>
-        <el-form-item label="关联席位id" prop="seatId">
-          <el-input v-model="form.seatId" placeholder="请输入关联席位id" />
+        <el-form-item label="职责" prop="position">
+          <el-input v-model="form.position" placeholder="请输入职责" />
         </el-form-item>
-        <el-form-item label="其他信息" prop="remark">
+
+        <el-form-item label="隶属" prop="tbc1">
+          <el-input v-model="form.tbc1" placeholder="请输入隶属" />
+        </el-form-item>
+        <el-form-item label="作业内容" prop="remark">
           <el-input
             v-model="form.remark"
             type="textarea"
-            placeholder="请输入内容"
+            placeholder="请输入作业内容"
           />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="fileId">
-          <el-input v-model="form.fileId" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc1">
-          <el-input v-model="form.tbc1" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc2">
-          <el-input v-model="form.tbc2" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc3">
-          <el-input v-model="form.tbc3" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc4">
-          <el-input v-model="form.tbc4" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc5">
-          <el-input v-model="form.tbc5" placeholder="请输入关联文件id" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
