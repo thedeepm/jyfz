@@ -109,9 +109,9 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="岗位名称" align="center" prop="personName" />
+      <el-table-column label="席位名称" align="center" prop="personName" />
       <el-table-column
-        label="岗位描述"
+        label="席位描述"
         align="center"
         prop="briefIntroduction"
       />
@@ -191,13 +191,13 @@
     <!-- 添加或修改人员信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="岗位名称" prop="personName">
-          <el-input v-model="form.personName" placeholder="请输入岗位名称" />
+        <el-form-item label="席位名称" prop="personName">
+          <el-input v-model="form.personName" placeholder="请输入席位名称" />
         </el-form-item>
-        <el-form-item label="岗位描述" prop="briefIntroduction">
+        <el-form-item label="席位描述" prop="briefIntroduction">
           <el-input
             v-model="form.briefIntroduction"
-            placeholder="请输入岗位描述"
+            placeholder="请输入席位描述"
           />
         </el-form-item>
         <el-form-item label="职责" prop="position">

@@ -136,9 +136,9 @@ export default {
         this.templateId = res.rows[0].templateId;
         getTemplate(this.templateId).then((res) => {
           this.cells = JSON.parse(res.data.tbc1);
-          setTimeout(() => {
+          // setTimeout(() => {
             this.cellShow = true;
-          }, 500);
+          // }, 500);
         });
         getFile({ caseId: res.rows[0].id }).then((res) => {
           this.file = res.data;

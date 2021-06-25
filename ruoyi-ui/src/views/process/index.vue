@@ -116,9 +116,9 @@ export default {
       console.log(res, "1");
       if (res.code == 200) {
         this.cells = JSON.parse(res.data.tbc1);
-        setTimeout(() => {
-          this.cellShow = true;
-        }, 1000);
+        // setTimeout(() => {
+        this.cellShow = true;
+        // }, 1000);
       } else {
         console.log("error");
       }
@@ -154,7 +154,7 @@ export default {
       //接收到消息的回调方法
       this.websocket.onmessage = (event) => {
         //追加
-        console.log(event);
+        // console.log(event);
         if (event.data) {
           let monitonJson = JSON.parse(event.data);
           // this.taskList = monitonJson.eduTaskList;

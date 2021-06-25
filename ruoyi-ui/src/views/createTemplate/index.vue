@@ -18,10 +18,10 @@
             show-word-limit
           ></el-input>
         </el-form-item>
-        <el-form-item label="总席位数" prop="totalSeats">
+        <el-form-item label="总区位数" prop="totalSeats">
           <!-- <el-input
             v-model="form.totalSeats"
-            placeholder="请输入席位数量"
+            placeholder="请输入区位数量"
           ></el-input> -->
           <el-input-number
             v-model="form.totalSeats"
@@ -93,7 +93,7 @@
                 </el-col>
                 <el-col :lg="8" :sm="12">
                   <el-form-item
-                    label="席位数量"
+                    label="区位数量"
                     :prop="'partitionsList.' + index + '.totalSeats'"
                     :rules="{
                       validator: seatValid,
@@ -225,7 +225,7 @@
                   </el-col>
                   <el-col :lg="8" :sm="12">
                     <el-form-item
-                      label="席位数量"
+                      label="区位数量"
                       :prop="'eduGroupList.' + index + '.totalSeats'"
                       :rules="{
                         validator: seatValid,
@@ -329,7 +329,7 @@ export default {
         totalSeats: [
           {
             required: true,
-            message: "请输入席位数量",
+            message: "请输入区位数量",
             trigger: "change",
           },
           {
@@ -718,7 +718,7 @@ export default {
       if (valid) {
         callback();
       } else {
-        callback(new Error("席位数量错误,已超出总席位设置数"));
+        callback(new Error("区位数量错误,已超出总席位设置数"));
       }
     },
   },
