@@ -149,9 +149,9 @@
             placeholder="请输入流程名"
           />
         </el-form-item>
-        <el-form-item label="流程图" prop="tcb1">
+        <el-form-item label="流程图" prop="tbc1">
           <!-- <el-input v-model="form.fileId" placeholder="请输入关联文件id" /> -->
-          <ImageUpload v-model="form.tcb1" />
+          <ImageUpload v-model="form.tbc1" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
