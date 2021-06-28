@@ -90,11 +90,19 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="席位id" align="center" prop="id" />
+      <!-- <el-table-column label="席位id" align="center" prop="id" /> -->
       <el-table-column label="流程名" align="center" prop="flowRefrenceName" />
-      <el-table-column label="流程图" align="center" prop="fileId" />
-      <!-- <el-table-column label="关联文件id" align="center" prop="tbc1" />
-      <el-table-column label="关联文件id" align="center" prop="tbc2" />
+      <!-- <el-table-column label="流程图" align="center" prop="fileId" /> -->
+      <el-table-column label="流程图" align="center" prop="tbc1">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.tbc1"
+            :preview-src-list="[scope.row.tbc1]"
+          />
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="关联文件id" align="center" prop="tbc2" />
       <el-table-column label="关联文件id" align="center" prop="tbc3" />
       <el-table-column label="关联文件id" align="center" prop="tbc4" />
       <el-table-column label="关联文件id" align="center" prop="tbc5" /> -->
@@ -141,9 +149,9 @@
             placeholder="请输入流程名"
           />
         </el-form-item>
-        <el-form-item label="流程图" prop="fileId">
+        <el-form-item label="流程图" prop="tcb1">
           <!-- <el-input v-model="form.fileId" placeholder="请输入关联文件id" /> -->
-          <ImageUpload v-model="form.fileId"/>
+          <ImageUpload v-model="form.tcb1" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -166,7 +174,7 @@ import {
 import ImageUpload from "@/components/ImageUpload";
 export default {
   name: "Refrence",
-  components: {ImageUpload},
+  components: { ImageUpload },
   data() {
     return {
       // 遮罩层
@@ -292,7 +300,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除流程图编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除流程图名为"' + row.flowRefrenceName + '"的数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
