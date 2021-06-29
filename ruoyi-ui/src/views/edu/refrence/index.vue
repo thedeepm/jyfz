@@ -7,69 +7,16 @@
       v-show="showSearch"
       label-width="68px"
     >
-      <el-form-item label="席位名" prop="flowRefrenceName">
+      <el-form-item label="流程名" prop="flowRefrenceName">
         <el-input
           v-model="queryParams.flowRefrenceName"
-          placeholder="请输入席位名"
+          placeholder="请输入流程名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="关联文件id" prop="fileId">
-        <el-input
-          v-model="queryParams.fileId"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc1">
-        <el-input
-          v-model="queryParams.tbc1"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc2">
-        <el-input
-          v-model="queryParams.tbc2"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc3">
-        <el-input
-          v-model="queryParams.tbc3"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc4">
-        <el-input
-          v-model="queryParams.tbc4"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="关联文件id" prop="tbc5">
-        <el-input
-          v-model="queryParams.tbc5"
-          placeholder="请输入关联文件id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -143,14 +90,22 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="席位id" align="center" prop="id" />
-      <el-table-column label="席位名" align="center" prop="flowRefrenceName" />
-      <el-table-column label="关联文件id" align="center" prop="fileId" />
-      <el-table-column label="关联文件id" align="center" prop="tbc1" />
-      <el-table-column label="关联文件id" align="center" prop="tbc2" />
+      <!-- <el-table-column label="席位id" align="center" prop="id" /> -->
+      <el-table-column label="流程名" align="center" prop="flowRefrenceName" />
+      <!-- <el-table-column label="流程图" align="center" prop="fileId" /> -->
+      <el-table-column label="流程图" align="center" prop="tbc1">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.tbc1"
+            :preview-src-list="[scope.row.tbc1]"
+          />
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="关联文件id" align="center" prop="tbc2" />
       <el-table-column label="关联文件id" align="center" prop="tbc3" />
       <el-table-column label="关联文件id" align="center" prop="tbc4" />
-      <el-table-column label="关联文件id" align="center" prop="tbc5" />
+      <el-table-column label="关联文件id" align="center" prop="tbc5" /> -->
       <el-table-column
         label="操作"
         align="center"
@@ -188,29 +143,15 @@
     <!-- 添加或修改流程图对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="席位名" prop="flowRefrenceName">
+        <el-form-item label="流程名" prop="flowRefrenceName">
           <el-input
             v-model="form.flowRefrenceName"
-            placeholder="请输入席位名"
+            placeholder="请输入流程名"
           />
         </el-form-item>
-        <el-form-item label="关联文件id" prop="fileId">
-          <el-input v-model="form.fileId" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc1">
-          <el-input v-model="form.tbc1" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc2">
-          <el-input v-model="form.tbc2" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc3">
-          <el-input v-model="form.tbc3" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc4">
-          <el-input v-model="form.tbc4" placeholder="请输入关联文件id" />
-        </el-form-item>
-        <el-form-item label="关联文件id" prop="tbc5">
-          <el-input v-model="form.tbc5" placeholder="请输入关联文件id" />
+        <el-form-item label="流程图" prop="tbc1">
+          <!-- <el-input v-model="form.fileId" placeholder="请输入关联文件id" /> -->
+          <ImageUpload v-model="form.tbc1" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -230,10 +171,10 @@ import {
   updateRefrence,
   exportRefrence,
 } from "@/api/edu/refrence";
-
+import ImageUpload from "@/components/ImageUpload";
 export default {
   name: "Refrence",
-  components: {},
+  components: { ImageUpload },
   data() {
     return {
       // 遮罩层
@@ -359,7 +300,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$confirm('是否确认删除流程图编号为"' + ids + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除流程图名为"' + row.flowRefrenceName + '"的数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
