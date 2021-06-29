@@ -1,6 +1,12 @@
 package com.xjy.edu.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.ServletUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +25,7 @@ import com.xjy.edu.domain.EduPersonInfo;
 import com.xjy.edu.service.IEduPersonInfoService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 人员信息Controller
@@ -26,6 +33,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author wuzh
  * @date 2021-05-28
  */
+@Api(value = "/edu/personInfo", description = "人员信息管理")
 @RestController
 @RequestMapping("/edu/personInfo")
 public class EduPersonInfoController extends BaseController
@@ -36,6 +44,7 @@ public class EduPersonInfoController extends BaseController
     /**
      * 查询人员信息列表
      */
+    @ApiOperation("获取任务列表")
     //@PreAuthorize("@ss.hasPermi('edu:personInfo:list')")
     @GetMapping("/list")
     public TableDataInfo list(EduPersonInfo eduPersonInfo)
@@ -48,8 +57,9 @@ public class EduPersonInfoController extends BaseController
     /**
      * 导出人员信息列表
      */
+    @ApiOperation("人员信息导出")
     //@PreAuthorize("@ss.hasPermi('edu:personInfo:export')")
-    @Log(title = "人员信息", businessType = BusinessType.EXPORT)
+    @Log(title = "人员信息导出", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(EduPersonInfo eduPersonInfo)
     {
@@ -100,5 +110,17 @@ public class EduPersonInfoController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(eduPersonInfoService.deleteEduPersonInfoByIds(ids));
+    }
+
+    @ApiOperation("人员信息管理导入")
+    @Log(title = "人员信息管理导入", businessType = BusinessType.IMPORT)
+    //@PreAuthorize("@ss.hasPermi('system:user:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<EduPersonInfo> util = new ExcelUtil<EduPersonInfo>(EduPersonInfo.class);
+        List<EduPersonInfo> eduPersonInfoList = util.importExcel(file.getInputStream());
+        String message = eduPersonInfoService.importPersonInfo(eduPersonInfoList, updateSupport);
+        return AjaxResult.success(message);
     }
 }

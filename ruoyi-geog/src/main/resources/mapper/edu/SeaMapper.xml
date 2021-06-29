@@ -24,11 +24,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             chinese_name,
             foreign_name,
             CONCAT_WS(
-                '|',
-                IfNULL( area, '' ),
-                IfNULL( position, '' ),
-                IfNULL( deep, '' ),
-                IfNULL( add_msg, '' )
+                '--',
+                IfNULL( CONCAT( '面积', ': ', area ), '' ),
+                IfNULL( CONCAT( '地理位置', ': ', position ), '' ),
+                IfNULL( CONCAT( '平均水深', ': ', deep ), '' ),
+                IfNULL( CONCAT( '别名', ': ', add_msg ), '' )
             ) AS properties,
             'sea' AS type
         FROM

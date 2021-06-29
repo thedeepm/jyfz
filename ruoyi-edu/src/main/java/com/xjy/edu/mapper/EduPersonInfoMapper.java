@@ -20,6 +20,13 @@ public interface EduPersonInfoMapper
         EduPersonInfo selectEduPersonInfoById(Long id);
 
     /**
+     * 查询人员信息
+     *
+     * @param personName 人员信息名称
+     * @return 人员信息
+     */
+    EduPersonInfo selectEduPersonInfoByUserName(String personName);
+    /**
      * 查询人员信息列表
      * 
      * @param eduPersonInfo 人员信息

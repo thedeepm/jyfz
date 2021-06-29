@@ -53,7 +53,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectEduPersonInfoVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectEduPersonInfoByUserName" parameterType="String" resultMap="EduPersonInfoResult">
+        <include refid="selectEduPersonInfoVo"/>
+        where person_name = #{personName}
+    </select>
+
     <insert id="insertEduPersonInfo" parameterType="EduPersonInfo" useGeneratedKeys="true" keyProperty="id">
         insert into edu_person_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

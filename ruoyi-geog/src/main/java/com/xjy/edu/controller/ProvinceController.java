@@ -41,7 +41,7 @@ public class ProvinceController extends BaseController
     public TableDataInfo list(Province province)
     {
         startPage();
-        List<Province> list = provinceService.selectProvinceList(province);
+        List<Province> list = provinceService.selectProvinceListByKeyword(province.getKeyword());
         return getDataTable(list);
     }
 

@@ -41,7 +41,7 @@ public class CityController extends BaseController
     public TableDataInfo list(City city)
     {
         startPage();
-        List<City> list = cityService.selectCityList(city);
+        List<City> list = cityService.selectCityListByKeyword(city.getKeyword());
         return getDataTable(list);
     }
 
