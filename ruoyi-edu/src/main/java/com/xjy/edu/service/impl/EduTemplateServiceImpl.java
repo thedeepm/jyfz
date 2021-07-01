@@ -27,9 +27,6 @@ public class EduTemplateServiceImpl implements IEduTemplateService
     private EduTemplateMapper eduTemplateMapper;
 
     @Autowired
-    private EduSeatMapper eduSeatMapper;
-
-    @Autowired
     private EduPartitionMapper eduPartitionMapper;
     /**
      * 查询最新模板
@@ -107,7 +104,7 @@ public class EduTemplateServiceImpl implements IEduTemplateService
         if(rows != 0){
             eduTemplate = this.selectEduTemplateById(eduTemplate.getId());
             EduPartition eduPartition;
-            //修改分区
+            //修改关联的分区
             if(eduTemplateVo.getPartitionsList() != null){
                 for(int i = 0; i < eduTemplateVo.getPartitionsList().size(); i++){
                     eduPartition = eduTemplateVo.getPartitionsList().get(i);
