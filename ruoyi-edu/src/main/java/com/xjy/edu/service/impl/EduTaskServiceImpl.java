@@ -85,13 +85,12 @@ public class EduTaskServiceImpl implements IEduTaskService
             eduSeat = eduSeatMapper.selectEduSeatById(eduTask.getSeatId());
             eduSeat.setOccupied(true);
             eduSeatMapper.updateEduSeat(eduSeat);
-            StringBuilder userName = new StringBuilder(32);
-            userName.append(eduTask.getPartitionId());
-            userName.append(eduTask.getGroupId());
-            userName.append(eduTask.getSeatId());
-            userName.append(eduTask.getStepLevel());
             SysUser user = new SysUser();
-            user.setUserName(userName.toString());
+            String userName = String.valueOf(eduTask.getPartitionId()) +
+                    eduTask.getGroupId() +
+                    eduTask.getSeatId() +
+                    eduTask.getStepLevel();
+            user.setUserName(userName);
             user.setPassword(SecurityUtils.encryptPassword("123456"));
             user.setNickName("AutoGenerate");
             Long[] roles = new Long[]{100L};

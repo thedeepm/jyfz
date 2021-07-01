@@ -101,7 +101,6 @@ public class FlowWSServer {
                     eduSeat = new EduSeat();
                     map = new ConcurrentHashMap<String,Object>();
                     eduTask = new EduTask();
-                    eduPersonInfo = new EduPersonInfo();
                     try {
                         if(caseId == null){
                             send(session,  mapper.writeValueAsString("no caseId"));
@@ -138,8 +137,7 @@ public class FlowWSServer {
                         }
                         if( eduTaskList.size() > 0){
                             for (int i = 0; i< eduTaskList.size(); i++){
-                                //eduTask = new EduTask();
-                                tempmap = new ConcurrentHashMap<String,Object>();
+                                tempmap = new ConcurrentHashMap<>(10);
                                 eduPersonInfo = personInfoService.selectEduPersonInfoById(eduTask.getPersonId());
                                 sysUser = sysUserService.selectUserById(eduPersonInfo.getUserId());
                                 tempmap.put("userName", sysUser.getUserName());

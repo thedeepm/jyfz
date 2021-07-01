@@ -81,9 +81,9 @@ public class EduGroupServiceImpl implements IEduGroupService
             return validResult;
         }
         int rows = 0;
-        EduGroup eduGroup = new EduGroup();
+        EduGroup eduGroup;
         List<EduGroup> eduGroupList;
-        EduGroupRequestVo eduGroupRequestVo = new EduGroupRequestVo();
+        EduGroupRequestVo eduGroupRequestVo;
         EduSeat seat = new EduSeat();
         for(int i = 0; i < eduGroupRequestVoList.size(); i++){
             eduGroupRequestVo = eduGroupRequestVoList.get(i);
@@ -125,9 +125,9 @@ public class EduGroupServiceImpl implements IEduGroupService
             return validResult;
         }
         int rows = 0;
-        EduGroup eduGroup = new EduGroup();
+        EduGroup eduGroup;
         List<EduGroup> eduGroupList;
-        EduGroupRequestVo eduGroupRequestVo = new EduGroupRequestVo();
+        EduGroupRequestVo eduGroupRequestVo;
         EduSeat seat = new EduSeat();
         for(int i = 0; i < eduGroupRequestVoList.size(); i++){
             eduGroupRequestVo = eduGroupRequestVoList.get(i);
@@ -136,7 +136,6 @@ public class EduGroupServiceImpl implements IEduGroupService
                 eduGroup = eduGroupList.get(j);
                 eduGroup.setPartitionId(eduGroupRequestVo.getId());
                 //创建分组后 修改席位关联起分组id 并计算出index
-                //TODO 更新分区中的分组数量
                 rows = eduGroupMapper.updateEduGroup(eduGroup);
                 if(rows != 0){
                     eduGroup = this.getLastEduGroup();
@@ -179,6 +178,12 @@ public class EduGroupServiceImpl implements IEduGroupService
         return eduGroupMapper.deleteEduGroupById(id);
     }
 
+    /**
+     * 校验分组信息
+     *
+     * @param eduGroupRequestVoList eduGroupRequestVoList
+     * @return int
+     */
     public int validateGroupListData(List<EduGroupRequestVo> eduGroupRequestVoList)
     {
         EduGroup eduGroup;

@@ -122,13 +122,10 @@ public class EduPersonInfoServiceImpl implements IEduPersonInfoService
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        //String password = configService.selectConfigByKey("sys.user.initPassword");
         for (EduPersonInfo eduPersonInfo : personInfoList)
         {
             try
             {
-                // 验证是否存在这个用户
-                //SysUser u = userMapper.selectUserByUserName(user.getUserName());
                 EduPersonInfo personInfo = eduPersonInfoMapper.selectEduPersonInfoByUserName(eduPersonInfo.getPersonName());
                 if (StringUtils.isNull(personInfo))
                 {

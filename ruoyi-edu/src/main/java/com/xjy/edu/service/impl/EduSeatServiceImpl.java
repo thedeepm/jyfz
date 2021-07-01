@@ -41,7 +41,6 @@ public class EduSeatServiceImpl implements IEduSeatService
     @Override
     public List<EduSeat> selectEduSeatList(EduSeat eduSeat)
     {
-        //eduSeat.setOccupied(Boolean.TRUE);
         return eduSeatMapper.selectEduSeatList(eduSeat);
     }
     
